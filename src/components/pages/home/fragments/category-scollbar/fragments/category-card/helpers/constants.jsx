@@ -1,0 +1,1 @@
+export const NO_IMAGE_PLACEHOLDER = "/assets/food-image-placeholder.png"
