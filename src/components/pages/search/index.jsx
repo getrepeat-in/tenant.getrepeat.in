@@ -9,7 +9,7 @@ import { SearchHeader } from "./fragments/search-header";
 import { setAddonGroups } from "@/store/slices/menuSlice";
 import { SearchResults } from "./fragments/search-results";
 import { useRouter, useSearchParams } from "next/navigation";
-import { MenuService } from "@/services/frontend/menu.service";
+import { MenuService } from "@/services/frontend/menu";
 import { SearchEmptyState } from "./fragments/search-empty-state";
 
 export default function SearchPage() {
@@ -139,7 +139,7 @@ export default function SearchPage() {
                         <SearchResults results={results} />
                         <div ref={loaderRef} className="h-10 flex items-center justify-center mt-4">
                             {isFetchingNextPage && (
-                                <Loader2 className="size-6 animate-spin text-orange-500" />
+                                <Loader2 className="size-6 animate-spin text-primary" />
                             )}
                         </div>
                         <Footer />

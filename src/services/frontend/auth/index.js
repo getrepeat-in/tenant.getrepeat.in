@@ -1,6 +1,6 @@
 import api from "@/lib/api/axiosInstance";
 import { getTenantSlug } from "@/lib/utils";
-import { API_ENDPOINTS } from "../api-endpoints";
+import { API_ENDPOINTS } from "../../api-endpoints";
 
 export class AuthService {
     static async login({ phone, password }, slug = getTenantSlug()) {

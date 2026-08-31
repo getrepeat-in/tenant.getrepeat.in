@@ -10,7 +10,7 @@ export const MenuEmptyState = () => {
             title="Menu Coming Soon"
             description="This restaurant is carefully crafting its menu. Check back shortly to explore their delicious offerings."
             badgeText="Opening Soon"
-            badgeColor="orange"
+            badgeColor="primary"
         />
     );
 };

@@ -15,7 +15,7 @@ export function SearchBar({
     return (
         <form
             onSubmit={handleSubmit}
-            className="flex h-11 min-w-0 flex-1 items-center rounded-xl bg-neutral-50/60 px-3.5 border border-gray-150/40 focus-within:bg-white focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500/10 transition-all duration-200"
+            className="flex h-11 min-w-0 flex-1 items-center rounded-xl bg-neutral-50/60 px-3.5 border border-gray-150/40 focus-within:bg-white focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 transition-all duration-200"
         >
             <Search
                 size={18}
@@ -38,7 +38,7 @@ export function SearchBar({
                 <button
                     type="submit"
                     aria-label="Submit search"
-                    className="ml-2 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-orange-600 text-white transition hover:bg-orange-700 active:scale-95 cursor-pointer"
+                    className="ml-2 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground transition hover:bg-primary/90 active:scale-95 cursor-pointer"
                 >
                     <ArrowRight size={13} />
                 </button>

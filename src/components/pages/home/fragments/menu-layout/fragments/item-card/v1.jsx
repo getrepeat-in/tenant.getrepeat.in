@@ -8,13 +8,15 @@ import VariantDrawer from "@/components/global/variant-drawer";
 import { addItem, updateQuantity } from "@/store/slices/cartSlice";
 
 const ItemCardV1 = ({ item }) => {
-    const price = item?.price || item?.base_price || item?.defaultPrice || 0;
+    const basePrice = item?.price || item?.base_price || item?.defaultPrice || 0;
+    const discountedPrice = item?.discounted_price;
+    const hasDiscount = discountedPrice !== undefined && discountedPrice < basePrice;
     const dispatch = useDispatch();
     const { restaurant } = useRestaurant();
 
     const hasCustomizations = (item?.variants?.length > 0) || (item?.addonGroups?.length > 0);
     const [isVariantDrawerOpen, setIsVariantDrawerOpen] = useState(false);
-    
+
     const cartItems = useSelector(state => state.cart.items);
     const totalItemQuantity = cartItems
         .filter(i => i.item._id === item._id)
@@ -28,8 +30,8 @@ const ItemCardV1 = ({ item }) => {
         if (hasCustomizations) {
             setIsVariantDrawerOpen(true);
         } else {
-            dispatch(addItem({ 
-                item, 
+            dispatch(addItem({
+                item,
                 restaurantId: restaurant?._id || restaurant?.id,
                 selectedCustomizations: {}
             }));
@@ -47,7 +49,7 @@ const ItemCardV1 = ({ item }) => {
 
     return (
         <>
-            <article 
+            <article
                 onClick={() => hasCustomizations && setIsVariantDrawerOpen(true)}
                 className={`group flex w-full flex-col gap-3 rounded-[20px] p-2 transition-all duration-300 hover:bg-gray-50/50 ${hasCustomizations ? "cursor-pointer" : ""}`}
             >
@@ -72,27 +74,40 @@ const ItemCardV1 = ({ item }) => {
 
                     <div className="mt-3 flex flex-1 items-end justify-between gap-2 font-heading tracking-tight">
                         <div className="flex flex-col mb-1">
-                            <span className="text-[18px] font-bold text-foreground">
-                                ₹{price}
-                            </span>
+                            {hasDiscount ? (
+                                <>
+                                    <span className="text-[18px] font-bold text-foreground">
+                                        ₹{discountedPrice}
+                                    </span>
+                                    <div className="flex items-center gap-1.5 mt-0.5">
+                                        <span className="text-[13px] font-semibold text-gray-400 line-through">
+                                            ₹{basePrice}
+                                        </span>
+                                    </div>
+                                </>
+                            ) : (
+                                <span className="text-[18px] font-bold text-foreground">
+                                    ₹{basePrice}
+                                </span>
+                            )}
                         </div>
 
                         <div className="flex flex-col items-center gap-1 relative z-10">
                             {!hasCustomizations && simpleQuantity > 0 ? (
-                                <div className="flex h-9 w-[90px] items-center justify-between rounded-lg bg-white border-[1.5px] border-orange-600 px-0.5 text-[15px] font-bold text-orange-600 shadow-sm transition-all duration-200">
-                                    <button onClick={(e) => handleUpdate(simpleQuantity - 1, e)} className="flex h-full w-8 items-center justify-center hover:bg-orange-50 active:scale-95 focus:outline-none rounded-l-md">-</button>
+                                <div className="flex h-9 w-[90px] items-center justify-between rounded-lg bg-white border-[1.5px] border-primary px-0.5 text-[15px] font-bold text-primary shadow-sm transition-all duration-200">
+                                    <button onClick={(e) => handleUpdate(simpleQuantity - 1, e)} className="flex h-full w-8 items-center justify-center hover:bg-primary/10 active:scale-95 focus:outline-none rounded-l-md">-</button>
                                     <span className="w-5 text-center">{simpleQuantity}</span>
-                                    <button onClick={(e) => handleUpdate(simpleQuantity + 1, e)} className="flex h-full w-8 items-center justify-center hover:bg-orange-50 active:scale-95 focus:outline-none rounded-r-md">+</button>
+                                    <button onClick={(e) => handleUpdate(simpleQuantity + 1, e)} className="flex h-full w-8 items-center justify-center hover:bg-primary/10 active:scale-95 focus:outline-none rounded-r-md">+</button>
                                 </div>
                             ) : (
                                 <button
                                     type="button"
                                     onClick={handleAdd}
-                                    className="relative flex h-9 w-[90px] items-center justify-center rounded-lg border-[1.5px] border-orange-600/60 bg-background text-[15px] font-bold tracking-wide text-orange-600 shadow-sm transition-all duration-200 hover:border-orange-600 hover:bg-orange-50 active:scale-[0.95] focus:outline-none"
+                                    className="relative flex h-9 w-[90px] items-center justify-center rounded-lg border-[1.5px] border-primary/60 bg-background text-[15px] font-bold tracking-wide text-primary shadow-sm transition-all duration-200 hover:border-primary hover:bg-primary/10 active:scale-[0.95] focus:outline-none"
                                 >
                                     ADD
                                     {hasCustomizations && totalItemQuantity > 0 && (
-                                        <div className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-orange-600 text-[10px] text-white shadow-sm">
+                                        <div className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] text-primary-foreground shadow-sm">
                                             {totalItemQuantity}
                                         </div>
                                     )}

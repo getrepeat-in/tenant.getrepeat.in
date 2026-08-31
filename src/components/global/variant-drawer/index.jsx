@@ -141,7 +141,7 @@ export default function VariantDrawer({ isOpen, setIsOpen, item }) {
                         <SheetTitle className="text-lg font-bold leading-tight tracking-tight text-gray-900 line-clamp-2">
                             {item.name}
                         </SheetTitle>
-                        <SheetDescription className="text-sm font-medium text-orange-600 mt-1">
+                        <SheetDescription className="text-sm font-medium text-primary mt-1">
                             ₹{currentPrice}
                         </SheetDescription>
                     </div>
@@ -159,19 +159,19 @@ export default function VariantDrawer({ isOpen, setIsOpen, item }) {
                                     <label
                                         key={option.name}
                                         onClick={() => setSelectedCustomizations(prev => ({ ...prev, [variant.property_name]: option.name }))}
-                                        className={`flex items-center justify-between cursor-pointer rounded-xl p-3.5 mb-2 border-2 transition-all duration-200 ${selectedCustomizations[variant.property_name] === option.name ? 'border-orange-500 bg-orange-50/50 shadow-sm' : 'border-gray-100 bg-white hover:border-gray-200'}`}
+                                        className={`flex items-center justify-between cursor-pointer rounded-xl p-3.5 mb-2 border-2 transition-all duration-200 ${selectedCustomizations[variant.property_name] === option.name ? 'border-primary bg-primary/5/50 shadow-sm' : 'border-gray-100 bg-white hover:border-gray-200'}`}
                                     >
                                         <div className="flex items-center gap-3.5">
-                                            <div className={`flex h-5 w-5 items-center justify-center rounded-full border-2 transition-colors ${selectedCustomizations[variant.property_name] === option.name ? 'border-orange-600' : 'border-gray-300'}`}>
+                                            <div className={`flex h-5 w-5 items-center justify-center rounded-full border-2 transition-colors ${selectedCustomizations[variant.property_name] === option.name ? 'border-primary' : 'border-gray-300'}`}>
                                                 {selectedCustomizations[variant.property_name] === option.name && (
-                                                    <div className="h-2.5 w-2.5 rounded-full bg-orange-600" />
+                                                    <div className="h-2.5 w-2.5 rounded-full bg-primary" />
                                                 )}
                                             </div>
                                             <span className={`text-[15px] tracking-tight ${selectedCustomizations[variant.property_name] === option.name ? 'text-gray-900 font-bold' : 'text-gray-600 font-medium'}`}>
                                                 {option.name}
                                             </span>
                                         </div>
-                                        <span className={`text-[15px] font-semibold tracking-tight ${selectedCustomizations[variant.property_name] === option.name ? 'text-orange-600' : 'text-gray-500'}`}>
+                                        <span className={`text-[15px] font-semibold tracking-tight ${selectedCustomizations[variant.property_name] === option.name ? 'text-primary' : 'text-gray-500'}`}>
                                             ₹{option.price}
                                         </span>
                                     </label>
@@ -195,17 +195,17 @@ export default function VariantDrawer({ isOpen, setIsOpen, item }) {
                                         <label
                                             key={addon._id}
                                             onClick={() => toggleAddon(group.name, optionName, group.selectionType)}
-                                            className={`flex items-center justify-between cursor-pointer rounded-xl p-3.5 mb-2 border-2 transition-all duration-200 ${isSelected ? 'border-orange-500 bg-orange-50/50 shadow-sm' : 'border-gray-100 bg-white hover:border-gray-200'}`}
+                                            className={`flex items-center justify-between cursor-pointer rounded-xl p-3.5 mb-2 border-2 transition-all duration-200 ${isSelected ? 'border-primary bg-primary/5/50 shadow-sm' : 'border-gray-100 bg-white hover:border-gray-200'}`}
                                         >
                                             <div className="flex items-center gap-3.5">
                                                 {group.selectionType === "single" ? (
-                                                    <div className={`flex h-5 w-5 items-center justify-center rounded-full border-2 transition-colors ${isSelected ? 'border-orange-600' : 'border-gray-300'}`}>
+                                                    <div className={`flex h-5 w-5 items-center justify-center rounded-full border-2 transition-colors ${isSelected ? 'border-primary' : 'border-gray-300'}`}>
                                                         {isSelected && (
-                                                            <div className="h-2.5 w-2.5 rounded-full bg-orange-600" />
+                                                            <div className="h-2.5 w-2.5 rounded-full bg-primary" />
                                                         )}
                                                     </div>
                                                 ) : (
-                                                    <div className={`flex h-5 w-5 items-center justify-center rounded-[6px] border-2 transition-colors ${isSelected ? 'border-orange-600 bg-orange-600' : 'border-gray-300 bg-white'}`}>
+                                                    <div className={`flex h-5 w-5 items-center justify-center rounded-[6px] border-2 transition-colors ${isSelected ? 'border-primary bg-primary' : 'border-gray-300 bg-white'}`}>
                                                         {isSelected && (
                                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5 text-white">
                                                                 <polyline points="20 6 9 17 4 12" />
@@ -217,7 +217,7 @@ export default function VariantDrawer({ isOpen, setIsOpen, item }) {
                                                     {optionName}
                                                 </span>
                                             </div>
-                                            <span className={`text-[15px] font-semibold tracking-tight ${isSelected ? 'text-orange-600' : 'text-gray-500'}`}>
+                                            <span className={`text-[15px] font-semibold tracking-tight ${isSelected ? 'text-primary' : 'text-gray-500'}`}>
                                                 +₹{optionPrice}
                                             </span>
                                         </label>

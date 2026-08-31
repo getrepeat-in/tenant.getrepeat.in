@@ -16,7 +16,7 @@ export function SearchHeader({ searchVal, setSearchVal, isVeg, handleFilterToggl
                     <ArrowLeft size={18} />
                 </button>
 
-                <form onSubmit={handleSearchSubmit} className="flex h-11 min-w-0 flex-1 items-center rounded-xl bg-neutral-50/60 px-3.5 border border-gray-150/40 focus-within:bg-white focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500/10 transition-all duration-200">
+                <form onSubmit={handleSearchSubmit} className="flex h-11 min-w-0 flex-1 items-center rounded-xl bg-neutral-50/60 px-3.5 border border-gray-150/40 focus-within:bg-white focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 transition-all duration-200">
                     <Search size={18} className="mr-3 shrink-0 text-neutral-500" />
                     <input
                         type="search"
@@ -32,12 +32,10 @@ export function SearchHeader({ searchVal, setSearchVal, isVeg, handleFilterToggl
                     onClick={handleFilterToggle}
                     className="flex h-11 shrink-0 items-center justify-between gap-3.5 rounded-xl border border-gray-150/40 bg-neutral-50/60 pl-4 pr-3 transition-all active:scale-95 cursor-pointer"
                 >
-                    <div className={`relative w-8.5 h-5 rounded-full transition-colors duration-250 ease-in-out ${
-                        isVeg ? "bg-emerald-500" : "bg-neutral-200"
-                    }`}>
-                        <div className={`absolute top-0.5 left-0.5 size-4 rounded-full bg-white shadow-xs transition-transform duration-250 ease-in-out ${
-                            isVeg ? "translate-x-3.5" : "translate-x-0"
-                        }`} />
+                    <div className={`relative w-8.5 h-5 rounded-full transition-colors duration-250 ease-in-out ${isVeg ? "bg-emerald-500" : "bg-neutral-200"
+                        }`}>
+                        <div className={`absolute top-0.5 left-0.5 size-4 rounded-full bg-white shadow-xs transition-transform duration-250 ease-in-out ${isVeg ? "translate-x-3.5" : "translate-x-0"
+                            }`} />
                     </div>
                 </button>
             </div>

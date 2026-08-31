@@ -52,7 +52,7 @@ export function ItemImage({ src, alt, className }) {
                             className="w-full h-full object-cover opacity-15 filter grayscale transition-all duration-300"
                         />
                     ) : (
-                        <div className="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center text-orange-500 font-black text-xl uppercase opacity-50">
+                        <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary font-black text-xl uppercase opacity-50">
                             {(alt || restaurant?.name || "R")[0]}
                         </div>
                     )}

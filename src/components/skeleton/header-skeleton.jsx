@@ -36,7 +36,7 @@ export function HeaderSkeleton({ showMenu = true, showSearch = true, showFilter 
                 ))}
                 <div className="flex items-center gap-2">
                     <div className="h-11 w-24 bg-gray-200 rounded-xl dark:bg-zinc-800"></div>
-                    <div className="h-11 w-28 bg-orange-200 rounded-xl dark:bg-orange-900/50"></div>
+                    <div className="h-11 w-28 bg-primary/10 rounded-xl dark:bg-primary/50"></div>
                 </div>
             </div>
         </div>

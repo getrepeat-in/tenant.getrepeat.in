@@ -14,7 +14,7 @@ export function AvatarSection({ name, avatar, isUploading, handleImageUpload, re
                             className="h-full w-full object-cover"
                         />
                     ) : (
-                        <div className="flex h-full w-full items-center justify-center bg-orange-50 text-3xl font-bold text-orange-500">
+                        <div className="flex h-full w-full items-center justify-center bg-primary/10 text-3xl font-bold text-primary">
                             {name?.charAt(0).toUpperCase() || "U"}
                         </div>
                     )}
@@ -22,7 +22,7 @@ export function AvatarSection({ name, avatar, isUploading, handleImageUpload, re
 
                 <label className="absolute -bottom-1 -right-1 flex size-8 cursor-pointer items-center justify-center rounded-full border border-gray-200 bg-white shadow-md hover:bg-gray-50 active:scale-95 transition-all">
                     {isUploading ? (
-                        <Loader2 className="size-4 animate-spin text-orange-500" />
+                        <Loader2 className="size-4 animate-spin text-primary" />
                     ) : (
                         <Camera className="size-4 text-gray-500" />
                     )}

@@ -25,11 +25,11 @@ export function SidebarNav({ activePath = "/" }) {
                                 className={cn(
                                     "relative flex h-auto items-center gap-3 rounded-[5px] px-3 py-2.5 text-[14px] font-medium transition-all duration-200 ease-in-out group",
                                     isActive
-                                        ? "bg-orange-500! text-white! shadow-md! shadow-orange-500/20! font-bold! border-0!"
+                                        ? "bg-primary! text-primary-foreground shadow-md! shadow-primary/20! font-bold! border-0!"
                                         : "text-gray-600 hover:bg-white dark:text-gray-400 dark:hover:bg-zinc-800/80 hover:text-gray-950 dark:hover:text-white border border-transparent shadow-none hover:shadow-sm hover:shadow-black/[0.03]"
                                 )}
                             >
-                                <Icon className={cn("size-[18px] transition-transform duration-200 group-hover:scale-105", isActive ? "text-white!" : "text-gray-400 dark:text-gray-500 group-hover:text-gray-700 dark:group-hover:text-gray-300")} strokeWidth={isActive ? 2.5 : 2} />
+                                <Icon className={cn("size-[18px] transition-transform duration-200 group-hover:scale-105")} strokeWidth={isActive ? 2.5 : 2} />
                                 <span>{item.label}</span>
                             </SidebarMenuButton>
                         </SidebarMenuItem>

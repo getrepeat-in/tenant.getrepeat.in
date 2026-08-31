@@ -2,19 +2,19 @@ import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge"
 
 export function cn(...inputs) {
-    return twMerge(clsx(inputs));
+  return twMerge(clsx(inputs));
 }
 
 export function getTenantSlug() {
-    let slug = "khadak-singh-da-dhaba";
-    if (typeof window !== "undefined") {
-        const hostname = window.location.hostname;
-        const parts = hostname.split(".");
-        if (parts.length > 0 && parts[0] !== "localhost" && parts[0] !== "www" && parts[0] !== "127") {
-            slug = parts[0];
-        }
+  let slug = "vintage-villa-restro-cafe";
+  if (typeof window !== "undefined") {
+    const hostname = window.location.hostname;
+    const parts = hostname.split(".");
+    if (parts.length > 0 && parts[0] !== "localhost" && parts[0] !== "www" && parts[0] !== "127") {
+      slug = parts[0];
     }
-    return slug;
+  }
+  return slug;
 }
 
 export function getImageUrl(imageInput, useAvif = true, variant = "original") {
@@ -54,7 +54,7 @@ export function getImageUrl(imageInput, useAvif = true, variant = "original") {
         } else {
           selected = list.find((v) => v.format === "webp") || list.find((v) => v.format === "jpg") || list.find((v) => v.format === "png");
         }
-        
+
         selected = selected || list[0];
         if (selected?.key) {
           return `${baseUrl}/${selected.key}`;

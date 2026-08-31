@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 
 const badgeColors = {
     red: "bg-red-50 text-red-600 dark:bg-red-500/10 dark:text-red-400",
-    orange: "bg-orange-50 text-orange-600 dark:bg-orange-500/10 dark:text-orange-400",
+    orange: "bg-primary/10 text-primary dark:bg-primary/10 dark:text-primary",
     blue: "bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400",
     green: "bg-green-50 text-green-600 dark:bg-green-500/10 dark:text-green-400",
     neutral: "bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400",
@@ -11,7 +11,7 @@ const badgeColors = {
 
 const badgeDotColors = {
     red: "bg-red-500",
-    orange: "bg-orange-500",
+    orange: "bg-primary",
     blue: "bg-blue-500",
     green: "bg-green-500",
     neutral: "bg-neutral-500",
@@ -42,7 +42,7 @@ export function EmptyState({
                 )}
 
                 {Icon && !image && (
-                    <div className="mb-8 flex h-24 w-24 items-center justify-center rounded-[2rem] bg-orange-50 text-orange-500 dark:bg-orange-500/10 dark:text-orange-400">
+                    <div className="mb-8 flex h-24 w-24 items-center justify-center rounded-[2rem] bg-primary/10 text-primary dark:bg-primary/10 dark:text-primary">
                         <Icon size={42} strokeWidth={1.5} />
                     </div>
                 )}

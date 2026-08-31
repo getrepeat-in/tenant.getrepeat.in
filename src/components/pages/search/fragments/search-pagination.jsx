@@ -28,7 +28,7 @@ export function SearchPagination({ page, totalPages, handlePageChange }) {
                                 onClick={() => handlePageChange(pageNum)}
                                 className={`h-9 w-9 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                                     page === pageNum
-                                        ? "bg-orange-500 text-white shadow-sm shadow-orange-500/10"
+                                        ? "bg-primary text-primary-foreground shadow-sm shadow-primary/10"
                                         : "border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 active:scale-95"
                                 }`}
                             >

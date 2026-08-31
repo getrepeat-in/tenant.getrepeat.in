@@ -5,11 +5,11 @@ import { User, Phone, Lock, Eye, EyeOff, Key } from "lucide-react";
 export function ProfileForm({ formik, showPassword, setShowPassword, isResettingPassword, setIsResettingPassword, userStatus }) {
     return (
         <div className="space-y-6">
-            <div className="relative flex items-center border border-gray-200 rounded-xl px-4 py-3 bg-white focus-within:border-orange-500 transition-all">
+            <div className="relative flex items-center border border-gray-200 rounded-xl px-4 py-3 bg-white focus-within:border-primary transition-all">
                 <span className="absolute -top-2.5 left-4 px-1.5 bg-white text-[10px] font-bold text-gray-500 uppercase tracking-wider">
                     Full Name
                 </span>
-                <User className="text-orange-500 w-5 h-5 shrink-0 mr-3" />
+                <User className="text-primary w-5 h-5 shrink-0 mr-3" />
                 <input
                     type="text"
                     name="name"
@@ -24,11 +24,11 @@ export function ProfileForm({ formik, showPassword, setShowPassword, isResetting
                 )}
             </div>
 
-            <div className="relative flex items-center border border-gray-200 rounded-xl px-4 py-3 bg-white focus-within:border-orange-500 transition-all">
+            <div className="relative flex items-center border border-gray-200 rounded-xl px-4 py-3 bg-white focus-within:border-primary transition-all">
                 <span className="absolute -top-2.5 left-4 px-1.5 bg-white text-[10px] font-bold text-gray-500 uppercase tracking-wider">
                     Phone Number
                 </span>
-                <Phone className="text-orange-500 w-5 h-5 shrink-0 mr-3" />
+                <Phone className="text-primary w-5 h-5 shrink-0 mr-3" />
                 <input
                     type="text"
                     name="phone"
@@ -50,11 +50,11 @@ export function ProfileForm({ formik, showPassword, setShowPassword, isResetting
             </div>
 
             {isResettingPassword ? (
-                <div className="relative flex items-center border border-gray-200 rounded-xl px-4 py-3 bg-white focus-within:border-orange-500 transition-all">
+                <div className="relative flex items-center border border-gray-200 rounded-xl px-4 py-3 bg-white focus-within:border-primary transition-all">
                     <span className="absolute -top-2.5 left-4 px-1.5 bg-white text-[10px] font-bold text-gray-500 uppercase tracking-wider">
                         New Password
                     </span>
-                    <Lock className="text-orange-500 w-5 h-5 shrink-0 mr-3" />
+                    <Lock className="text-primary w-5 h-5 shrink-0 mr-3" />
                     <input
                         type={showPassword ? "text" : "password"}
                         name="password"
@@ -81,7 +81,7 @@ export function ProfileForm({ formik, showPassword, setShowPassword, isResetting
                     <span className="absolute -top-2.5 left-4 px-1.5 bg-white text-[10px] font-bold text-gray-500 uppercase tracking-wider">
                         PASSWORD
                     </span>
-                    <Lock className="text-orange-500 w-5 h-5 shrink-0 mr-3" />
+                    <Lock className="text-primary w-5 h-5 shrink-0 mr-3" />
                     <input
                         type="password"
                         value="••••••••"

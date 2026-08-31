@@ -15,7 +15,7 @@ export function SearchEmptyState() {
             <button
                 type="button"
                 onClick={() => router.push("/")}
-                className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase tracking-wider shadow-md shadow-orange-600/15 transition-all duration-200 active:scale-95 cursor-pointer"
+                className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-xs uppercase tracking-wider shadow-md shadow-primary/15 transition-all duration-200 active:scale-95 cursor-pointer"
             >
                 <Home size={14} />
                 Go Back Home

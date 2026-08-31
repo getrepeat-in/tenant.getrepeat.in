@@ -9,6 +9,10 @@ function flattenTheme(theme) {
         "--primary-foreground": theme.colors.primaryForeground,
         "--secondary": theme.colors.secondary,
         "--secondary-foreground": theme.colors.secondaryForeground,
+        "--background": theme.colors.background,
+        "--foreground": theme.colors.foreground,
+        "--muted": theme.colors.muted,
+        "--muted-foreground": theme.colors.mutedForeground,
     };
 }
 

@@ -7,7 +7,7 @@ import CartBar from "./fragments/cart-bar";
 import { useRouter } from "next/navigation";
 import Footer from "@/components/global/footer"
 import { useQuery } from "@tanstack/react-query";
-import { MenuService } from "@/services/ui/menu";
+import { MenuService } from "@/services/frontend/menu";
 import { AppSidebar } from "../../global/sidebar"
 import { ResponsiveHeader } from "./fragments/header"
 import { useRestaurant } from "@/hooks/useRestaurant";
@@ -18,6 +18,7 @@ import { MenuLayout } from "./fragments/menu-layout/fragments"
 import { RestaurantOfflineState } from "./fragments/offline-state";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
 import { useWebsiteConfiguration } from "@/hooks/useWebsiteConfiguration";
+import { PromotionOffers } from "./fragments/promo-carousel/fragments/promotion-offers";
 
 const Home = () => {
     const { user } = useUser();
@@ -114,10 +115,12 @@ const Home = () => {
                         banners={configuration?.homepage?.banners}
                         isLoading={isConfigLoading}
                     />
+                    
+                    <PromotionOffers />
 
-                    <CategoryScrollbar />
-                    <MenuLayout.V2 />
-                    {/* <Footer /> */}
+                    {/* <CategoryScrollbar />
+                    <MenuLayout.V2 /> */}
+                    <Footer />
                     <CartBar />
                 </div>
             </SidebarInset>

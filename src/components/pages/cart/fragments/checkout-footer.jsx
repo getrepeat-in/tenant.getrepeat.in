@@ -12,7 +12,7 @@ export function CheckoutFooter({ grandTotal }) {
 
                 <button
                     type="button"
-                    className="flex h-12 w-[50%] flex-1 items-center justify-center gap-2 rounded-md bg-orange-600 text-[16px] font-bold tracking-wide text-white transition-all duration-200 hover:bg-orange-700 active:scale-[0.98] focus:outline-none"
+                    className="flex h-12 w-[50%] flex-1 items-center justify-center gap-2 rounded-md bg-primary text-[16px] font-bold tracking-wide text-primary-foreground transition-all duration-200 hover:bg-primary/90 active:scale-[0.98] focus:outline-none"
                 >
                     <span>Proceed to Pay</span>
                     <ArrowRight size={18} strokeWidth={2.5} />

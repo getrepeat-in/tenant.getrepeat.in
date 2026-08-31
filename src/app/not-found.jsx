@@ -25,7 +25,7 @@ export default function NotFound() {
 
                     <Link
                         href="/"
-                        className="group flex flex-1 items-center justify-center gap-2 rounded-[5px] bg-orange-500 p-3.5 text-[14px] font-semibold text-white shadow-md shadow-orange-500/10 transition-all hover:bg-orange-600 active:scale-[0.98]"
+                        className="group flex flex-1 items-center justify-center gap-2 rounded-[5px] bg-primary p-3.5 text-[14px] font-semibold text-primary-foreground shadow-md shadow-primary/10 transition-all hover:bg-primary/90 active:scale-[0.98]"
                     >
                         <Home className="size-4" />
                         Back to Home

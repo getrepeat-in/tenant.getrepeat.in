@@ -41,7 +41,7 @@ export function CartItem({ cartItem }) {
                             className="h-full w-full object-cover"
                         />
                     ) : (
-                        <div className="flex h-full w-full items-center justify-center bg-orange-50 font-bold text-orange-400 text-xl">
+                        <div className="flex h-full w-full items-center justify-center bg-primary/10 font-bold text-primary text-xl">
                             {item?.name?.charAt(0) || "I"}
                         </div>
                     )}
@@ -70,7 +70,7 @@ export function CartItem({ cartItem }) {
                             </span>
                         </div>
 
-                        <div className="flex h-8 w-[80px] items-center justify-between rounded-lg border-[1.5px] border-orange-600/30 bg-orange-50/50 px-1 text-[14px] font-bold text-orange-600">
+                        <div className="flex h-8 w-[80px] items-center justify-between rounded-lg border-[1.5px] border-primary/30 bg-primary/5/50 px-1 text-[14px] font-bold text-primary">
                             <button
                                 onClick={() => handleUpdate(quantity - 1)}
                                 className="flex h-full w-7 items-center justify-center hover:opacity-80 active:scale-95 focus:outline-none"

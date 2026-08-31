@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux"
 import { useUser } from "@/hooks/useUser"
 import { useRouter } from "next/navigation"
 import { clearUser } from "@/store/slices/userSlice"
-import { AuthService } from "@/services/frontend/auth.service"
+import { AuthService } from "@/services/frontend/auth"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { SidebarMenu, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar"
 import {
@@ -110,7 +110,7 @@ export function NavUser() {
                         <button
                             type="button"
                             onClick={() => router.push("/register")}
-                            className="flex h-9 flex-1 items-center justify-center gap-1.5 rounded-lg bg-orange-500 text-xs font-semibold text-white shadow-xs transition-all hover:bg-orange-600 active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500"
+                            className="flex h-9 flex-1 items-center justify-center gap-1.5 rounded-lg bg-primary text-xs font-semibold text-primary-foreground shadow-xs transition-all hover:bg-primary/90 active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                         >
                             <UserPlusIcon className="size-3.5" />
                             <span>Register</span>
@@ -135,7 +135,7 @@ export function NavUser() {
                 <DropdownMenuTrigger className="w-full" asChild>
                     <button
                         type="button"
-                        className="group flex w-full items-center justify-between gap-3 rounded-lg p-1.5 text-left transition-colors hover:bg-gray-100/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 dark:hover:bg-zinc-800/80"
+                        className="group flex w-full items-center justify-between gap-3 rounded-lg p-1.5 text-left transition-colors hover:bg-gray-100/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary dark:hover:bg-zinc-800/80"
                     >
                         <div className="flex min-w-0 flex-1 items-center gap-3">
                             <div className="relative shrink-0">

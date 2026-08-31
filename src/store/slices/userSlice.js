@@ -1,4 +1,4 @@
-import { AuthService } from "@/services/frontend/auth.service";
+import { AuthService } from "@/services/frontend/auth";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const fetchUser = createAsyncThunk("user/fetchUser", async (_, { rejectWithValue }) => {

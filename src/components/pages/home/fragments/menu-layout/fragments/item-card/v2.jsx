@@ -8,14 +8,16 @@ import VariantDrawer from "@/components/global/variant-drawer";
 import { addItem, updateQuantity } from "@/store/slices/cartSlice";
 
 const ItemCardV2 = ({ item }) => {
-    const price = item?.price || item?.base_price || item?.defaultPrice || 0;
+    const basePrice = item?.price || item?.base_price || item?.defaultPrice || 0;
+    const discountedPrice = item?.discounted_price;
+    const hasDiscount = discountedPrice !== undefined && discountedPrice < basePrice;
     const dispatch = useDispatch();
     const { restaurant } = useRestaurant();
 
     const hasCustomizations = (item?.variants?.length > 0) || (item?.addonGroups?.length > 0);
     const [isVariantDrawerOpen, setIsVariantDrawerOpen] = useState(false);
     const cartItems = useSelector(state => state.cart.items);
-    
+
     const totalItemQuantity = cartItems
         .filter(i => i.item._id === item._id)
         .reduce((sum, current) => sum + current.quantity, 0);
@@ -46,7 +48,7 @@ const ItemCardV2 = ({ item }) => {
 
     return (
         <>
-            <article 
+            <article
                 onClick={() => hasCustomizations && setIsVariantDrawerOpen(true)}
                 className={`flex w-full items-start justify-between gap-4 rounded-2xl bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.03)] transition-all duration-300 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] ${hasCustomizations ? "cursor-pointer" : ""}`}
             >
@@ -68,9 +70,28 @@ const ItemCardV2 = ({ item }) => {
                     </h3>
 
                     <div className="mt-1.5 flex items-center gap-2">
-                        <span className="font-heading text-[16px] font-bold tracking-tight text-gray-900">
-                            ₹{price}
-                        </span>
+                        {hasDiscount ? (
+                            <>
+                                <span className="font-heading text-[16px] font-bold tracking-tight text-gray-900">
+                                    ₹{discountedPrice}
+                                </span>
+                                <span className="text-[13px] font-semibold text-gray-400 line-through">
+                                    ₹{basePrice}
+                                </span>
+                                {item?.applied_promotion && (
+                                    <div className="flex items-center gap-1 rounded-[4px] border border-blue-500/20 bg-gradient-to-r from-blue-50 to-indigo-50 px-1.5 py-[2px] text-[10px] font-black uppercase tracking-wide text-blue-700 shadow-sm relative overflow-hidden group-hover:border-blue-500/40 transition-colors">
+                                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+                                        {['PERCENTAGE_DISCOUNT', 'PERCENTAGE'].includes(item.applied_promotion.type)
+                                            ? `${item.applied_promotion.discount_value}% OFF`
+                                            : `₹${item.applied_promotion.discount_value} OFF`}
+                                    </div>
+                                )}
+                            </>
+                        ) : (
+                            <span className="font-heading text-[16px] font-bold tracking-tight text-gray-900">
+                                ₹{basePrice}
+                            </span>
+                        )}
                     </div>
 
                     {item?.description && (
@@ -91,20 +112,20 @@ const ItemCardV2 = ({ item }) => {
 
                     <div className="absolute -bottom-3 left-1/2 flex flex-col items-center gap-1 -translate-x-1/2">
                         {!hasCustomizations && simpleQuantity > 0 ? (
-                            <div className="flex h-9 w-[90px] items-center justify-between rounded-lg bg-white text-[15px] font-bold text-orange-600 shadow-md border-[1.5px] border-orange-600 px-0.5 transition-all duration-200">
-                                <button onClick={(e) => { e.stopPropagation(); handleUpdate(simpleQuantity - 1); }} className="flex h-full w-7 items-center justify-center hover:bg-orange-50 active:scale-95 focus:outline-none rounded-l-md">-</button>
+                            <div className="flex h-9 w-[90px] items-center justify-between rounded-lg bg-white text-[15px] font-bold text-primary shadow-md border-[1.5px] border-primary px-0.5 transition-all duration-200">
+                                <button onClick={(e) => { e.stopPropagation(); handleUpdate(simpleQuantity - 1); }} className="flex h-full w-7 items-center justify-center hover:bg-primary/10 active:scale-95 focus:outline-none rounded-l-md">-</button>
                                 <span className="w-4 text-center">{simpleQuantity}</span>
-                                <button onClick={(e) => { e.stopPropagation(); handleUpdate(simpleQuantity + 1); }} className="flex h-full w-7 items-center justify-center hover:bg-orange-50 active:scale-95 focus:outline-none rounded-r-md">+</button>
+                                <button onClick={(e) => { e.stopPropagation(); handleUpdate(simpleQuantity + 1); }} className="flex h-full w-7 items-center justify-center hover:bg-primary/10 active:scale-95 focus:outline-none rounded-r-md">+</button>
                             </div>
                         ) : (
                             <button
                                 type="button"
                                 onClick={handleAdd}
-                                className="flex h-9 w-[90px] items-center justify-center rounded-lg bg-white text-[15px] font-bold tracking-wide text-orange-600 shadow-md transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none border border-orange-200 relative"
+                                className="flex h-9 w-[90px] items-center justify-center rounded-lg bg-white text-[15px] font-bold tracking-wide text-primary shadow-md transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none border border-primary/20 relative"
                             >
                                 {hasCustomizations ? "ADD" : "ADD"}
                                 {hasCustomizations && totalItemQuantity > 0 && (
-                                    <div className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-orange-600 text-[10px] text-white shadow-sm">
+                                    <div className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] text-primary-foreground shadow-sm">
                                         {totalItemQuantity}
                                     </div>
                                 )}

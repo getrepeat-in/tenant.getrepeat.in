@@ -1,4 +1,5 @@
 "use client";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { ArrowRight } from "lucide-react";
 import { getImageUrl } from "@/lib/utils";
@@ -7,7 +8,13 @@ import { useRouter } from "next/navigation";
 export default function CartBar() {
     const router = useRouter();
     const cartItems = useSelector((state) => state.cart.items);
-    if (!cartItems || cartItems.length === 0) return null;
+    const [isMounted, setIsMounted] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
+    if (!isMounted || !cartItems || cartItems.length === 0) return null;
     const totalItems = cartItems.reduce((acc, curr) => acc + curr.quantity, 0);
 
     return (
@@ -27,7 +34,7 @@ export default function CartBar() {
                                         className="h-full w-full object-cover"
                                     />
                                 ) : (
-                                    <div className="flex h-full w-full items-center justify-center bg-orange-100 text-sm font-bold text-orange-500">
+                                    <div className="flex h-full w-full items-center justify-center bg-primary/10 text-sm font-bold text-primary">
                                         {cartItem.item?.name?.charAt(0) || "I"}
                                     </div>
                                 )}
@@ -47,9 +54,9 @@ export default function CartBar() {
                     </div>
                 </div>
 
-                <div className="flex items-center gap-2 rounded-md bg-primary py-2.5 pl-4 pr-3 font-heading text-[13px] font-bold tracking-wider text-white shadow-md transition-colors hover:bg-primary/95">
+                <div className="flex items-center gap-2 rounded-md bg-primary py-2.5 pl-4 pr-3 font-heading text-[13px] font-bold tracking-wider text-primary-foreground shadow-md transition-colors hover:bg-primary/95">
                     Continue
-                    <div className="flex items-center justify-center text-white">
+                    <div className="flex items-center justify-center">
                         <ArrowRight size={16} strokeWidth={2.5} />
                     </div>
                 </div>

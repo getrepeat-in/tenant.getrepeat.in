@@ -10,7 +10,7 @@ export function SidebarBrand({ brand, href = "/" }) {
                 <SidebarMenuButton
                     size="lg"
                     render={<a href={href} />}
-                    className="group relative flex h-auto w-full items-center gap-3 rounded-md border border-gray-200/80 bg-white px-3.5 py-3 shadow-sm transition-all duration-200 hover:bg-gray-50/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/30"
+                    className="group relative flex h-auto w-full items-center gap-3 rounded-md border border-gray-200/80 bg-white px-3.5 py-3 shadow-sm transition-all duration-200 hover:bg-gray-50/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
                 >
                     {brand.logo ? (
                         <div className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-white ring-1 ring-black/5 transition-transform duration-200 group-hover:scale-105">
@@ -26,7 +26,7 @@ export function SidebarBrand({ brand, href = "/" }) {
                         </div>
                     ) : (
                         brand.name && (
-                            <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-orange-500/10 text-sm font-bold text-orange-600 ring-1 ring-black/5 transition-transform duration-200 group-hover:scale-105">
+                            <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-sm font-bold text-primary ring-1 ring-black/5 transition-transform duration-200 group-hover:scale-105">
                                 {brand.name.charAt(0).toUpperCase()}
                             </div>
                         )

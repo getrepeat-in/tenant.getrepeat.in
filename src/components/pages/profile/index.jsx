@@ -10,8 +10,8 @@ import useNotification from "@/hooks/useNotification";
 import { ProfileForm } from "./fragments/profile-form";
 import { AvatarSection } from "./fragments/avatar-section";
 import { profileSchema } from "./validators/profile.validator";
-import { AuthService } from "@/services/frontend/auth.service";
-import { UploadService } from "@/services/frontend/upload.service";
+import { AuthService } from "@/services/frontend/auth";
+import { UploadService } from "@/services/frontend/upload";
 
 export default function Profile() {
     const { user, loading: userLoading } = useUser();
@@ -94,7 +94,7 @@ export default function Profile() {
     if (userLoading || !user) {
         return (
             <div className="flex min-h-screen items-center justify-center bg-[#f0f5f9]">
-                <Loader2 className="size-8 animate-spin text-orange-500" />
+                <Loader2 className="size-8 animate-spin text-primary" />
             </div>
         );
     }
@@ -147,7 +147,7 @@ export default function Profile() {
                             type="button"
                             onClick={formik.handleSubmit}
                             disabled={isUpdating || isUploading}
-                            className="flex-1 h-12 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-xl text-sm shadow-md shadow-orange-600/10 transition-all flex items-center justify-center gap-2 active:scale-98"
+                            className="flex-1 h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-bold rounded-xl text-sm shadow-md shadow-primary/10 transition-all flex items-center justify-center gap-2 active:scale-98"
                         >
                             {isUpdating ? (
                                 <Loader2 className="w-4 h-4 animate-spin" />

@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import Footer from "@/components/global/footer";
 import { ArrowLeft, Search } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { MenuService } from "@/services/ui/menu";
+import { MenuService } from "@/services/frontend/menu";
 import { useRestaurant } from "@/hooks/useRestaurant";
 import { useRouter, useSearchParams } from "next/navigation";
 import CartBar from "@/components/pages/home/fragments/cart-bar";

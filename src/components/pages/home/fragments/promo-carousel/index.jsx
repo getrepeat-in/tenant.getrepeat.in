@@ -98,7 +98,7 @@ export const PromoCarousel = ({ banners, isLoading = false }) => {
                                         )}
                                         {offer.ctaText && (
                                             <div>
-                                                <span className="inline-flex items-center justify-center bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-6 py-2.5 rounded-full text-sm font-bold shadow-lg shadow-orange-500/30 transition-all transform hover:-translate-y-0.5 pointer-events-auto">
+                                                <span className="inline-flex items-center justify-center bg-gradient-to-r from-primary to-primary/80 hover:from-primary hover:to-primary/80 text-white px-6 py-2.5 rounded-full text-sm font-bold shadow-lg shadow-primary/30 transition-all transform hover:-translate-y-0.5 pointer-events-auto">
                                                     {offer.ctaText}
                                                 </span>
                                             </div>

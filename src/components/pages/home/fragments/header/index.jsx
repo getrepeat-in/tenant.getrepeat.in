@@ -12,7 +12,7 @@ import { useSidebar } from "@/components/ui/sidebar";
 import { clearUser } from "@/store/slices/userSlice";
 import useNotification from "@/hooks/useNotification";
 import { HeaderSkeleton } from "@/components/skeleton";
-import { AuthService } from "@/services/frontend/auth.service";
+import { AuthService } from "@/services/frontend/auth";
 import { Menu, LogIn, UserPlus, LogOut, Loader2, User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -24,7 +24,7 @@ export function MenuButton({ onClick }) {
             onClick={onClick}
             className="flex h-12 w-12 items-center justify-center rounded-[22px] bg-white text-neutral-900 shadow-sm ring-1 ring-black/[0.03] transition hover:bg-neutral-50 active:scale-95 sm:h-14 sm:w-14"
         >
-            <Menu size={24} strokeWidth={2.5} />
+            <Menu size={20} strokeWidth={2.5} />
         </button>
     );
 }
@@ -63,13 +63,13 @@ export function ResponsiveHeader({ brand, actions = [], showMenu = true, searchP
             setIsLoggingOut(false);
         }
     };
-
+ 
     const renderUserMenu = () => {
         if (loading) {
             return (
                 <div className="flex items-center gap-2 animate-pulse">
                     <div className="h-11 w-24 bg-gray-200 rounded-xl dark:bg-zinc-800"></div>
-                    <div className="h-11 w-28 bg-orange-200 rounded-xl dark:bg-orange-900/50"></div>
+                    <div className="h-11 w-28 bg-primary/10 rounded-xl dark:bg-primary/50"></div>
                 </div>
             );
         }
@@ -86,7 +86,7 @@ export function ResponsiveHeader({ brand, actions = [], showMenu = true, searchP
                     </button>
                     <button
                         onClick={() => router.push("/register")}
-                        className="h-11 px-4 bg-orange-500 hover:bg-orange-600 rounded-xl text-white text-xs font-bold shadow-sm transition-all cursor-pointer flex items-center gap-1.5 active:scale-95"
+                        className="h-11 px-4 bg-primary hover:bg-primary/90 rounded-xl text-primary-foreground text-xs font-bold shadow-sm transition-all cursor-pointer flex items-center gap-1.5 active:scale-95"
                     >
                         <UserPlus size={13} />
                         Register
@@ -105,10 +105,10 @@ export function ResponsiveHeader({ brand, actions = [], showMenu = true, searchP
         return (
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <button className="relative shrink-0 rounded-full border border-gray-200 dark:border-zinc-800 shadow-sm overflow-hidden focus:outline-none focus:ring-2 focus:ring-orange-500 cursor-pointer active:scale-95 transition-all">
+                    <button className="relative shrink-0 rounded-full border border-gray-200 dark:border-zinc-800 shadow-sm overflow-hidden focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer active:scale-95 transition-all">
                         <Avatar className="size-9 rounded-full">
                             <AvatarImage src={getImageUrl(user.avatar, true, "thumbnail")} className="object-cover" />
-                            <AvatarFallback className="font-semibold text-sm bg-orange-50 text-orange-600">
+                            <AvatarFallback className="font-semibold text-sm bg-primary/10 text-primary">
                                 {initials}
                             </AvatarFallback>
                         </Avatar>
@@ -118,7 +118,7 @@ export function ResponsiveHeader({ brand, actions = [], showMenu = true, searchP
                     <div className="flex items-center gap-3 p-2 border-b border-gray-100 dark:border-zinc-800">
                         <Avatar className="size-9">
                             <AvatarImage src={getImageUrl(user.avatar, true, "thumbnail")} className="object-cover" />
-                            <AvatarFallback className="font-semibold text-sm bg-orange-50 text-orange-600">
+                            <AvatarFallback className="font-semibold text-sm bg-primary/10 text-primary">
                                 {initials}
                             </AvatarFallback>
                         </Avatar>
@@ -173,7 +173,7 @@ export function ResponsiveHeader({ brand, actions = [], showMenu = true, searchP
                                 {showMenu && (
                                     <button
                                         onClick={toggleSidebar}
-                                        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white text-neutral-700 shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-gray-200/60 hover:bg-neutral-50 hover:text-orange-500 hover:border-orange-200 active:scale-95 transition-all md:hidden"
+                                        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white text-neutral-700 shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-gray-200/60 hover:bg-neutral-50 hover:text-primary hover:border-primary/20 active:scale-95 transition-all md:hidden"
                                     >
                                         <Menu size={22} strokeWidth={2.25} />
                                     </button>

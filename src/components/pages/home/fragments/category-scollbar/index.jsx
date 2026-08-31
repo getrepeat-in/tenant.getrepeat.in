@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { MenuService } from "@/services/ui/menu";
+import { MenuService } from "@/services/frontend/menu";
 import { useQuery } from "@tanstack/react-query";
 import { useRestaurant } from "@/hooks/useRestaurant";
 import { CategoryCard } from "./fragments/category-card";

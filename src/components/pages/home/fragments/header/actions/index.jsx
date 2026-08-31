@@ -16,7 +16,7 @@ export function HeaderActionButton({ action }) {
 
             {action.badge !== undefined && action.badge !== null && (
                 <span
-                    className="absolute -right-1 -top-1 flex min-h-5 min-w-5 items-center justify-center rounded-full bg-orange-600 px-1 text-[9px] font-bold leading-none text-white ring-2 ring-white"
+                    className="absolute -right-1 -top-1 flex min-h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[9px] font-bold leading-none text-primary-foreground ring-2 ring-white"
                 >
                     {action.badge}
                 </span>

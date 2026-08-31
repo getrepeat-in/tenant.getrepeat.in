@@ -2,11 +2,12 @@
 import { ItemCard } from "./item-card";
 import { useDispatch } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
-import { MenuService } from "@/services/ui/menu";
 import { useRestaurant } from "@/hooks/useRestaurant";
+import { MenuService } from "@/services/frontend/menu";
 import { setAddonGroups } from "@/store/slices/menuSlice";
+import { PromotionService } from "@/services/frontend/promotion";
 
-const CategorySectionV2 = ({ category, slug }) => {
+const CategorySectionV2 = ({ category, slug, promotions = [] }) => {
     const dispatch = useDispatch();
     const { data: itemsGrouped = {}, isPending, isError } = useQuery({
         queryKey: ["items", slug, category?._id || category?.id],
@@ -17,10 +18,17 @@ const CategorySectionV2 = ({ category, slug }) => {
                 dispatch(setAddonGroups(data.addonGroups));
             }
             const items = data.items || data;
-            if (Array.isArray(items)) {
-                return { [category?.name || "Items"]: items };
+            const processedItems = Array.isArray(items) ? PromotionService.applyPromotionsToItems(items, promotions) : items;
+
+            if (Array.isArray(processedItems)) {
+                return { [category?.name || "Items"]: processedItems };
             }
-            return items;
+
+            const processedGrouped = {};
+            for (const [key, value] of Object.entries(items)) {
+                processedGrouped[key] = Array.isArray(value) ? PromotionService.applyPromotionsToItems(value, promotions) : value;
+            }
+            return processedGrouped;
         },
         enabled: !!(category?._id || category?.id),
     });
@@ -63,6 +71,15 @@ const MenuLayoutV2 = () => {
         enabled: !!slug,
     });
 
+    const { data: promotions = [] } = useQuery({
+        queryKey: ["promotions", slug],
+        queryFn: async () => {
+            const response = await PromotionService.getAll(slug);
+            return response?.data || response || [];
+        },
+        enabled: !!slug,
+    });
+
     if (isError) {
         return <div className="py-10 text-center text-sm text-red-500">Failed to load menu.</div>;
     }
@@ -87,7 +104,7 @@ const MenuLayoutV2 = () => {
     return (
         <div className="w-full py-8">
             {categories.map((category) => (
-                <CategorySectionV2 key={category?._id || category?.id} slug={slug} category={category} />
+                <CategorySectionV2 key={category?._id || category?.id} slug={slug} category={category} promotions={promotions} />
             ))}
         </div>
     );
