@@ -156,12 +156,8 @@ export default function VariantDrawer({ isOpen, setIsOpen, item }) {
                 showCloseButton={false}
                 className="rounded-t-[28px] sm:rounded-t-[32px] p-0 bg-white dark:bg-zinc-950 max-h-[90vh] overflow-hidden flex flex-col max-w-lg mx-auto border-t border-neutral-100 dark:border-zinc-800 shadow-2xl"
             >
-                {/* Scrollable Body */}
                 <div className="flex-1 overflow-y-auto pb-4 no-scrollbar">
-                    {/* Top Handle */}
                     <div className="w-12 h-1.5 bg-neutral-200 dark:bg-zinc-800 rounded-full mx-auto my-2.5 shrink-0" />
-
-                    {/* Framed Image Container */}
                     <div className="px-4 sm:px-5">
                         <div className="relative aspect-[16/10] sm:aspect-[16/9] w-full bg-neutral-100 dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-xs border border-neutral-100 dark:border-zinc-800">
                             <ItemImage
@@ -170,7 +166,6 @@ export default function VariantDrawer({ isOpen, setIsOpen, item }) {
                                 variant="detail"
                                 className="h-full w-full object-cover"
                             />
-                            {/* Floating Glassmorphic Close Button */}
                             <button
                                 type="button"
                                 onClick={() => setIsOpen(false)}
@@ -182,12 +177,11 @@ export default function VariantDrawer({ isOpen, setIsOpen, item }) {
                         </div>
                     </div>
 
-                    {/* Item Details Header */}
                     <div className="px-5 pt-4 pb-2">
                         <div className="flex items-start justify-between gap-3">
-                            <div className="flex items-center gap-2 min-w-0 flex-1">
+                            <div className="flex items-start gap-2.5 min-w-0 flex-1">
                                 {dietaryType && (
-                                    <div className="shrink-0 flex items-center justify-center mt-0.5">
+                                    <div className="shrink-0 flex items-center justify-center mt-1.5">
                                         <DiaterySymbol
                                             type={dietaryType}
                                             size={16}
@@ -234,7 +228,7 @@ export default function VariantDrawer({ isOpen, setIsOpen, item }) {
                                             {variant.options?.map((option) => {
                                                 const isSelected =
                                                     selectedCustomizations[
-                                                        vKey
+                                                    vKey
                                                     ] === option.name;
 
                                                 return (
@@ -249,39 +243,35 @@ export default function VariantDrawer({ isOpen, setIsOpen, item }) {
                                                                 })
                                                             )
                                                         }
-                                                        className={`flex items-center justify-between cursor-pointer rounded-xl p-3.5 border transition-all duration-200 select-none ${
-                                                            isSelected
-                                                                ? "border-primary bg-primary/5 shadow-2xs dark:bg-primary/10"
-                                                                : "border-neutral-200/80 dark:border-zinc-800 bg-neutral-50/50 dark:bg-zinc-900/50 hover:bg-neutral-100/50 dark:hover:bg-zinc-850"
-                                                        }`}
+                                                        className={`flex items-center justify-between cursor-pointer rounded-xl p-3.5 border transition-all duration-200 select-none ${isSelected
+                                                            ? "border-primary bg-primary/5 shadow-2xs dark:bg-primary/10"
+                                                            : "border-neutral-200/80 dark:border-zinc-800 bg-neutral-50/50 dark:bg-zinc-900/50 hover:bg-neutral-100/50 dark:hover:bg-zinc-850"
+                                                            }`}
                                                     >
                                                         <div className="flex items-center gap-3">
                                                             <div
-                                                                className={`flex h-5 w-5 items-center justify-center rounded-full border-2 transition-all ${
-                                                                    isSelected
-                                                                        ? "border-primary bg-primary"
-                                                                        : "border-neutral-300 dark:border-zinc-600 bg-white dark:bg-zinc-900"
-                                                                }`}
+                                                                className={`flex h-5 w-5 items-center justify-center rounded-full border-2 transition-all ${isSelected
+                                                                    ? "border-primary bg-primary"
+                                                                    : "border-neutral-300 dark:border-zinc-600 bg-white dark:bg-zinc-900"
+                                                                    }`}
                                                             >
                                                                 {isSelected && (
                                                                     <div className="h-2 w-2 rounded-full bg-primary-foreground" />
                                                                 )}
                                                             </div>
                                                             <span
-                                                                className={`text-sm tracking-tight ${
-                                                                    isSelected
-                                                                        ? "text-neutral-900 dark:text-neutral-100 font-medium"
-                                                                        : "text-neutral-700 dark:text-neutral-300 font-normal"
-                                                                }`}
+                                                                className={`text-sm tracking-tight ${isSelected
+                                                                    ? "text-neutral-900 dark:text-neutral-100 font-medium"
+                                                                    : "text-neutral-700 dark:text-neutral-300 font-normal"
+                                                                    }`}
                                                             >
                                                                 {option.name}
                                                             </span>
                                                         </div>
                                                         <span
-                                                            className={`text-sm font-medium tracking-tight ${
-                                                                isSelected
-                                                                    ? "text-neutral-900 dark:text-neutral-100"
-                                                                    : "text-neutral-500 dark:text-neutral-400"
+                                                            className={`text-sm font-medium tracking-tight ${isSelected
+                                                                ? "text-neutral-900 dark:text-neutral-100"
+                                                                : "text-neutral-500 dark:text-neutral-400"
                                                                 }`}
                                                         >
                                                             ₹{option.price}
@@ -320,7 +310,7 @@ export default function VariantDrawer({ isOpen, setIsOpen, item }) {
                                                     : addon.item.base_price || 0;
                                             const isSelected = (
                                                 selectedCustomizations[
-                                                    group.name
+                                                group.name
                                                 ] || []
                                             ).includes(optionName);
 
@@ -334,21 +324,19 @@ export default function VariantDrawer({ isOpen, setIsOpen, item }) {
                                                             group.selectionType
                                                         )
                                                     }
-                                                    className={`flex items-center justify-between cursor-pointer rounded-xl p-3.5 border transition-all duration-200 select-none ${
-                                                        isSelected
-                                                            ? "border-primary bg-primary/5 shadow-2xs dark:bg-primary/10"
-                                                            : "border-neutral-200/80 dark:border-zinc-800 bg-neutral-50/50 dark:bg-zinc-900/50 hover:bg-neutral-100/50 dark:hover:bg-zinc-850"
-                                                    }`}
+                                                    className={`flex items-center justify-between cursor-pointer rounded-xl p-3.5 border transition-all duration-200 select-none ${isSelected
+                                                        ? "border-primary bg-primary/5 shadow-2xs dark:bg-primary/10"
+                                                        : "border-neutral-200/80 dark:border-zinc-800 bg-neutral-50/50 dark:bg-zinc-900/50 hover:bg-neutral-100/50 dark:hover:bg-zinc-850"
+                                                        }`}
                                                 >
                                                     <div className="flex items-center gap-3">
                                                         {group.selectionType ===
-                                                        "single" ? (
+                                                            "single" ? (
                                                             <div
-                                                                className={`flex h-5 w-5 items-center justify-center rounded-full border-2 transition-all ${
-                                                                    isSelected
-                                                                        ? "border-primary bg-primary"
-                                                                        : "border-neutral-300 dark:border-zinc-600 bg-white dark:bg-zinc-900"
-                                                                }`}
+                                                                className={`flex h-5 w-5 items-center justify-center rounded-full border-2 transition-all ${isSelected
+                                                                    ? "border-primary bg-primary"
+                                                                    : "border-neutral-300 dark:border-zinc-600 bg-white dark:bg-zinc-900"
+                                                                    }`}
                                                             >
                                                                 {isSelected && (
                                                                     <div className="h-2 w-2 rounded-full bg-primary-foreground" />
@@ -356,11 +344,10 @@ export default function VariantDrawer({ isOpen, setIsOpen, item }) {
                                                             </div>
                                                         ) : (
                                                             <div
-                                                                className={`flex h-5 w-5 items-center justify-center rounded-md border-2 transition-all ${
-                                                                    isSelected
-                                                                        ? "border-primary bg-primary text-primary-foreground"
-                                                                        : "border-neutral-300 dark:border-zinc-600 bg-white dark:bg-zinc-900"
-                                                                }`}
+                                                                className={`flex h-5 w-5 items-center justify-center rounded-md border-2 transition-all ${isSelected
+                                                                    ? "border-primary bg-primary text-primary-foreground"
+                                                                    : "border-neutral-300 dark:border-zinc-600 bg-white dark:bg-zinc-900"
+                                                                    }`}
                                                             >
                                                                 {isSelected && (
                                                                     <Check
@@ -372,21 +359,19 @@ export default function VariantDrawer({ isOpen, setIsOpen, item }) {
                                                             </div>
                                                         )}
                                                         <span
-                                                            className={`text-sm tracking-tight ${
-                                                                isSelected
-                                                                    ? "text-neutral-900 dark:text-neutral-100 font-medium"
-                                                                    : "text-neutral-700 dark:text-neutral-300 font-normal"
+                                                            className={`text-sm tracking-tight ${isSelected
+                                                                ? "text-neutral-900 dark:text-neutral-100 font-medium"
+                                                                : "text-neutral-700 dark:text-neutral-300 font-normal"
                                                                 }`}
                                                         >
                                                             {optionName}
                                                         </span>
                                                     </div>
                                                     <span
-                                                        className={`text-sm font-medium tracking-tight ${
-                                                            isSelected
-                                                                ? "text-neutral-900 dark:text-neutral-100"
-                                                                : "text-neutral-500 dark:text-neutral-400"
-                                                        }`}
+                                                        className={`text-sm font-medium tracking-tight ${isSelected
+                                                            ? "text-neutral-900 dark:text-neutral-100"
+                                                            : "text-neutral-500 dark:text-neutral-400"
+                                                            }`}
                                                     >
                                                         +₹{optionPrice}
                                                     </span>

@@ -23,5 +23,9 @@ export const API_ENDPOINTS = {
         GET_BY_ID: (slug, orderId) => `/api/${slug}/order/${orderId}`,
         LIST: (slug, page = 1, limit = 10) => `/api/${slug}/order?page=${page}&limit=${limit}`,
         CANCEL: (slug, orderId) => `/api/${slug}/order/${orderId}`,
+    },
+    USER: {
+        ADDRESSES: (slug) => `/api/${slug}/user/address`,
+        ADDRESS: (slug, addressId) => `/api/${slug}/user/address/${addressId}`,
     }
 };

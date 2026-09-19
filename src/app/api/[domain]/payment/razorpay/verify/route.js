@@ -1,6 +1,6 @@
 import crypto from "crypto";
-import { JsonResponse } from "@/lib/api/responseHandler";
 import merchantApi from "@/lib/api/merchantInstance";
+import { JsonResponse } from "@/lib/api/responseHandler";
 
 export const POST = async (req, { params }) => {
     try {
@@ -32,7 +32,6 @@ export const POST = async (req, { params }) => {
             );
         }
 
-        // Generate expected signature
         const hmac = crypto.createHmac("sha256", key_secret);
         hmac.update(`${razorpay_order_id}|${razorpay_payment_id}`);
         const generatedSignature = hmac.digest("hex");
@@ -46,11 +45,10 @@ export const POST = async (req, { params }) => {
             );
         }
 
-        // Optional: Notify or sync order to merchant API
         let merchantOrderResult = null;
         try {
             if (process.env.MERCHANT_APP_URL && orderData) {
-                const res = await merchantApi.post(`/api/${domain}/orders`, {
+                const payload = {
                     ...orderData,
                     payment: {
                         method: "RAZORPAY",
@@ -59,8 +57,14 @@ export const POST = async (req, { params }) => {
                         razorpay_payment_id,
                         razorpay_signature,
                     },
-                });
-                merchantOrderResult = res.data?.data || res.data;
+                };
+                try {
+                    const res = await merchantApi.post(`/api/${domain}/order`, payload);
+                    merchantOrderResult = res.data?.data || res.data;
+                } catch (firstErr) {
+                    const fallbackRes = await merchantApi.post(`/api/${domain}/order/create`, payload);
+                    merchantOrderResult = fallbackRes.data?.data || fallbackRes.data;
+                }
             }
         } catch (merchantErr) {
             console.warn(

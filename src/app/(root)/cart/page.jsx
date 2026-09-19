@@ -13,7 +13,7 @@ import { BillSummary } from "@/components/pages/cart/fragments/bill-summary";
 import { CheckoutFooter } from "@/components/pages/cart/fragments/checkout-footer";
 import { OrderTypeSelector } from "@/components/pages/cart/fragments/order-type-selector";
 import { TableNumberModal } from "@/components/pages/cart/fragments/table-number-modal";
-import { DeliveryAddressModal } from "@/components/pages/cart/fragments/delivery-address-modal";
+import { AddressManager } from "@/components/global/address";
 import { useRestaurant } from "@/hooks/useRestaurant";
 import { useUser } from "@/hooks/useUser";
 import useNotification from "@/hooks/useNotification";
@@ -37,8 +37,7 @@ export default function CartPage() {
     
     // Modal states
     const [isTableModalOpen, setIsTableModalOpen] = useState(false);
-    const [isDeliveryModalOpen, setIsDeliveryModalOpen] = useState(false);
-    const [deliveryAddress, setDeliveryAddress] = useState("");
+    const [selectedAddress, setSelectedAddress] = useState(null);
     
     // Calculate totals
     const subtotal = cartItems.reduce((acc, curr) => {
@@ -77,11 +76,12 @@ export default function CartPage() {
             }
             processCheckout(existingTable, "");
         } else if (orderType === "delivery") {
-            if (!deliveryAddress) {
-                setIsDeliveryModalOpen(true);
+            if (!selectedAddress) {
+                notify.error("Please select a delivery address", { duration: 3000 });
                 return;
             }
-            processCheckout("", deliveryAddress);
+            const addrStr = `${selectedAddress.street}, ${selectedAddress.city}, ${selectedAddress.state ? selectedAddress.state + " " : ""}${selectedAddress.zipCode}`;
+            processCheckout("", addrStr);
         } else {
             processCheckout("", "");
         }
@@ -352,6 +352,15 @@ export default function CartPage() {
                             setOrderType={setOrderType} 
                         />
 
+                        {orderType === "delivery" && (
+                            <div className="bg-white dark:bg-zinc-900 border border-gray-150/80 dark:border-zinc-800 rounded-xl p-4 sm:p-5 shadow-xs">
+                                <AddressManager 
+                                    onSelectAddress={setSelectedAddress} 
+                                    selectedAddressId={selectedAddress?._id}
+                                />
+                            </div>
+                        )}
+
                         {/* Items Card Section */}
                         <div className="flex flex-col gap-2.5">
                             <div className="flex items-center justify-between px-1">
@@ -419,16 +428,6 @@ export default function CartPage() {
                 onConfirm={(table) => {
                     setIsTableModalOpen(false);
                     processCheckout(table, "");
-                }} 
-            />
-
-            <DeliveryAddressModal 
-                open={isDeliveryModalOpen} 
-                onOpenChange={setIsDeliveryModalOpen} 
-                onConfirm={(address) => {
-                    setIsDeliveryModalOpen(false);
-                    setDeliveryAddress(address);
-                    processCheckout("", address);
                 }} 
             />
         </div>
