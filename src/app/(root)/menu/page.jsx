@@ -1,17 +1,13 @@
 import { Suspense } from "react";
-import MenuPage from "@/components/pages/menu";
+import Menu from "@/components/pages/menu";
+import { MenuSkeleton } from "@/components/skeleton";
 
-export default function Page() {
+const Page = () => {
     return (
-        <Suspense fallback={
-            <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-                <div className="flex flex-col items-center gap-3">
-                    <div className="w-8 h-8 rounded-full border-4 border-primary/20 border-t-primary animate-spin" />
-                    <span className="text-xs font-bold text-gray-400">Loading...</span>
-                </div>
-            </div>
-        }>
-            <MenuPage />
+        <Suspense fallback={<MenuSkeleton />}>
+            <Menu />
         </Suspense>
     );
-}
+};
+
+export default Page;

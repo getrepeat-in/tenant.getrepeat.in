@@ -3,56 +3,65 @@ import { cn, getImageUrl } from "@/lib/utils";
 import { useState, useEffect, useRef } from "react";
 import { useRestaurant } from "@/hooks/useRestaurant";
 
-export function ItemImage({ src, alt, className }) {
+export function ItemImage({
+    src,
+    alt = "Item Image",
+    className,
+    variant = "card",
+    loading = "lazy",
+}) {
     const { restaurant } = useRestaurant();
     const logoUrl = restaurant?.logo;
-    const formattedSrc = getImageUrl(src, true, "card");
-    const formattedLogoUrl = getImageUrl(logoUrl, true, "card");
 
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
+    const formattedSrc = getImageUrl(src, true, variant);
+    const formattedLogoUrl = getImageUrl(logoUrl, true, "thumbnail");
+
+    const [isLoading, setIsLoading] = useState(true);
+    const [hasError, setHasError] = useState(false);
     const imgRef = useRef(null);
 
     useEffect(() => {
-        setLoading(true);
-        setError(false);
+        setIsLoading(true);
+        setHasError(false);
+
         if (imgRef.current && imgRef.current.complete) {
             if (imgRef.current.naturalHeight === 0) {
-                setError(true);
-                setLoading(false);
+                setHasError(true);
+                setIsLoading(false);
             } else {
-                setLoading(false);
+                setIsLoading(false);
             }
         }
     }, [formattedSrc]);
 
     const handleLoad = () => {
-        setLoading(false);
+        setIsLoading(false);
+        setHasError(false);
     };
 
     const handleError = () => {
-        setLoading(false);
-        setError(true);
+        setIsLoading(false);
+        setHasError(true);
     };
 
-    const showPlaceholder = !formattedSrc || error;
+    const showPlaceholder = !formattedSrc || hasError;
 
     return (
-        <div className={cn("relative overflow-hidden bg-slate-50 w-full h-full flex items-center justify-center select-none", className)}>
-            {loading && !showPlaceholder && (
-                <div className="absolute inset-0 bg-neutral-200 animate-pulse" />
+        <div className={cn("relative overflow-hidden bg-slate-50 dark:bg-zinc-850 w-full h-full flex items-center justify-center select-none", className)}>
+            {isLoading && !showPlaceholder && (
+                <div className="absolute inset-0 bg-neutral-200 dark:bg-zinc-800 animate-pulse z-0" />
             )}
 
             {showPlaceholder ? (
-                <div className="flex flex-col items-center justify-center w-full h-full bg-neutral-50/50">
+                <div className="relative flex flex-col items-center justify-center w-full h-full bg-neutral-100/90 dark:bg-zinc-800/90 overflow-hidden">
                     {formattedLogoUrl ? (
                         <img
                             src={formattedLogoUrl}
                             alt={restaurant?.name || "Restaurant Logo"}
-                            className="w-full h-full object-cover opacity-15 filter grayscale transition-all duration-300"
+                            className="w-full h-full object-cover filter grayscale opacity-20 contrast-90 transition-all duration-300"
                         />
                     ) : (
-                        <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary font-black text-xl uppercase opacity-50">
+                        <div className="w-full h-full flex items-center justify-center bg-neutral-100 dark:bg-zinc-800 text-neutral-400 font-bold text-xs sm:text-sm uppercase">
                             {(alt || restaurant?.name || "R")[0]}
                         </div>
                     )}
@@ -64,13 +73,15 @@ export function ItemImage({ src, alt, className }) {
                     alt={alt}
                     onLoad={handleLoad}
                     onError={handleError}
-                    loading="lazy"
+                    loading={loading}
                     className={cn(
                         "h-full w-full object-cover transition-all duration-500 ease-in-out",
-                        loading ? "scale-105 blur-xs" : "scale-100 blur-none"
+                        isLoading ? "scale-105 blur-xs" : "scale-100 blur-none"
                     )}
                 />
             )}
         </div>
     );
 }
+
+export default ItemImage;

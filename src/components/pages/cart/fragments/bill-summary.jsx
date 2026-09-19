@@ -1,40 +1,103 @@
 "use client";
+import React from "react";
+import { ReceiptText, Info, Sparkles } from "lucide-react";
 
-export function BillSummary({ subtotal }) {
-    const gst = Math.round(subtotal * 0.05); 
-    const platformFee = 5;
-    const grandTotal = subtotal + gst + platformFee;
+export function BillSummary({
+    subtotal = 0,
+    discount = 0,
+    gstRate = 0.05,
+    platformFee = 5,
+}) {
+    const discountedSubtotal = Math.max(0, subtotal - discount);
+    const gst = Math.round(discountedSubtotal * gstRate);
+    const grandTotal = subtotal > 0 ? discountedSubtotal + gst + platformFee : 0;
+    const totalSavings = discount;
 
     return (
-        <div className="flex flex-col gap-4 rounded-xl bg-white p-5 border border-gray-200">
-            <h3 className="text-[16px] font-bold tracking-tight text-gray-900">
-                Bill Details
-            </h3>
-
-            <div className="flex flex-col gap-3 pb-4 border-b border-gray-100 border-dashed">
-                <div className="flex items-center justify-between text-[14px]">
-                    <span className="font-medium text-gray-600">Item Total</span>
-                    <span className="font-semibold text-gray-900">₹{subtotal}</span>
+        <div className="rounded-2xl bg-white dark:bg-zinc-900 p-4 sm:p-5 border border-gray-150/70 dark:border-zinc-800 shadow-xs">
+            {/* Header */}
+            <div className="flex items-center justify-between pb-3 border-b border-gray-100 dark:border-zinc-800">
+                <div className="flex items-center gap-2">
+                    <ReceiptText size={17} className="text-primary" />
+                    <h3 className="text-sm font-semibold tracking-tight text-neutral-800 dark:text-zinc-100">
+                        Bill Summary
+                    </h3>
                 </div>
-                
-                <div className="flex items-center justify-between text-[14px]">
-                    <div className="flex items-center gap-1.5">
-                        <span className="font-medium text-gray-600">Platform Fee</span>
-                        <div className="flex h-4 w-4 items-center justify-center rounded-full bg-gray-100 text-[10px] font-bold text-gray-500">i</div>
+
+                {totalSavings > 0 && (
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300">
+                        <Sparkles size={11} />
+                        Saved ₹{totalSavings}
+                    </span>
+                )}
+            </div>
+
+            {/* Line Items */}
+            <div className="flex flex-col gap-2.5 py-3.5 border-b border-dashed border-gray-200 dark:border-zinc-800 text-xs sm:text-sm">
+                {/* Item Total */}
+                <div className="flex items-center justify-between">
+                    <span className="text-neutral-500 dark:text-neutral-400">
+                        Item Subtotal
+                    </span>
+                    <span className="font-medium text-neutral-800 dark:text-zinc-100">
+                        ₹{subtotal}
+                    </span>
+                </div>
+
+                {/* Discount */}
+                {discount > 0 && (
+                    <div className="flex items-center justify-between text-emerald-600 dark:text-emerald-400 font-medium">
+                        <span>Coupon Discount</span>
+                        <span>-₹{discount}</span>
                     </div>
-                    <span className="font-semibold text-gray-900">₹{platformFee}</span>
+                )}
+
+                {/* Platform Fee */}
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1">
+                        <span className="text-neutral-500 dark:text-neutral-400">
+                            Platform Fee
+                        </span>
+                        <div
+                            title="Supports continuous improvements of the platform"
+                            className="flex size-3.5 items-center justify-center rounded-full bg-neutral-100 dark:bg-zinc-800 text-[9px] font-normal text-neutral-400 cursor-help"
+                        >
+                            <Info size={10} />
+                        </div>
+                    </div>
+                    <span className="font-medium text-neutral-800 dark:text-zinc-100">
+                        ₹{platformFee}
+                    </span>
                 </div>
 
-                <div className="flex items-center justify-between text-[14px]">
-                    <span className="font-medium text-gray-600">Taxes (GST)</span>
-                    <span className="font-semibold text-gray-900">₹{gst}</span>
+                {/* Taxes (GST) */}
+                <div className="flex items-center justify-between">
+                    <span className="text-neutral-500 dark:text-neutral-400">
+                        GST & Restaurant Taxes (5%)
+                    </span>
+                    <span className="font-medium text-neutral-800 dark:text-zinc-100">
+                        ₹{gst}
+                    </span>
                 </div>
             </div>
 
-            <div className="flex items-center justify-between pt-1">
-                <span className="text-[16px] font-bold text-gray-900">To Pay</span>
-                <span className="text-[18px] font-extrabold text-gray-900">₹{grandTotal}</span>
+            {/* Grand Total */}
+            <div className="flex items-center justify-between pt-3.5">
+                <div className="flex flex-col">
+                    <span className="text-xs sm:text-sm font-semibold text-neutral-800 dark:text-zinc-100 uppercase tracking-wide">
+                        To Pay
+                    </span>
+                    <span className="text-[11px] font-normal text-neutral-400 dark:text-neutral-500">
+                        Inclusive of all taxes & charges
+                    </span>
+                </div>
+
+                <span className="text-lg sm:text-xl font-bold text-neutral-900 dark:text-zinc-100 tracking-tight">
+                    ₹{grandTotal}
+                </span>
             </div>
         </div>
     );
 }
+
+export default BillSummary;

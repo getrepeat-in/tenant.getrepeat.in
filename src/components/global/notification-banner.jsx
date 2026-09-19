@@ -61,16 +61,16 @@ export default function NotificationBanner() {
                 transition={{ duration: 0.3, ease: "easeOut" }}
                 className={`fixed inset-x-0 top-0 z-[9999] border-b shadow-[0_8px_30px_rgb(0,0,0,0.08)] backdrop-blur-md bg-opacity-95 ${config.className}`}
             >
-                <div className="relative mx-auto flex min-h-[4rem] max-w-screen-xl items-center gap-4 px-4 py-3 sm:px-6">
-                    <Icon className={`h-6 w-6 shrink-0 ${config.iconClass}`} />
+                <div className="relative mx-auto flex min-h-[3.25rem] max-w-screen-xl items-center gap-3 sm:gap-4 px-4 py-2.5 sm:px-6">
+                    <Icon className={`h-5 w-5 sm:h-6 sm:w-6 shrink-0 ${config.iconClass}`} />
 
                     <div className="flex flex-1 flex-col justify-center min-w-0">
                         {notification.title && (
-                            <p className="font-semibold text-[15px] leading-snug">
+                            <p className="font-semibold text-xs sm:text-[15px] leading-snug truncate">
                                 {notification.title}
                             </p>
                         )}
-                        <p className="text-sm font-medium leading-relaxed">
+                        <p className="text-xs sm:text-sm font-medium leading-tight truncate">
                             {notification.message}
                         </p>
                     </div>

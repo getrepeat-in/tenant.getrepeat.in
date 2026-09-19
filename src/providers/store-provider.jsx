@@ -4,6 +4,7 @@ import { useRef, useEffect } from "react";
 import { Provider, useDispatch } from "react-redux";
 import { loadCart } from "@/store/slices/cartSlice";
 import { fetchUser } from "@/store/slices/userSlice";
+import { fetchRestaurant } from "@/store/slices/restaurantSlice";
 
 function StateHydrator({ children }) {
     const dispatch = useDispatch();
@@ -13,6 +14,7 @@ function StateHydrator({ children }) {
         if (hasHydrated.current) return;
         hasHydrated.current = true;
         dispatch(fetchUser());
+        dispatch(fetchRestaurant());
         try {
             const storedCart = localStorage.getItem("getrepeat-cart");
             if (storedCart) {

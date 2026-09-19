@@ -1,6 +1,7 @@
 import userReducer from "./slices/userSlice";
 import cartReducer from "./slices/cartSlice";
 import menuReducer from "./slices/menuSlice";
+import restaurantReducer from "./slices/restaurantSlice";
 import { configureStore } from "@reduxjs/toolkit";
 import notificationReducer from "./slices/notificationSlice";
 
@@ -26,6 +27,7 @@ export const makeStore = () => {
             notification: notificationReducer,
             cart: cartReducer,
             menu: menuReducer,
+            restaurant: restaurantReducer,
         },
         middleware: (getDefaultMiddleware) => 
             getDefaultMiddleware().concat(localStorageMiddleware),

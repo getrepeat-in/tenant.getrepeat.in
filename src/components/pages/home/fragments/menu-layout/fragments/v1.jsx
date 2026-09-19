@@ -82,7 +82,7 @@ const CategorySection = ({ category, slug, promotions = [] }) => {
                                 <AccordionContent className="px-5 pb-6 pt-6">
                                     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
                                         {Array.isArray(items) && items.map((item) => (
-                                            <ItemCard.V1 key={item?._id || item?.id} item={item} />
+                                            <ItemCard key={item?._id || item?.id} item={item} />
                                         ))}
                                     </div>
                                 </AccordionContent>

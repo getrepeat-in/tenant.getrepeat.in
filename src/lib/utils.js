@@ -6,7 +6,7 @@ export function cn(...inputs) {
 }
 
 export function getTenantSlug() {
-  let slug = "vintage-villa-restro-cafe";
+  let slug = "barbeque-nation";
   if (typeof window !== "undefined") {
     const hostname = window.location.hostname;
     const parts = hostname.split(".");
@@ -20,48 +20,62 @@ export function getTenantSlug() {
 export function getImageUrl(imageInput, useAvif = true, variant = "original") {
   if (!imageInput) return "";
 
-  if (typeof imageInput === "string" && (imageInput.startsWith("http://") || imageInput.startsWith("https://"))) {
-    return imageInput;
-  }
-
-  let key = "";
-  let variants = null;
-
-  if (typeof imageInput === "string") {
-    key = imageInput;
-  } else if (imageInput && typeof imageInput === "object") {
-    key = imageInput.original?.key || imageInput.key || "";
-    variants = imageInput.variants;
-  }
-
-  if (!key) return "";
-
   const bucket = process.env.NEXT_PUBLIC_AWS_S3_BUCKET;
   const region = process.env.NEXT_PUBLIC_AWS_REGION;
-  const baseUrl = `https://${bucket}.s3.${region}.amazonaws.com`;
+  const baseUrl = bucket && region ? `https://${bucket}.s3.${region}.amazonaws.com` : "";
 
-  if (variant && variant !== "original" && variants) {
-    let order = ["thumbnail", "card", "detail"];
-    if (variant === "card") order = ["card", "detail", "thumbnail"];
-    if (variant === "detail") order = ["detail", "card", "thumbnail"];
+  if (typeof imageInput === "string") {
+    if (imageInput.startsWith("http://") || imageInput.startsWith("https://")) {
+      return imageInput;
+    }
+    const cleanKey = imageInput.replace(/^\//, "");
+    return baseUrl ? `${baseUrl}/${cleanKey}` : `/${cleanKey}`;
+  }
 
-    for (const vName of order) {
-      const list = variants[vName];
-      if (Array.isArray(list) && list.length > 0) {
-        let selected = null;
-        if (useAvif) {
-          selected = list.find((v) => v.format === "avif") || list.find((v) => v.format === "webp");
-        } else {
-          selected = list.find((v) => v.format === "webp") || list.find((v) => v.format === "jpg") || list.find((v) => v.format === "png");
-        }
+  if (typeof imageInput === "object") {
+    let key =
+      imageInput[variant] ||
+      imageInput.card ||
+      imageInput.thumbnail ||
+      imageInput.original ||
+      imageInput.key ||
+      imageInput.original?.key ||
+      "";
 
-        selected = selected || list[0];
-        if (selected?.key) {
-          return `${baseUrl}/${selected.key}`;
+    if (typeof key === "string" && (key.startsWith("http://") || key.startsWith("https://"))) {
+      return key;
+    }
+
+    if (imageInput.variants && typeof imageInput.variants === "object") {
+      let order = ["thumbnail", "card", "detail"];
+      if (variant === "card") order = ["card", "detail", "thumbnail"];
+      if (variant === "detail") order = ["detail", "card", "thumbnail"];
+
+      for (const vName of order) {
+        const list = imageInput.variants[vName];
+        if (Array.isArray(list) && list.length > 0) {
+          let selected = null;
+          if (useAvif) {
+            selected = list.find((v) => v.format === "avif") || list.find((v) => v.format === "webp");
+          } else {
+            selected = list.find((v) => v.format === "webp") || list.find((v) => v.format === "jpg") || list.find((v) => v.format === "png");
+          }
+
+          selected = selected || list[0];
+          if (selected?.key) {
+            key = selected.key;
+            break;
+          }
         }
       }
     }
+
+    if (!key || typeof key !== "string") return "";
+
+    const cleanKey = key.replace(/^\//, "");
+    return baseUrl ? `${baseUrl}/${cleanKey}` : `/${cleanKey}`;
   }
 
-  return `${baseUrl}/${key}`;
+  return "";
 }
+

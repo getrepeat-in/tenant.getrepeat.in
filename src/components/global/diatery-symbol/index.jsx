@@ -1,36 +1,52 @@
 const DiaterySymbol = ({
     type,
-    size = 16
+    size = 16,
+    className = ""
 }) => {
     if (!type) return null;
     const lowerType = type?.toLowerCase();
     const isVeg = lowerType === "veg" || lowerType === "vegetarian";
     const isEgg = lowerType === "egg" || lowerType === "eggetarian" || lowerType === "contains egg";
-    const containerStyle = { width: size, height: size };
-    const innerSize = Math.max(Math.floor(size * 0.5), 4);
-
+    
     if (isVeg) {
         return (
-            <div style={containerStyle} className="flex shrink-0 items-center justify-center rounded-[3px] border border-green-600">
-                <div style={{ width: innerSize, height: innerSize }} className="rounded-full bg-green-600"></div>
-            </div>
+            <span
+                style={{ width: size, height: size }}
+                className={`inline-flex shrink-0 items-center justify-center rounded-[3px] border-[1.5px] border-[#0f8a3c] bg-white p-[2px] ${className}`}
+                title="Vegetarian"
+            >
+                <span className="w-full h-full rounded-full bg-[#0f8a3c]" />
+            </span>
         );
     }
 
     if (isEgg) {
         return (
-            <div style={containerStyle} className="flex shrink-0 items-center justify-center rounded-[3px] border border-[#eab308]">
-                <div style={{ width: innerSize, height: innerSize }} className="rounded-full bg-[#eab308]"></div>
-            </div>
+            <span
+                style={{ width: size, height: size }}
+                className={`inline-flex shrink-0 items-center justify-center rounded-[3px] border-[1.5px] border-[#eab308] bg-white p-[2px] ${className}`}
+                title="Contains Egg"
+            >
+                <span className="w-full h-full rounded-full bg-[#eab308]" />
+            </span>
         );
     }
 
     return (
-        <div style={containerStyle} className="flex shrink-0 items-center justify-center rounded-[3px] border border-[#8c1818]">
-            <svg width={innerSize + 2} height={innerSize + 2} viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M5 1L9.33013 8.5H0.669873L5 1Z" fill="#8c1818" />
+        <span
+            style={{ width: size, height: size }}
+            className={`inline-flex shrink-0 items-center justify-center rounded-[3px] border-[1.5px] border-[#9c1818] bg-white p-[1.5px] ${className}`}
+            title="Non-Vegetarian"
+        >
+            <svg
+                viewBox="0 0 10 10"
+                className="w-full h-full"
+                fill="#9c1818"
+                xmlns="http://www.w3.org/2000/svg"
+            >
+                <polygon points="5,1 9.5,9 0.5,9" />
             </svg>
-        </div>
+        </span>
     );
 };
 

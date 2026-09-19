@@ -1,9 +1,16 @@
 import axios from "axios";
-import api from "@/lib/api/axiosInstance";
 import { getTenantSlug } from "@/lib/utils";
 import { API_ENDPOINTS } from "../../api-endpoints";
 
 export const MenuService = {
+    getMenu: async (slug = getTenantSlug()) => {
+        const response = await axios.get(API_ENDPOINTS.MENU.GET(slug));
+        const data = response.data;
+        if (!data.success) {
+            throw new Error(data.message || "Failed to load menu.");
+        }
+        return data;
+    },
     category: {
         getAll: async (slug = getTenantSlug()) => {
             const response = await axios.get(API_ENDPOINTS.MENU.CATEGORIES(slug));
@@ -24,20 +31,4 @@ export const MenuService = {
             return data;
         }
     },
-    search: async ({ query = "", isVeg = "", page = 1, limit = 10 }, slug = getTenantSlug()) => {
-        try {
-            const response = await api.get(API_ENDPOINTS.MENU.SEARCH(slug), {
-                params: {
-                    q: query,
-                    is_veg: isVeg,
-                    page,
-                    limit,
-                },
-            });
-            return response.data;
-        } catch (error) {
-            console.error("Search menu items error:", error);
-            throw new Error(error.response?.data?.message || "Failed to search menu items");
-        }
-    }
 };

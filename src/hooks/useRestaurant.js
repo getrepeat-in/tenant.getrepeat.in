@@ -1,30 +1,36 @@
-import api from "@/lib/api/axiosInstance";
+"use client";
+import { useSelector, useDispatch } from "react-redux";
 import { getTenantSlug } from "@/lib/utils";
-import { useQuery } from "@tanstack/react-query";
+import { fetchRestaurant } from "@/store/slices/restaurantSlice";
 
 export function useRestaurant() {
-    const slug = getTenantSlug();
-
-    const { data: restaurant, isLoading, isError, error } = useQuery({
-        queryKey: ["restaurant", slug],
-        queryFn: async () => {
-            const response = await api.get(`/api/${slug}`);
-            return response.data?.data || response.data || {};
-        },
-        enabled: !!slug,
-    });
+    const dispatch = useDispatch();
+    const fallbackSlug = getTenantSlug();
+    const storedSlug = useSelector((state) => state.restaurant?.slug);
+    const slug = storedSlug || fallbackSlug;
+    
+    const restaurant = useSelector((state) => state.restaurant?.restaurant);
+    const loading = useSelector((state) => state.restaurant?.loading);
+    const error = useSelector((state) => state.restaurant?.error);
+    const isError = Boolean(error);
 
     const name = restaurant?.name || slug
-        .split("-")
+        ?.split("-")
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(" ");
+
+    const refetch = () => {
+        return dispatch(fetchRestaurant(slug));
+    };
 
     return {
         slug,
         name,
         restaurant,
-        isLoading,
+        isLoading: loading,
+        loading,
         isError,
-        error
+        error,
+        refetch,
     };
 }

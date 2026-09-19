@@ -16,6 +16,12 @@ function flattenTheme(theme) {
     };
 }
 
+function generateCSS(vars) {
+    return `:root, :host, body { ${Object.entries(vars)
+        .map(([k, v]) => `${k}: ${v} !important;`)
+        .join(" ")} }`;
+}
+
 export default function ThemeProvider({
     themeName = "default",
     theme: customTheme,
@@ -26,9 +32,11 @@ export default function ThemeProvider({
     }, [themeName, customTheme]);
 
     const variables = useMemo(() => flattenTheme(theme), [theme]);
+    const cssString = useMemo(() => generateCSS(variables), [variables]);
 
     return (
         <ThemeContext.Provider value={theme}>
+            <style dangerouslySetInnerHTML={{ __html: cssString }} />
             <div style={variables} className="contents">
                 {children}
             </div>

@@ -1,9 +1,9 @@
 export const defaultTheme = {
   colors: {
-    primary: "#ffc800ff",
-    primaryForeground: "#000000ff",
-    secondary: "#ffe100ff",
-    secondaryForeground: "#854D0E",
+    primary: "#16a34a",
+    primaryForeground: "#ffffff",
+    secondary: "#ffffff",
+    secondaryForeground: "#18181b",
     background: "#FFFFFF",
     foreground: "#18181B",
     muted: "#F4F4F5",

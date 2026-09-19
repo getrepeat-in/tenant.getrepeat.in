@@ -1,4 +1,4 @@
-import { Home, ShoppingBag, User, Settings, Heart, Clock, HomeIcon, UtensilsIcon, ShoppingCartIcon, HeadsetIcon, UserIcon } from "lucide-react";
+import { Home, ShoppingBag, User, Settings, Heart, Clock, HomeIcon, UtensilsIcon, ShoppingCartIcon, HeadsetIcon, UserIcon, Camera } from "lucide-react";
 
 export const SidebarService = {
     getNavItems: () => [
@@ -60,10 +60,10 @@ export const SidebarService = {
             href: "/cart",
         },
         {
-            id: "support",
-            label: "Support",
-            icon: HeadsetIcon,
-            href: "/support",
+            id: "social",
+            label: "Social",
+            icon: Camera,
+            href: "/social",
         },
         {
             id: "profile",

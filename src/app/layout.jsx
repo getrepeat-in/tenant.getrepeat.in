@@ -14,15 +14,15 @@ export default function RootLayout({ children }) {
       lang="en"
       className={cn("h-full", "antialiased")}
     >
-      <body className={cn("min-h-full flex flex-col", fontPoppins.variable)}>
+      <body className={cn("min-h-full flex flex-col font-sans", fontPoppins.className, fontPoppins.variable)}>
         <QueryProvider>
           <ThemeProvider>
             <StoreProvider>
               <TooltipProvider>
-                <NavigationWrapper>
-                  {children}
-                </NavigationWrapper>
-                <NotificationBanner />
+                  <NavigationWrapper>
+                    {children}
+                  </NavigationWrapper>
+                  <NotificationBanner />
               </TooltipProvider>
             </StoreProvider>
           </ThemeProvider>

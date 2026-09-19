@@ -8,17 +8,17 @@ import { useRouter } from "next/navigation";
 import Footer from "@/components/global/footer"
 import { useQuery } from "@tanstack/react-query";
 import { MenuService } from "@/services/frontend/menu";
-import { AppSidebar } from "../../global/sidebar"
 import { ResponsiveHeader } from "./fragments/header"
 import { useRestaurant } from "@/hooks/useRestaurant";
 import PromoCarousel from "./fragments/promo-carousel";
 import { MenuEmptyState } from "./fragments/empty-state";
-import CategoryScrollbar from "./fragments/category-scollbar"
+import { QuickActions } from "./fragments/quick-actions";
 import { MenuLayout } from "./fragments/menu-layout/fragments"
 import { RestaurantOfflineState } from "./fragments/offline-state";
-import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
 import { useWebsiteConfiguration } from "@/hooks/useWebsiteConfiguration";
-import { PromotionOffers } from "./fragments/promo-carousel/fragments/promotion-offers";
+import { FreebieItems } from "./fragments/promo-carousel/fragments/freebie-items";
+import { SpecialDeals } from "./fragments/promo-carousel/fragments/special-deals";
+import { BestsellerDeals } from "./fragments/promo-carousel/fragments/bestseller-deals";
 
 const Home = () => {
     const { user } = useUser();
@@ -27,17 +27,18 @@ const Home = () => {
     const router = useRouter();
     const [searchValue, setSearchValue] = useState("");
 
-    const { data: categories = [], isPending: isCategoriesPending } = useQuery({
-        queryKey: ["categories", slug],
+    const { data: menuData, isPending: isMenuPending } = useQuery({
+        queryKey: ["menu", slug],
         queryFn: async () => {
-            const response = await MenuService.category.getAll(slug);
-            return response?.data || response || [];
+            const response = await MenuService.getMenu(slug);
+            return response?.data || response || {};
         },
         enabled: !!slug,
-        retry: false,
+        staleTime: 1000 * 60 * 5,
     });
 
-    const isEmptyMenu = !isCategoriesPending && categories.length === 0;
+    const categories = menuData?.category || menuData?.categories || (Array.isArray(menuData) ? menuData : []);
+    const isEmptyMenu = !isMenuPending && categories.length === 0;
     const isOffline = restaurant?.openingHours?.currentlyOpen === false;
 
     if (isOffline) {
@@ -76,55 +77,53 @@ const Home = () => {
     };
 
     return (
-        <SidebarProvider>
-            <div className="md:hidden">
-                <AppSidebar brand={brandInfo} />
-            </div>
-            <SidebarInset>
-                <div className="w-full mx-auto min-h-screen bg-slate-50 pb-20">
-                    <ResponsiveHeader
-                        isLoading={isRestaurantLoading}
-                        brand={brandInfo}
-                        actions={[
-                            {
-                                id: "notifications",
-                                icon: <Bell size={24} strokeWidth={2.5} />,
-                                badge: 3,
-                                ariaLabel: "Notifications",
-                                onClick: () => {
-                                    console.log("Notifications");
-                                },
-                            },
-                        ]}
-                        searchPlaceholder="Search your favorite meal..."
-                        searchValue={searchValue}
-                        onSearchChange={(value) => {
-                            setSearchValue(value);
-                        }}
-                        onSearchSubmit={(value) => {
-                            if (value?.trim()) {
-                                router.push(`/search?q=${encodeURIComponent(value)}`);
-                            }
-                        }}
-                        onFilterClick={() => {
-                            router.push(`/search?is_veg=true`);
-                        }}
-                    />
+        <div className="w-full mx-auto min-h-screen bg-slate-50 pb-20">
+            <ResponsiveHeader
+                isLoading={isRestaurantLoading}
+                brand={brandInfo}
+                actions={[
+                    {
+                        id: "notifications",
+                        icon: <Bell size={24} strokeWidth={2.5} />,
+                        badge: 3,
+                        ariaLabel: "Notifications",
+                        onClick: () => {
+                            console.log("Notifications");
+                        },
+                    },
+                ]}
+                searchPlaceholder="Search your favorite meal..."
+                searchValue={searchValue}
+                onSearchChange={(value) => {
+                    setSearchValue(value);
+                }}
+                onSearchSubmit={(value) => {
+                    if (value?.trim()) {
+                        router.push(`/menu?q=${encodeURIComponent(value)}`);
+                    } else {
+                        router.push("/menu");
+                    }
+                }}
+                onFilterClick={() => {
+                    router.push(`/menu?is_veg=true`);
+                }}
+            />
 
-                    <PromoCarousel
-                        banners={configuration?.homepage?.banners}
-                        isLoading={isConfigLoading}
-                    />
-                    
-                    <PromotionOffers />
+            <PromoCarousel
+                banners={configuration?.homepage?.banners}
+                isLoading={isConfigLoading}
+            />
 
-                    {/* <CategoryScrollbar />
-                    <MenuLayout.V2 /> */}
-                    <Footer />
-                    <CartBar />
-                </div>
-            </SidebarInset>
-        </SidebarProvider>
+            <FreebieItems />
+            <BestsellerDeals />
+            <SpecialDeals />
+
+            <QuickActions />
+
+            {/* <MenuLayout.V2 /> */}
+
+            <CartBar />
+        </div>
     )
 }
 

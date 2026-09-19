@@ -52,7 +52,7 @@ const CategorySectionV2 = ({ category, slug, promotions = [] }) => {
             ) : (
                 <div className="grid grid-cols-2 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
                     {allItems.map((item) => (
-                        <ItemCard.V1 key={item?._id || item?.id} item={item} />
+                        <ItemCard key={item?._id || item?.id} item={item} />
                     ))}
                 </div>
             )}
