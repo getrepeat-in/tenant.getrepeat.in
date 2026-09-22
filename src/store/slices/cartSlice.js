@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     items: [],
     restaurantId: null,
+    isLoaded: false,
 };
 
 export const cartSlice = createSlice({
@@ -12,6 +13,10 @@ export const cartSlice = createSlice({
         loadCart: (state, action) => {
             state.items = action.payload.items || [];
             state.restaurantId = action.payload.restaurantId || null;
+            state.isLoaded = true;
+        },
+        setCartLoaded: (state) => {
+            state.isLoaded = true;
         },
 
         addItem: (state, action) => {
@@ -61,6 +66,16 @@ export const cartSlice = createSlice({
             if (!state.items.length) state.restaurantId = null;
         },
 
+        updateInstructions: (state, action) => {
+            const { itemId, cartItemId, instructions } = action.payload;
+            const targetId = cartItemId || itemId;
+
+            const itemIndex = state.items.findIndex(i => (i.cartItemId || i.item._id) === targetId);
+            if (itemIndex !== -1) {
+                state.items[itemIndex].instructions = instructions;
+            }
+        },
+
         clearCart: (state) => {
             state.items = [];
             state.restaurantId = null;
@@ -68,5 +83,5 @@ export const cartSlice = createSlice({
     }
 });
 
-export const { loadCart, addItem, removeItem, updateQuantity, clearCart } = cartSlice.actions;
+export const { loadCart, setCartLoaded, addItem, removeItem, updateQuantity, updateInstructions, clearCart } = cartSlice.actions;
 export default cartSlice.reducer;

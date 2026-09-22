@@ -1,115 +1,31 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import { useFormik } from "formik";
-import { useUser } from "@/hooks/useUser";
-import { useDispatch } from "react-redux";
-import { useRouter } from "next/navigation";
-import { ArrowLeft, Loader2, LogOut, Check, ShoppingBag, ChevronRight } from "lucide-react";
-import { setUser, clearUser } from "@/store/slices/userSlice";
-import useNotification from "@/hooks/useNotification";
-import { ProfileForm } from "./fragments/profile-form";
-import { AvatarSection } from "./fragments/avatar-section";
-import { profileSchema } from "./validators/profile.validator";
-import { AuthService } from "@/services/frontend/auth";
-import { UploadService } from "@/services/frontend/upload";
-import { Button } from "@/components/ui/button";
-import { useRestaurant } from "@/hooks/useRestaurant";
 import { getImageUrl } from "@/lib/utils";
+import Button from "@/components/global/common/Button";
+import { ProfileForm } from "./fragments/profile-form";
+import { useProfilePage } from "./helpers/useProfilePage";
+import { AvatarSection } from "./fragments/avatar-section";
+import AddressManager from "@/components/global/common/address";
+import { ArrowLeft, Loader2, LogOut, ShoppingBag, ChevronRight } from "lucide-react";
 
 export default function Profile() {
-    const { user, loading: userLoading } = useUser();
-    const { restaurant, name: restaurantName } = useRestaurant();
-    const dispatch = useDispatch();
-    const router = useRouter();
-    const notify = useNotification();
-
-    const [showPassword, setShowPassword] = useState(false);
-    const [isUpdating, setIsUpdating] = useState(false);
-    const [isUploading, setIsUploading] = useState(false);
-    const [isResettingPassword, setIsResettingPassword] = useState(false);
-    const [isLoggingOut, setIsLoggingOut] = useState(false);
-
-    useEffect(() => {
-        if (!userLoading && !user) {
-            router.push("/login");
-        }
-    }, [user, userLoading, router]);
-
-    const formik = useFormik({
-        enableReinitialize: true,
-        initialValues: {
-            name: user?.name || "",
-            phone: user?.phone || "",
-            avatar: user?.avatar || "",
-            password: "",
-        },
-        validationSchema: profileSchema,
-        onSubmit: async (values) => {
-            try {
-                setIsUpdating(true);
-                const payload = {
-                    name: values.name,
-                    phone: values.phone,
-                    image: values.avatar,
-                };
-                if (isResettingPassword && values.password) {
-                    payload.password = values.password;
-                }
-
-                const response = await AuthService.updateProfile(payload);
-                const updatedUser = response.data || response;
-
-                dispatch(setUser(updatedUser));
-                formik.setFieldValue("password", "");
-                setIsResettingPassword(false);
-                notify.success("Profile updated successfully!", { duration: 3000 });
-            } catch (error) {
-                notify.error(error?.message || "Failed to update profile", { duration: 3500 });
-            } finally {
-                setIsUpdating(false);
-            }
-        },
-    });
-
-    const handleImageUpload = async (e) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
-
-        try {
-            setIsUploading(true);
-            const formData = new FormData();
-            formData.append("file", file);
-            formData.append("path", "user-profiles");
-
-            const response = await UploadService.uploadFile(formData);
-            const imageUrl = response.data?.url || response.url || response.data?.data?.url;
-            formik.setFieldValue("avatar", imageUrl);
-            notify.success("Photo uploaded! Click Save to apply.", { duration: 3000 });
-        } catch (error) {
-            notify.error(error?.message || "Failed to upload profile photo", { duration: 3500 });
-        } finally {
-            setIsUploading(false);
-        }
-    };
-
-    const handleRemoveImage = () => {
-        formik.setFieldValue("avatar", "");
-    };
-
-    const handleLogout = async () => {
-        try {
-            setIsLoggingOut(true);
-            await AuthService.logout();
-            dispatch(clearUser());
-            notify.success("Signed out successfully", { duration: 2500 });
-            router.push("/login");
-        } catch (err) {
-            console.error("Logout error:", err);
-            notify.error("Failed to sign out. Please try again.", { duration: 3000 });
-        } finally {
-            setIsLoggingOut(false);
-        }
-    };
+    const {
+        user,
+        userLoading,
+        restaurant,
+        restaurantName,
+        formik,
+        showPassword,
+        setShowPassword,
+        isUpdating,
+        isUploading,
+        isResettingPassword,
+        setIsResettingPassword,
+        isLoggingOut,
+        onImageUpload,
+        onRemoveImage,
+        onLogout,
+        router
+    } = useProfilePage();
 
     if (userLoading || !user) {
         return (
@@ -121,11 +37,9 @@ export default function Profile() {
 
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-zinc-950 pb-28 select-none">
-            {/* Sticky Header matching CartHeader */}
             <header className="sticky top-0 z-40 w-full border-b border-gray-150/40 dark:border-zinc-800 bg-white/90 dark:bg-zinc-950/90 backdrop-blur-md shadow-[0_2px_12px_rgba(0,0,0,0.03)]">
-                <div className="mx-auto max-w-screen-md px-4 py-3">
+                <div className="px-2 py-3">
                     <div className="flex items-center justify-between gap-3">
-                        {/* Back & Restaurant info */}
                         <div className="flex items-center gap-3 min-w-0">
                             <button
                                 type="button"
@@ -157,10 +71,9 @@ export default function Profile() {
                             </div>
                         </div>
 
-                        {/* Logout Button */}
                         <button
                             type="button"
-                            onClick={handleLogout}
+                            onClick={onLogout}
                             disabled={isLoggingOut}
                             className="flex h-8.5 items-center gap-1.5 px-2.5 rounded-lg text-xs font-medium text-rose-600 dark:text-rose-400 bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/30 dark:hover:bg-rose-950/50 transition-colors cursor-pointer shrink-0"
                             title="Sign out"
@@ -176,19 +89,16 @@ export default function Profile() {
                 </div>
             </header>
 
-            {/* Main Content */}
-            <main className="mx-auto max-w-md px-4 pt-4 sm:pt-6">
-                <div className="rounded-2xl border border-gray-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5 sm:p-6 shadow-xs animate-in fade-in slide-in-from-bottom-3 duration-300">
+            <main className="px-2 pt-4 sm:pt-6">
+                <div className="rounded-2xl border border-gray-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-3 sm:p-4 shadow-xs animate-in fade-in slide-in-from-bottom-3 duration-300">
                     <AvatarSection
                         name={user?.name}
                         phone={user?.phone}
                         avatar={formik.values.avatar}
                         isUploading={isUploading}
-                        handleImageUpload={handleImageUpload}
-                        removeImage={handleRemoveImage}
+                        handleImageUpload={onImageUpload}
+                        removeImage={onRemoveImage}
                     />
-
-                    {/* Quick Access to My Orders */}
                     <button
                         type="button"
                         onClick={() => router.push("/orders")}
@@ -220,6 +130,12 @@ export default function Profile() {
                             userStatus={user?.status || "ACTIVE"}
                         />
                     </form>
+
+                    <div className="my-5 border-t border-gray-100 dark:border-zinc-800" />
+
+                    <div className="mb-6">
+                        <AddressManager />
+                    </div>
 
                     <div className="my-5 border-t border-gray-100 dark:border-zinc-800" />
 

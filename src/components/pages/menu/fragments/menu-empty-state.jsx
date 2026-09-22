@@ -2,7 +2,7 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { Utensils, SearchX, Home, ArrowRight, Sparkles } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import Button from "@/components/global/common/Button";
 
 export function MenuEmptyState({
     title = "No Dishes Found",

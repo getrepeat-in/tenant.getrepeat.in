@@ -1,4 +1,4 @@
-import merchantApi from "@/lib/api/merchantInstance";
+import { proxyMerchantRequest } from "@/lib/api/proxy";
 import { JsonResponse } from "@/lib/api/responseHandler";
 
 export const GET = async (req, { params }) => {
@@ -6,27 +6,18 @@ export const GET = async (req, { params }) => {
     const { domain } = await params;
 
     if (!domain) {
-      return JsonResponse.error(
-        "Restaurant slug is required!",
-        400
-      );
+      return JsonResponse.error("Restaurant slug is required!", 400);
     }
 
-    const response = await merchantApi.get(
-      `/api/${domain}/menu`
-    );
-
-    const menuData = response.data?.data || response.data || {};
-    return JsonResponse.success(
-      menuData,
-      "Menu fetched successfully",
-      200
-    );
+    return await proxyMerchantRequest({
+      method: "GET",
+      url: `/api/${domain}/menu`,
+      req,
+      successMessage: "Menu fetched successfully",
+      errorMessage: "Failed to fetch menu from server",
+    });
   } catch (err) {
-    console.error("GET menu error:", err.response?.data || err.message);
-    return JsonResponse.error(
-      err.response?.data?.message || err.message || "Internal Server Error!",
-      err.response?.status || 500
-    );
+    console.error("GET menu error:", err);
+    return JsonResponse.error(err.message || "Internal Server Error!", 500);
   }
 };

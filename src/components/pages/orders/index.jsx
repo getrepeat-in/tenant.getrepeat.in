@@ -1,239 +1,29 @@
 "use client";
 import Link from "next/link";
-import { useDispatch } from "react-redux";
-import { useUser } from "@/hooks/useUser";
-import { useRouter } from "next/navigation";
 import { cn, getImageUrl } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { addItem } from "@/store/slices/cartSlice";
-import { useState, useMemo, useEffect } from "react";
-import { useRestaurant } from "@/hooks/useRestaurant";
-import useNotification from "@/hooks/useNotification";
-import { OrderService } from "@/services/frontend/order";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { ShoppingBag, ArrowLeft, Clock, ReceiptText, ChefHat, Utensils, CheckCircle2, XCircle, CheckCheck, BellRing, Search, RotateCcw, Copy, Check, ChevronDown, ChevronUp } from "lucide-react";
-
-const ORDER_STATUS_CONFIG = {
-    PLACED: { label: "Placed", icon: ReceiptText, badgeClass: "bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-300 border-blue-200 dark:border-blue-800/50", indicatorClass: "bg-blue-500", isActive: true },
-    ACCEPTED: { label: "Accepted", icon: CheckCheck, badgeClass: "bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-300 border-amber-200 dark:border-amber-800/50", indicatorClass: "bg-amber-500", isActive: true },
-    PREPARING: { label: "Preparing", icon: ChefHat, badgeClass: "bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-300 border-purple-200 dark:border-purple-800/50", indicatorClass: "bg-purple-500", isActive: true },
-    READY: { label: "Ready", icon: BellRing, badgeClass: "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800/50", indicatorClass: "bg-emerald-500", isActive: true },
-    COMPLETED: { label: "Completed", icon: CheckCircle2, badgeClass: "bg-zinc-100 dark:bg-zinc-800/80 text-zinc-700 dark:text-zinc-300 border-zinc-200 dark:border-zinc-700", indicatorClass: "bg-zinc-400", isActive: false },
-    CANCELLED: { label: "Cancelled", icon: XCircle, badgeClass: "bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-300 border-rose-200 dark:border-rose-800/50", indicatorClass: "bg-rose-500", isActive: false },
-    REJECTED: { label: "Rejected", icon: XCircle, badgeClass: "bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-300 border-rose-200 dark:border-rose-800/50", indicatorClass: "bg-rose-500", isActive: false },
-};
-
-const FULFILLMENT_STATUS_CONFIG = {
-    IN_TRANSIT: { label: "Out for Delivery", icon: Clock, badgeClass: "bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800/50", indicatorClass: "bg-indigo-500", isActive: true },
-    FULFILLED: { label: "Fulfilled", icon: CheckCircle2, badgeClass: "bg-zinc-100 dark:bg-zinc-800/80 text-zinc-700 dark:text-zinc-300 border-zinc-200 dark:border-zinc-700", indicatorClass: "bg-zinc-400", isActive: false },
-};
-
-function getDisplayStatus(order) {
-    const oStatus = (order.orderStatus || "PLACED").toUpperCase();
-    const fStatus = (order.fulfillmentStatus || "PENDING").toUpperCase();
-    const oType = (order.orderType || "").toLowerCase();
-
-    if (oStatus === "CANCELLED" || oStatus === "REJECTED") {
-        return ORDER_STATUS_CONFIG[oStatus];
-    }
-    
-    if (fStatus === "IN_TRANSIT") {
-        return FULFILLMENT_STATUS_CONFIG.IN_TRANSIT;
-    }
-    
-    if (oStatus === "COMPLETED" && fStatus === "FULFILLED") {
-        return ORDER_STATUS_CONFIG.COMPLETED;
-    }
-
-    if (oStatus === "COMPLETED") {
-        if (oType === "delivery") return { ...ORDER_STATUS_CONFIG.READY, label: "Waiting for Rider" };
-        return { ...ORDER_STATUS_CONFIG.READY, label: "Ready for Pickup" };
-    }
-
-    return ORDER_STATUS_CONFIG[oStatus] || ORDER_STATUS_CONFIG.PLACED;
-}
-
-function formatOrderDate(dateString) {
-    if (!dateString) return "Recently";
-    try {
-        const date = new Date(dateString);
-        if (isNaN(date.getTime())) return "Recently";
-
-        const now = new Date();
-        const isToday =
-            date.getDate() === now.getDate() &&
-            date.getMonth() === now.getMonth() &&
-            date.getFullYear() === now.getFullYear();
-
-        const timeStr = date.toLocaleTimeString("en-US", {
-            hour: "numeric",
-            minute: "2-digit",
-            hour12: true,
-        });
-
-        if (isToday) return `Today, ${timeStr}`;
-
-        return date.toLocaleDateString("en-US", {
-            day: "numeric",
-            month: "short",
-            hour: "numeric",
-            minute: "2-digit",
-            hour12: true,
-        });
-    } catch {
-        return "Recently";
-    }
-}
+import Button from "@/components/global/common/Button";
+import { useOrdersPage, formatOrderDate, getDisplayStatus } from "./helpers/useOrdersPage";
+import { ShoppingBag, ArrowLeft, Clock, ReceiptText, Utensils, Search, RotateCcw, Copy, Check, ChevronDown, ChevronUp } from "lucide-react";
 
 export default function MyOrdersPage() {
-    const router = useRouter();
-    const dispatch = useDispatch();
-    const queryClient = useQueryClient();
-    const notify = useNotification();
-    const { slug, restaurant, name: restaurantName } = useRestaurant();
-    const { user } = useUser();
-
-    const [activeTab, setActiveTab] = useState("ALL");
-    const [searchQuery, setSearchQuery] = useState("");
-    const [expandedOrderIds, setExpandedOrderIds] = useState({});
-    const [copiedOrderId, setCopiedOrderId] = useState(null);
-
-    const userPhone = user?.phone || user?.phoneNumber || "";
-    const userId = user?._id || user?.id || "";
-
     const {
-        data: serverOrdersData,
+        restaurant,
+        restaurantName,
+        activeTab,
+        setActiveTab,
+        searchQuery,
+        setSearchQuery,
+        expandedOrderIds,
+        toggleExpand,
+        copiedOrderId,
+        handleCopyOrderNumber,
+        handleReorder,
+        allOrders,
+        filteredOrders,
+        activeOrdersCount,
         isLoading,
-        refetch,
-    } = useQuery({
-        queryKey: ["orders-history", slug, userId, userPhone],
-        queryFn: async () => {
-            if (!slug) return { orders: [] };
-            try {
-                return await OrderService.getOrderHistory(slug, {
-                    page: 1,
-                    limit: 50,
-                    ...(userPhone ? { phone: userPhone } : {}),
-                    ...(userId ? { userId: userId } : {}),
-                });
-            } catch (err) {
-                console.warn("Could not fetch server orders history:", err);
-                return { orders: [] };
-            }
-        },
-        enabled: !!slug,
-    });
-
-
-
-    const allOrders = useMemo(() => {
-        let localOrders = [];
-        if (typeof window !== "undefined" && slug) {
-            try {
-                const stored = localStorage.getItem(`recent_orders_${slug}`);
-                if (stored) localOrders = JSON.parse(stored);
-            } catch (e) {
-                console.warn("Error reading local orders:", e);
-            }
-        }
-
-        const rawServerOrders = Array.isArray(serverOrdersData)
-            ? serverOrdersData
-            : serverOrdersData?.orders || [];
-        const mergedMap = new Map();
-
-        rawServerOrders.forEach((order) => {
-            const key = order._id || order.orderNumber;
-            if (key) mergedMap.set(key, order);
-        });
-
-        localOrders.forEach((order) => {
-            const key = order._id || order.orderNumber;
-            if (key && !mergedMap.has(key)) {
-                mergedMap.set(key, order);
-            }
-        });
-
-        return Array.from(mergedMap.values()).sort((a, b) => {
-            const timeA = new Date(a.createdAt || 0).getTime();
-            const timeB = new Date(b.createdAt || 0).getTime();
-            return timeB - timeA;
-        });
-    }, [serverOrdersData, slug]);
-
-    const filteredOrders = useMemo(() => {
-        return allOrders.filter((order) => {
-            const oStatus = (order.orderStatus || "PLACED").toUpperCase();
-            const fStatus = (order.fulfillmentStatus || "PENDING").toUpperCase();
-            
-            const isCancelled = oStatus === "CANCELLED" || oStatus === "REJECTED";
-            const isCompleted = oStatus === "COMPLETED" && fStatus === "FULFILLED";
-            const isOrderActive = !isCancelled && !isCompleted;
-
-            if (activeTab === "ACTIVE" && !isOrderActive) return false;
-            if (activeTab === "COMPLETED" && !isCompleted) return false;
-            if (activeTab === "CANCELLED" && !isCancelled) return false;
-            
-            if (searchQuery.trim()) {
-                const query = searchQuery.toLowerCase().trim();
-                const orderNumber = (order.orderNumber || order._id || "").toLowerCase();
-                const hasItemMatch = (order.items || []).some((item) =>
-                    (item.name || "").toLowerCase().includes(query)
-                );
-                if (!orderNumber.includes(query) && !hasItemMatch) {
-                    return false;
-                }
-            }
-
-            return true;
-        });
-    }, [allOrders, activeTab, searchQuery]);
-
-    const activeOrdersCount = useMemo(() => {
-        return allOrders.filter((order) => {
-            const oStatus = (order.orderStatus || "PLACED").toUpperCase();
-            const fStatus = (order.fulfillmentStatus || "PENDING").toUpperCase();
-            const isCancelled = oStatus === "CANCELLED" || oStatus === "REJECTED";
-            const isCompleted = oStatus === "COMPLETED" && fStatus === "FULFILLED";
-            return !isCancelled && !isCompleted;
-        }).length;
-    }, [allOrders]);
-
-    const toggleExpand = (id) => {
-        setExpandedOrderIds((prev) => ({ ...prev, [id]: !prev[id] }));
-    };
-
-    const handleCopyOrderNumber = (orderNumber) => {
-        if (typeof navigator !== "undefined" && navigator.clipboard) {
-            navigator.clipboard.writeText(orderNumber);
-            setCopiedOrderId(orderNumber);
-            notify.success(`Copied #${orderNumber}`, { duration: 2000 });
-            setTimeout(() => setCopiedOrderId(null), 2000);
-        }
-    };
-
-    const handleReorder = (order) => {
-        if (!order.items || order.items.length === 0) return;
-
-        order.items.forEach((item) => {
-            dispatch(
-                addItem({
-                    item: {
-                        _id: item.menuItem || item._id || `reorder_${Date.now()}`,
-                        name: item.name,
-                        price: item.unitPrice || item.price || 0,
-                    },
-                    restaurantId: slug,
-                    quantity: item.quantity || 1,
-                    price: item.unitPrice || item.price || 0,
-                    selectedCustomizations: item.variant || {},
-                })
-            );
-        });
-
-        notify.success(`Added ${order.items.length} items to your cart!`, { duration: 3000 });
-        router.push("/cart");
-    };
+        router,
+    } = useOrdersPage();
 
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-zinc-950 pb-28 select-none">
@@ -427,7 +217,7 @@ export default function MyOrdersPage() {
                             const isExpanded = !!expandedOrderIds[orderId];
                             const items = order.items || [];
                             const totalAmount = order.totalAmount || order.amount || 0;
-                            const isCash = (order.paymentMethod || "cash").toLowerCase() === "cash";
+                            const isCash = (order.paymentMethod || "CASH").toUpperCase() === "CASH";
                             const isLive = statusCfg.isActive;
 
                             return (
@@ -551,7 +341,6 @@ export default function MyOrdersPage() {
                                         </div>
                                     )}
 
-                                    {/* Card Footer: Total Amount & Action Buttons */}
                                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 mt-1 border-t border-gray-100 dark:border-zinc-800">
                                         <div className="flex items-baseline gap-1.5">
                                             <span className="text-xs text-neutral-400 font-normal">
@@ -563,7 +352,6 @@ export default function MyOrdersPage() {
                                         </div>
 
                                         <div className="flex items-center gap-2">
-                                            {/* Reorder Button */}
                                             {items.length > 0 && (
                                                 <Button
                                                     type="button"
@@ -576,10 +364,9 @@ export default function MyOrdersPage() {
                                                 </Button>
                                             )}
 
-                                            {/* Live Track or View Details Button */}
                                             <Button
                                                 type="button"
-                                                onClick={() => router.push(`/order?orderId=${orderId}`)}
+                                                onClick={() => router.push(`/orders/${orderId}`)}
                                                 className={cn(
                                                     "h-9.5 flex-1 sm:flex-initial px-4 rounded-xl font-semibold text-xs gap-1.5 cursor-pointer active:scale-95 transition-all",
                                                     isLive

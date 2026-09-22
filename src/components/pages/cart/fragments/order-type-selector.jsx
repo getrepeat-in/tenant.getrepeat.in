@@ -1,21 +1,23 @@
-import React from "react";
 import { cn } from "@/lib/utils";
 import { Utensils, ShoppingBag, Bike } from "lucide-react";
 
-export function OrderTypeSelector({ orderType, setOrderType }) {
+export function OrderTypeSelector({ orderType, setOrderType, acceptedTypes = ["DINE_IN", "TAKEAWAY", "DELIVERY"] }) {
     const options = [
-        { id: "dine-in", label: "Dine-in", icon: Utensils },
-        { id: "takeaway", label: "Takeaway", icon: ShoppingBag },
-        { id: "delivery", label: "Delivery", icon: Bike },
+        { id: "DINE_IN", label: "Dine-in", icon: Utensils },
+        { id: "TAKEAWAY", label: "Takeaway", icon: ShoppingBag },
+        { id: "DELIVERY", label: "Delivery", icon: Bike },
     ];
+
+    const filteredOptions = options.filter(opt => acceptedTypes.includes(opt.id));
+    if (filteredOptions.length === 0) return null;
 
     return (
         <div className="flex flex-col gap-2.5">
             <h2 className="text-xs font-semibold uppercase tracking-wider text-neutral-400 dark:text-neutral-500 px-1">
                 Order Type
             </h2>
-            <div className="grid grid-cols-3 gap-2">
-                {options.map((option) => {
+            <div className={`grid gap-2`} style={{ gridTemplateColumns: `repeat(${filteredOptions.length}, minmax(0, 1fr))` }}>
+                {filteredOptions.map((option) => {
                     const Icon = option.icon;
                     const isActive = orderType === option.id;
                     return (

@@ -2,11 +2,11 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { fontPoppins } from "@/constants/fonts";
 import StoreProvider from "@/providers/store-provider";
-import ThemeProvider from "@/components/theme-provider";
-import QueryProvider from "@/components/query-provider";
+import ThemeProvider from "@/providers/theme-provider";
+import QueryProvider from "@/providers/query-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import NavigationWrapper from "@/components/global/navigation-wrapper";
-import NotificationBanner from "@/components/global/notification-banner";
+import NavigationWrapper from "@/components/layouts/main-layout";
+import NotificationBanner from "@/components/global/notification";
 
 export default function RootLayout({ children }) {
   return (
@@ -19,10 +19,10 @@ export default function RootLayout({ children }) {
           <ThemeProvider>
             <StoreProvider>
               <TooltipProvider>
-                  <NavigationWrapper>
-                    {children}
-                  </NavigationWrapper>
-                  <NotificationBanner />
+                <NavigationWrapper>
+                  {children}
+                </NavigationWrapper>
+                <NotificationBanner />
               </TooltipProvider>
             </StoreProvider>
           </ThemeProvider>

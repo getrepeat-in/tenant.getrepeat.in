@@ -19,7 +19,7 @@ export const API_ENDPOINTS = {
         VERIFY: (slug) => `/api/${slug}/payment/razorpay/verify`,
     },
     ORDER: {
-        CREATE: (slug) => `/api/${slug}/order/create`,
+        CREATE: (slug) => `/api/${slug}/order`,
         GET_BY_ID: (slug, orderId) => `/api/${slug}/order/${orderId}`,
         LIST: (slug, page = 1, limit = 10) => `/api/${slug}/order?page=${page}&limit=${limit}`,
         CANCEL: (slug, orderId) => `/api/${slug}/order/${orderId}`,

@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { useSelector, useDispatch } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
 import { useRestaurant } from "@/hooks/useRestaurant";
-import { ItemImage } from "@/components/global/item-image";
+import { ItemImage } from "@/components/global/common/item-image";
 import { PromotionService } from "@/services/frontend/promotion";
 import { addItem, removeItem } from "@/store/slices/cartSlice";
 import { Sparkles, Plus, Check, Lock, Unlock } from "lucide-react";

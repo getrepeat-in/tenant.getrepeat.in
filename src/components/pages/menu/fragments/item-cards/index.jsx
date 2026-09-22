@@ -3,9 +3,9 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRestaurant } from "@/hooks/useRestaurant";
-import { ItemImage } from "@/components/global/item-image";
-import DiaterySymbol from "@/components/global/diatery-symbol";
-import VariantDrawer from "@/components/global/variant-drawer";
+import { ItemImage } from "@/components/global/common/item-image";
+import DiaterySymbol from "@/components/global/common/diatery-symbol";
+import VariantDrawer from "@/components/global/common/variant-drawer";
 import { addItem, updateQuantity } from "@/store/slices/cartSlice";
 
 export default function ItemCardV1({ item, promo, title, price, description, image, badge, units, buttonText = "Add", onAdd, className = "" }) {

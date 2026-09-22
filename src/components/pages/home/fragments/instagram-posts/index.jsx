@@ -20,9 +20,9 @@ import {
 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { addItem } from "@/store/slices/cartSlice";
-import VariantDrawer from "@/components/global/variant-drawer";
-import { ItemImage } from "@/components/global/item-image";
-import DiaterySymbol from "@/components/global/diatery-symbol";
+import VariantDrawer from "@/components/global/common/variant-drawer";
+import { ItemImage } from "@/components/global/common/item-image";
+import DiaterySymbol from "@/components/global/common/diatery-symbol";
 import useNotification from "@/hooks/useNotification";
 import { getImageUrl, cn } from "@/lib/utils";
 

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetFooter } from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
+import Button from "@/components/global/common/Button";
 
 export function DeliveryAddressModal({ open, onOpenChange, onConfirm }) {
     const [address, setAddress] = useState("");

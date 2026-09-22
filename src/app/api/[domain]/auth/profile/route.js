@@ -1,6 +1,5 @@
-import merchantApi from "@/lib/api/merchantInstance";
+import { proxyMerchantRequest } from "@/lib/api/proxy";
 import { JsonResponse } from "@/lib/api/responseHandler";
-import { withAuthHeaders } from "@/lib/api/helpers/auth";
 
 export const PUT = async (req, { params }) => {
     try {
@@ -9,17 +8,17 @@ export const PUT = async (req, { params }) => {
             return JsonResponse.error("Restaurant domain/slug is required", 400);
         }
 
-        const config = withAuthHeaders(req);
         const body = await req.json();
 
-        const response = await merchantApi.put(`/api/${domain}/user/profile`, body, config);
-
-        const responseData = response.data.data || response.data;
-        return JsonResponse.success(responseData, response.data.message || "Profile updated successfully", response.status || 200);
+        return await proxyMerchantRequest({
+            method: "PUT",
+            url: `/api/${domain}/user/profile`,
+            req,
+            data: body,
+            successMessage: "Profile updated successfully",
+            errorMessage: "Failed to update profile",
+        });
     } catch (error) {
-        if (error.isAuthError) {
-            return JsonResponse.error(error.message, error.status);
-        }
-        return JsonResponse.error(error.response?.data?.message || "Merchant API error", error.response?.status || 500);
+        return JsonResponse.error(error.message || "Merchant API error", 500);
     }
 };

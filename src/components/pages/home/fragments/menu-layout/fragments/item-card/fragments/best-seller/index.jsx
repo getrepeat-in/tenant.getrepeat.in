@@ -2,9 +2,9 @@
 import { useState } from "react";
 import { useRestaurant } from "@/hooks/useRestaurant";
 import { useDispatch, useSelector } from "react-redux";
-import { ItemImage } from "@/components/global/item-image";
-import DiaterySymbol from "@/components/global/diatery-symbol";
-import VariantDrawer from "@/components/global/variant-drawer";
+import { ItemImage } from "@/components/global/common/item-image";
+import DiaterySymbol from "@/components/global/common/diatery-symbol";
+import VariantDrawer from "@/components/global/common/variant-drawer";
 import { addItem, updateQuantity } from "@/store/slices/cartSlice";
 import { cn } from "@/lib/utils";
 import { Flame } from "lucide-react";

@@ -10,7 +10,7 @@ import { setAddonGroups } from "@/store/slices/menuSlice";
 import { MenuEmptyState } from "./menu-empty-state";
 import { MenuSkeleton } from "@/components/skeleton";
 import ItemCardV1 from "./item-cards";
-import { ItemImage } from "@/components/global/item-image";
+import { ItemImage } from "@/components/global/common/item-image";
 import { cn } from "@/lib/utils";
 
 const CategoryTabItem = React.memo(({ category, fallbackImage, isActive, onClick }) => {

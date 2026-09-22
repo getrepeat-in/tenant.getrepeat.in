@@ -1,6 +1,5 @@
-import merchantApi from "@/lib/api/merchantInstance";
+import { proxyMerchantRequest } from "@/lib/api/proxy";
 import { JsonResponse } from "@/lib/api/responseHandler";
-import { withAuthHeaders } from "@/lib/api/helpers/auth";
 
 export const GET = async (req, { params }) => {
     try {
@@ -9,16 +8,14 @@ export const GET = async (req, { params }) => {
             return JsonResponse.error("Restaurant domain/slug is required", 400);
         }
 
-        const config = withAuthHeaders(req);
-
-        const response = await merchantApi.get(`/api/${domain}/user/auth/me`, config);
-
-        const responseData = response.data.data || response.data;
-        return JsonResponse.success(responseData, response.data.message || "User fetched successfully", response.status || 200);
+        return await proxyMerchantRequest({
+            method: "GET",
+            url: `/api/${domain}/user/auth/me`,
+            req,
+            successMessage: "User fetched successfully",
+            errorMessage: "Failed to fetch user details from server",
+        });
     } catch (error) {
-        if (error.isAuthError) {
-            return JsonResponse.error(error.message, error.status);
-        }
-        return JsonResponse.error(error.response?.data?.message || "Merchant API error", error.response?.status || 500);
+        return JsonResponse.error(error.message || "Merchant API error", 500);
     }
 };

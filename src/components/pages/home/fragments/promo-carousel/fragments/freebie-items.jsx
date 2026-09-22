@@ -7,7 +7,7 @@ import { addItem, removeItem } from "@/store/slices/cartSlice";
 import { Lock, Unlock, Plus, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import React from "react";
-import { ItemImage } from "@/components/global/item-image";
+import { ItemImage } from "@/components/global/common/item-image";
 
 export const FreebieItems = () => {
     const { slug } = useRestaurant();

@@ -1,4 +1,4 @@
-import merchantApi from "@/lib/api/merchantInstance";
+import { proxyMerchantRequest } from "@/lib/api/proxy";
 import { JsonResponse } from "@/lib/api/responseHandler";
 
 export const GET = async (req, { params }) => {
@@ -6,28 +6,18 @@ export const GET = async (req, { params }) => {
     const { domain } = await params;
 
     if (!domain) {
-      return JsonResponse.error(
-        "Restaurant slug is required!",
-        400
-      );
+      return JsonResponse.error("Restaurant slug is required!", 400);
     }
 
-    const response = await merchantApi.get(
-      `/api/${domain}/instagram/posts`
-    );
-
-    const posts = response.data?.data || response.data || [];
-    
-    return JsonResponse.success(
-      posts,
-      "Instagram posts fetched successfully",
-      200
-    );
+    return await proxyMerchantRequest({
+      method: "GET",
+      url: `/api/${domain}/instagram/posts`,
+      req,
+      successMessage: "Instagram posts fetched successfully",
+      errorMessage: "Failed to fetch Instagram posts from server",
+    });
   } catch (err) {
-    console.error("GET instagram posts error:", err.response?.data || err.message);
-    return JsonResponse.error(
-      err.response?.data?.message || err.message || "Internal Server Error!",
-      err.response?.status || 500
-    );
+    console.error("GET instagram posts error:", err);
+    return JsonResponse.error(err.message || "Internal Server Error!", 500);
   }
 };

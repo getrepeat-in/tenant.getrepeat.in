@@ -2,13 +2,9 @@ import axios from "axios";
 import { API_ENDPOINTS } from "../../api-endpoints";
 
 export const UserService = {
-    getAddresses: async (slug, token) => {
+    getAddresses: async (slug) => {
         try {
-            const response = await axios.get(API_ENDPOINTS.USER.ADDRESSES(slug), {
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                }
-            });
+            const response = await axios.get(API_ENDPOINTS.USER.ADDRESSES(slug));
             console.log("GET ADDRESSES RAW RESPONSE:", response.data);
             return response.data.data;
         } catch (error) {
@@ -17,13 +13,9 @@ export const UserService = {
         }
     },
 
-    addAddress: async (slug, token, addressData) => {
+    addAddress: async (slug, addressData) => {
         try {
-            const response = await axios.post(API_ENDPOINTS.USER.ADDRESSES(slug), addressData, {
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                }
-            });
+            const response = await axios.post(API_ENDPOINTS.USER.ADDRESSES(slug), addressData);
             return response.data.data;
         } catch (error) {
             console.error("UserService.addAddress Error:", error);
@@ -31,13 +23,9 @@ export const UserService = {
         }
     },
 
-    updateAddress: async (slug, token, addressId, addressData) => {
+    updateAddress: async (slug, addressId, addressData) => {
         try {
-            const response = await axios.put(API_ENDPOINTS.USER.ADDRESS(slug, addressId), addressData, {
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                }
-            });
+            const response = await axios.put(API_ENDPOINTS.USER.ADDRESS(slug, addressId), addressData);
             return response.data.data;
         } catch (error) {
             console.error("UserService.updateAddress Error:", error);
@@ -45,13 +33,9 @@ export const UserService = {
         }
     },
 
-    deleteAddress: async (slug, token, addressId) => {
+    deleteAddress: async (slug, addressId) => {
         try {
-            const response = await axios.delete(API_ENDPOINTS.USER.ADDRESS(slug, addressId), {
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                }
-            });
+            const response = await axios.delete(API_ENDPOINTS.USER.ADDRESS(slug, addressId));
             return response.data;
         } catch (error) {
             console.error("UserService.deleteAddress Error:", error);

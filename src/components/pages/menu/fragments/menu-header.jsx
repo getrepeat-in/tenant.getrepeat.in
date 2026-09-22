@@ -1,6 +1,6 @@
 "use client";
 import { Search, X } from "lucide-react";
-import DiaterySymbol from "@/components/global/diatery-symbol";
+import DiaterySymbol from "@/components/global/common/diatery-symbol";
 
 export function MenuHeader({
     searchVal = "",

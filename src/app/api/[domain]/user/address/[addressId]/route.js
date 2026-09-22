@@ -1,21 +1,23 @@
-import merchantApi from "@/lib/api/merchantInstance";
+import { proxyMerchantRequest } from "@/lib/api/proxy";
 import { JsonResponse } from "@/lib/api/responseHandler";
-import { withAuthHeaders } from "@/lib/api/helpers/auth";
 
 export const PUT = async (req, { params }) => {
     try {
         const { domain, addressId } = await params;
         if (!domain || !addressId) return JsonResponse.error("Restaurant slug and addressId are required", 400);
 
-        const config = withAuthHeaders(req);
         const body = await req.json();
 
-        const response = await merchantApi.put(`/api/${domain}/user/address/${addressId}`, body, config);
-        
-        return JsonResponse.success(response.data.data, response.data.message || "Address updated successfully", 200);
+        return await proxyMerchantRequest({
+            method: "PUT",
+            url: `/api/${domain}/user/address/${addressId}`,
+            req,
+            data: body,
+            successMessage: "Address updated successfully",
+            errorMessage: "Failed to update address",
+        });
     } catch (error) {
-        if (error.isAuthError) return JsonResponse.error(error.message, error.status);
-        return JsonResponse.error(error.response?.data?.message || "Merchant API error", error.response?.status || 500);
+        return JsonResponse.error(error.message || "Merchant API error", 500);
     }
 };
 
@@ -24,13 +26,14 @@ export const DELETE = async (req, { params }) => {
         const { domain, addressId } = await params;
         if (!domain || !addressId) return JsonResponse.error("Restaurant slug and addressId are required", 400);
 
-        const config = withAuthHeaders(req);
-
-        const response = await merchantApi.delete(`/api/${domain}/user/address/${addressId}`, config);
-        
-        return JsonResponse.success(response.data.data, response.data.message || "Address deleted successfully", 200);
+        return await proxyMerchantRequest({
+            method: "DELETE",
+            url: `/api/${domain}/user/address/${addressId}`,
+            req,
+            successMessage: "Address deleted successfully",
+            errorMessage: "Failed to delete address",
+        });
     } catch (error) {
-        if (error.isAuthError) return JsonResponse.error(error.message, error.status);
-        return JsonResponse.error(error.response?.data?.message || "Merchant API error", error.response?.status || 500);
+        return JsonResponse.error(error.message || "Merchant API error", 500);
     }
 };

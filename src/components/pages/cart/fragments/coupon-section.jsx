@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Tag, CheckCircle2, X, Sparkles } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import Button from "@/components/global/common/Button";
 
 export function CouponSection({
     appliedCoupon,

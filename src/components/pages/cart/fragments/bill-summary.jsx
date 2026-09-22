@@ -5,17 +5,17 @@ import { ReceiptText, Info, Sparkles } from "lucide-react";
 export function BillSummary({
     subtotal = 0,
     discount = 0,
-    gstRate = 0.05,
-    platformFee = 5,
+    packingCharges = 0,
+    platformFee = 0,
+    taxAmount = 0,
+    taxRate = 0,
 }) {
     const discountedSubtotal = Math.max(0, subtotal - discount);
-    const gst = Math.round(discountedSubtotal * gstRate);
-    const grandTotal = subtotal > 0 ? discountedSubtotal + gst + platformFee : 0;
+    const grandTotal = subtotal > 0 ? discountedSubtotal + packingCharges + taxAmount + platformFee : 0;
     const totalSavings = discount;
 
     return (
         <div className="rounded-2xl bg-white dark:bg-zinc-900 p-4 sm:p-5 border border-gray-150/70 dark:border-zinc-800 shadow-xs">
-            {/* Header */}
             <div className="flex items-center justify-between pb-3 border-b border-gray-100 dark:border-zinc-800">
                 <div className="flex items-center gap-2">
                     <ReceiptText size={17} className="text-primary" />
@@ -52,33 +52,49 @@ export function BillSummary({
                     </div>
                 )}
 
-                {/* Platform Fee */}
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1">
+                {/* Packing Charges */}
+                {packingCharges > 0 && (
+                    <div className="flex items-center justify-between">
                         <span className="text-neutral-500 dark:text-neutral-400">
-                            Platform Fee
+                            Packing Charges
                         </span>
-                        <div
-                            title="Supports continuous improvements of the platform"
-                            className="flex size-3.5 items-center justify-center rounded-full bg-neutral-100 dark:bg-zinc-800 text-[9px] font-normal text-neutral-400 cursor-help"
-                        >
-                            <Info size={10} />
-                        </div>
+                        <span className="font-medium text-neutral-800 dark:text-zinc-100">
+                            ₹{packingCharges}
+                        </span>
                     </div>
-                    <span className="font-medium text-neutral-800 dark:text-zinc-100">
-                        ₹{platformFee}
-                    </span>
-                </div>
+                )}
 
-                {/* Taxes (GST) */}
-                <div className="flex items-center justify-between">
-                    <span className="text-neutral-500 dark:text-neutral-400">
-                        GST & Restaurant Taxes (5%)
-                    </span>
-                    <span className="font-medium text-neutral-800 dark:text-zinc-100">
-                        ₹{gst}
-                    </span>
-                </div>
+                {/* Platform Fee */}
+                {platformFee > 0 && (
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-1">
+                            <span className="text-neutral-500 dark:text-neutral-400">
+                                Platform Fee
+                            </span>
+                            <Info size={12} className="text-neutral-400" />
+                        </div>
+                        <span className="font-medium text-neutral-800 dark:text-zinc-100">
+                            ₹{platformFee}
+                        </span>
+                    </div>
+                )}
+
+                {/* Taxes & Fees */}
+                {taxAmount > 0 && (
+                    <div className="flex items-center justify-between">
+                        <div className="flex flex-col gap-0.5">
+                            <span className="text-neutral-500 dark:text-neutral-400">
+                                Taxes & Fees
+                            </span>
+                            <span className="text-[10px] text-neutral-400 dark:text-neutral-500">
+                                Includes {taxRate}% GST
+                            </span>
+                        </div>
+                        <span className="font-medium text-neutral-800 dark:text-zinc-100 mt-0.5">
+                            ₹{taxAmount}
+                        </span>
+                    </div>
+                )}
             </div>
 
             {/* Grand Total */}

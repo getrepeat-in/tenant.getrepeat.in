@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { useRestaurant } from "@/hooks/useRestaurant";
 import { PromotionService } from "@/services/frontend/promotion";
-import { ItemImage } from "@/components/global/item-image";
+import { ItemImage } from "@/components/global/common/item-image";
 
 export default function CartBar() {
     const router = useRouter();

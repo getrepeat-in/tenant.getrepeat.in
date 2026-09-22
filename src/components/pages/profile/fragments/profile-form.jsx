@@ -1,7 +1,6 @@
 "use client";
-import React from "react";
-import { User, Phone, Lock, Eye, EyeOff, KeyRound, ShieldCheck, CheckCircle2, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { User, Phone, Lock, Eye, EyeOff, KeyRound, ShieldCheck, CheckCircle2, X } from "lucide-react";
 
 export function ProfileForm({
     formik,
@@ -15,7 +14,6 @@ export function ProfileForm({
 
     return (
         <div className="flex flex-col gap-4 sm:gap-5">
-            {/* Full Name Field */}
             <div className="flex flex-col gap-1.5">
                 <label className="text-xs font-semibold text-neutral-700 dark:text-zinc-300">
                     Full Name
@@ -46,7 +44,6 @@ export function ProfileForm({
                 )}
             </div>
 
-            {/* Phone Number Field */}
             <div className="flex flex-col gap-1.5">
                 <label className="text-xs font-semibold text-neutral-700 dark:text-zinc-300">
                     Phone Number
@@ -86,7 +83,6 @@ export function ProfileForm({
                 )}
             </div>
 
-            {/* Password Section */}
             <div className="flex flex-col gap-1.5">
                 <div className="flex items-center justify-between">
                     <label className="text-xs font-semibold text-neutral-700 dark:text-zinc-300">
@@ -165,7 +161,6 @@ export function ProfileForm({
                 )}
             </div>
 
-            {/* Account Status Card */}
             <div className="flex items-center justify-between p-3.5 rounded-xl bg-neutral-50 dark:bg-zinc-850 border border-gray-200/70 dark:border-zinc-800 mt-1">
                 <div className="flex items-center gap-2.5">
                     <ShieldCheck size={18} className="text-emerald-600 dark:text-emerald-400" />

@@ -58,18 +58,18 @@ export const POST = async (req, { params }) => {
                         razorpay_signature,
                     },
                 };
-                try {
-                    const res = await merchantApi.post(`/api/${domain}/order`, payload);
-                    merchantOrderResult = res.data?.data || res.data;
-                } catch (firstErr) {
-                    const fallbackRes = await merchantApi.post(`/api/${domain}/order/create`, payload);
-                    merchantOrderResult = fallbackRes.data?.data || fallbackRes.data;
-                }
+                const res = await merchantApi.post(`/api/${domain}/order`, payload);
+                merchantOrderResult = res.data?.data || res.data;
             }
         } catch (merchantErr) {
-            console.warn(
-                "Could not sync order to merchant API (continuing):",
-                merchantErr.message
+            console.error(
+                "Payment verified, but failed to sync order to merchant API:",
+                merchantErr.message,
+                merchantErr.response?.data
+            );
+            return JsonResponse.error(
+                merchantErr.response?.data?.message || "Payment received, but order creation failed. Please contact support.",
+                500
             );
         }
 
