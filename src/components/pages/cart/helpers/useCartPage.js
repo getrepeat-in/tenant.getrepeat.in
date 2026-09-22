@@ -185,7 +185,7 @@ export function useCartPage({ slug, restaurant, user, notify, configuration }) {
             },
             items: formattedItems,
             subtotal,
-            tax: gst,
+            tax: taxAmount,
             discount,
             totalAmount: grandTotal,
             paymentMethod: paymentMethod === CART_CONSTANTS.PAYMENT_METHODS.CASH ? "CASH" : "ONLINE",

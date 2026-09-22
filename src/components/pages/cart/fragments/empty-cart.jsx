@@ -1,11 +1,10 @@
 "use client";
-import React from "react";
 import { ShoppingBag, Utensils } from "lucide-react";
 import { EmptyState } from "@/components/global/common/empty-state";
 
 export function EmptyCart() {
     return (
-        <EmptyState 
+        <EmptyState
             icon={ShoppingBag}
             badgeIcon={Utensils}
             badgeText="Hungry for something delicious?"

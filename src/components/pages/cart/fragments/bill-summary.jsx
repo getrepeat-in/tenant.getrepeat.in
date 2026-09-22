@@ -1,15 +1,7 @@
 "use client";
-import React from "react";
 import { ReceiptText, Info, Sparkles } from "lucide-react";
 
-export function BillSummary({
-    subtotal = 0,
-    discount = 0,
-    packingCharges = 0,
-    platformFee = 0,
-    taxAmount = 0,
-    taxRate = 0,
-}) {
+export function BillSummary({ subtotal = 0, discount = 0, packingCharges = 0, platformFee = 0, taxAmount = 0, taxRate = 0 }) {
     const discountedSubtotal = Math.max(0, subtotal - discount);
     const grandTotal = subtotal > 0 ? discountedSubtotal + packingCharges + taxAmount + platformFee : 0;
     const totalSavings = discount;
@@ -32,9 +24,7 @@ export function BillSummary({
                 )}
             </div>
 
-            {/* Line Items */}
             <div className="flex flex-col gap-2.5 py-3.5 border-b border-dashed border-gray-200 dark:border-zinc-800 text-xs sm:text-sm">
-                {/* Item Total */}
                 <div className="flex items-center justify-between">
                     <span className="text-neutral-500 dark:text-neutral-400">
                         Item Subtotal
@@ -44,7 +34,6 @@ export function BillSummary({
                     </span>
                 </div>
 
-                {/* Discount */}
                 {discount > 0 && (
                     <div className="flex items-center justify-between text-emerald-600 dark:text-emerald-400 font-medium">
                         <span>Coupon Discount</span>
@@ -52,7 +41,6 @@ export function BillSummary({
                     </div>
                 )}
 
-                {/* Packing Charges */}
                 {packingCharges > 0 && (
                     <div className="flex items-center justify-between">
                         <span className="text-neutral-500 dark:text-neutral-400">
@@ -64,7 +52,6 @@ export function BillSummary({
                     </div>
                 )}
 
-                {/* Platform Fee */}
                 {platformFee > 0 && (
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-1">
@@ -79,7 +66,6 @@ export function BillSummary({
                     </div>
                 )}
 
-                {/* Taxes & Fees */}
                 {taxAmount > 0 && (
                     <div className="flex items-center justify-between">
                         <div className="flex flex-col gap-0.5">
@@ -97,7 +83,6 @@ export function BillSummary({
                 )}
             </div>
 
-            {/* Grand Total */}
             <div className="flex items-center justify-between pt-3.5">
                 <div className="flex flex-col">
                     <span className="text-xs sm:text-sm font-semibold text-neutral-800 dark:text-zinc-100 uppercase tracking-wide">

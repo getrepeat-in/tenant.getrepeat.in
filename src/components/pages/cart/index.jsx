@@ -2,14 +2,14 @@
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import { useUser } from "@/hooks/useUser";
+import { Store, AlertCircle } from "lucide-react";
 import useNotification from "@/hooks/useNotification";
 import { useRestaurant } from "@/hooks/useRestaurant";
 import { AddressManager } from "@/components/global/common/address";
+import { EmptyState } from "@/components/global/common/empty-state";
 import { CartItem } from "@/components/pages/cart/fragments/cart-item";
 import { EmptyCart } from "@/components/pages/cart/fragments/empty-cart";
 import { useCartPage } from "@/components/pages/cart/helpers/useCartPage";
-import { EmptyState } from "@/components/global/common/empty-state";
-import { Store, AlertCircle } from "lucide-react";
 import { useWebsiteConfiguration } from "@/hooks/useWebsiteConfiguration";
 import { CART_CONSTANTS } from "@/components/pages/cart/helpers/constants";
 import { CartHeader } from "@/components/pages/cart/fragments/cart-header";

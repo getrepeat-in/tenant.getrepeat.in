@@ -1,6 +1,7 @@
 "use client";
 import { themes } from "@/constants/fonts/themes";
 import { createContext, useContext, useMemo } from "react";
+import { useWebsiteConfiguration } from "@/hooks/useWebsiteConfiguration";
 
 const ThemeContext = createContext(null);
 function flattenTheme(theme) {
@@ -27,12 +28,24 @@ export default function ThemeProvider({
     theme: customTheme,
     children,
 }) {
+    const { configuration, isLoading } = useWebsiteConfiguration();
+
     const theme = useMemo(() => {
+        if (configuration?.theme?.colors) {
+            return configuration.theme;
+        }
         return customTheme ?? themes[themeName] ?? themes.default;
-    }, [themeName, customTheme]);
+    }, [themeName, customTheme, configuration?.theme]);
 
     const variables = useMemo(() => flattenTheme(theme), [theme]);
-    const cssString = useMemo(() => generateCSS(variables), [variables]);
+    
+    const cssString = useMemo(() => {
+        const base = generateCSS(variables);
+        const foucPrevention = isLoading 
+            ? '\nbody { opacity: 0 !important; }' 
+            : '\nbody { opacity: 1 !important; transition: opacity 0.3s ease-in-out; }';
+        return base + foucPrevention;
+    }, [variables, isLoading]);
 
     return (
         <ThemeContext.Provider value={theme}>

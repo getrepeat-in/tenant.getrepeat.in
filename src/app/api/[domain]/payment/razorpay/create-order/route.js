@@ -1,4 +1,4 @@
-import Razorpay from "razorpay";
+import merchantApi from "@/lib/api/merchantInstance";
 import { JsonResponse } from "@/lib/api/responseHandler";
 
 export const POST = async (req, { params }) => {
@@ -15,51 +15,24 @@ export const POST = async (req, { params }) => {
             return JsonResponse.error("Valid order amount is required!", 400);
         }
 
-        const key_id = process.env.RAZORPAY_API_KEY;
-        const key_secret = process.env.RAZORPAY_KEY_SECRET;
-
-        if (!key_id || !key_secret) {
-            return JsonResponse.error(
-                "Razorpay API credentials not configured on server.",
-                500
-            );
-        }
-
-        const razorpayInstance = new Razorpay({
-            key_id,
-            key_secret,
+        const response = await merchantApi.post(`/api/${domain}/payment/razorpay/create-order`, {
+            amount,
+            currency,
+            notes
         });
 
-        // Amount must be in the smallest currency sub-unit (paise for INR)
-        const amountInPaise = Math.round(Number(amount) * 100);
-
-        const options = {
-            amount: amountInPaise,
-            currency,
-            receipt: `rcpt_${domain}_${Date.now()}`,
-            notes: {
-                domain,
-                ...notes,
-            },
-        };
-
-        const order = await razorpayInstance.orders.create(options);
+        const responseData = response.data?.data || response.data;
 
         return JsonResponse.success(
-            {
-                orderId: order.id,
-                amount: order.amount,
-                currency: order.currency,
-                key: key_id,
-            },
+            responseData,
             "Razorpay order created successfully",
             201
         );
     } catch (err) {
         console.error("Razorpay create order error:", err);
         return JsonResponse.error(
-            err.message || "Failed to create Razorpay order",
-            500
+            err?.response?.data?.message || err.message || "Failed to create Razorpay order",
+            err?.response?.status || 500
         );
     }
 };
