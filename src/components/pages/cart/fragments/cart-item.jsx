@@ -137,7 +137,6 @@ export function CartItem({ cartItem }) {
                         ) : (
                             <>
                                 <MessageSquarePlus size={13} strokeWidth={2.5} />
-                                {cartItem.instructions ? "Edit Note" : "Add Note"}
                             </>
                         )}
                     </button>

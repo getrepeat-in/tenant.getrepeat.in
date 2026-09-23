@@ -61,7 +61,7 @@ export function CookingInstructions({ instructions, setInstructions, isItemVaria
                     </div>
 
                     <span className="text-xs font-medium text-primary">
-                        {isOpen ? "Hide" : "+ Add Note"}
+                        {isOpen ? "Hide" : "+"}
                     </span>
                 </button>
             )}

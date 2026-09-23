@@ -32,7 +32,7 @@ export default function OrderDetailsPage() {
     } = useOrderDetailsPage();
 
     return (
-        <div style={{ fontFamily: "\'Poppins\', sans-serif" }} className="min-h-screen bg-slate-50 dark:bg-zinc-950 pb-36 sm:pb-28 select-none">
+        <div style={{ fontFamily: "\'Poppins\', sans-serif" }} className="min-h-screen bg-slate-50 dark:bg-zinc-950 pb-14 sm:pb-10 select-none">
             <header className="sticky top-0 z-40 w-full border-b border-gray-100 dark:border-zinc-800 bg-background shadow-sm">
                 <div className="mx-auto max-w-screen-md px-4 py-3">
                     <div className="flex items-center justify-between gap-3">
@@ -80,7 +80,7 @@ export default function OrderDetailsPage() {
                 </div>
             </header>
 
-            <main className="mx-auto max-w-screen-md px-4 pt-8 sm:pt-12">
+            <main className="bg-white max-w-screen-md px-4 py-8 m-4 sm:pt-12">
                 <div className="flex flex-col items-center text-center">
                     <div
                         className={cn(
