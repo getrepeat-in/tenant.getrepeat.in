@@ -10,15 +10,7 @@ export const QuickActions = () => {
     const { restaurant } = useRestaurant();
 
     const actions = [
-        {
-            id: "menu",
-            title: "Full Menu",
-            subtitle: "Browse all items",
-            icon: <BookOpen size={22} className="text-zinc-700 dark:text-zinc-300 transition-colors group-hover:text-primary" />,
-            actionText: "View Menu",
-            onClick: () => router.push("/menu"),
-            color: "from-blue-500/5 to-transparent dark:from-blue-500/10"
-        },
+
         {
             id: "waiter",
             title: "Call Waiter",

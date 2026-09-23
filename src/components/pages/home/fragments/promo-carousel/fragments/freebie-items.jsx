@@ -28,7 +28,7 @@ export const FreebieItems = () => {
     if (isPending || activeFreebies.length === 0) return null;
 
     return (
-        <div className="w-full flex pt-2 flex-col gap-6 mt-2 mb-6 px-4 md:px-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div className="w-full flex pt-2 flex-col gap-6 mt-2 px-4 md:px-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
             {activeFreebies.map((promo, idx) => {
                 const threshold = promo.min_order_value || 0;
                 const isLocked = cartTotal < threshold;

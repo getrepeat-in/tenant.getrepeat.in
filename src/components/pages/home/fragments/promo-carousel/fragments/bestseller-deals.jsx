@@ -21,7 +21,7 @@ export const BestsellerDeals = () => {
     if (isPending || activeDeals.length === 0) return null;
 
     return (
-        <div className="w-full mb-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
             {activeDeals.map((promo, idx) => (
                 <BestsellerSection
                     key={promo._id || idx}

@@ -80,29 +80,40 @@ export default function OrderDetailsPage() {
                 </div>
             </header>
 
-            <main className="bg-white max-w-screen-md px-4 py-8 m-4 sm:pt-12">
-                <div className="flex flex-col items-center text-center">
-                    <div
-                        className={cn(
-                            "relative flex size-20 sm:size-24 items-center justify-center rounded-full text-white shadow-xl animate-in zoom-in-95 duration-500 ease-out ring-4 ring-white dark:ring-zinc-950 mb-5",
-                            isCancelled
-                                ? "bg-rose-500 shadow-rose-500/20"
-                                : "bg-emerald-500 shadow-emerald-500/20"
-                        )}
-                    >
-                        {isCancelled ? (
-                            <XCircle size={40} strokeWidth={2.5} />
-                        ) : (
-                            <CheckCircle2 size={40} strokeWidth={2.5} />
-                        )}
+            <main className="bg-white dark:bg-zinc-950 max-w-screen-md mx-auto px-4 py-10 sm:py-14 sm:px-6 m-2 sm:m-4 rounded-[32px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 dark:border-zinc-800 relative overflow-hidden">
+                <div className="flex flex-col items-center text-center relative z-10">
+                    <div className="relative mb-8 mt-2">
+                        <div className={cn(
+                            "absolute -inset-4 rounded-full animate-pulse opacity-10 dark:opacity-20 blur-xl",
+                            isCancelled ? "bg-rose-500" : "bg-green-600"
+                        )} />
+                        <div className={cn(
+                            "absolute inset-0 rounded-full animate-ping opacity-20 duration-1000",
+                            isCancelled ? "bg-rose-500" : "bg-green-600"
+                        )} />
+
+                        <div
+                            className={cn(
+                                "relative flex size-20 sm:size-24 items-center justify-center rounded-full text-white shadow-xl animate-in zoom-in-95 duration-500 ease-out ring-8 ring-white/80 dark:ring-zinc-950/80 backdrop-blur-sm z-10",
+                                isCancelled
+                                    ? "bg-gradient-to-br from-rose-400 to-rose-600 shadow-rose-500/30"
+                                    : "bg-gradient-to-br from-emerald-400 to-emerald-600 shadow-emerald-500/30"
+                            )}
+                        >
+                            {isCancelled ? (
+                                <XCircle size={44} strokeWidth={2.5} />
+                            ) : (
+                                <CheckCircle2 size={44} strokeWidth={2.5} />
+                            )}
+                        </div>
                     </div>
 
                     <span
                         className={cn(
-                            "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold uppercase tracking-widest mb-3 shadow-sm ring-1 ring-inset",
+                            "inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-widest mb-4 shadow-sm backdrop-blur-md border",
                             isCancelled
-                                ? "bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 ring-rose-200 dark:ring-rose-500/20"
-                                : "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 ring-emerald-200 dark:ring-emerald-500/20"
+                                ? "bg-rose-50/80 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-100 dark:border-rose-500/20"
+                                : "bg-emerald-50/80 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-100 dark:border-emerald-500/20"
                         )}
                     >
                         {isCancelled
@@ -112,22 +123,22 @@ export default function OrderDetailsPage() {
                                 : "Payment & Order Confirmed"}
                     </span>
 
-                    <h1 className="text-3xl sm:text-4xl font-semibold text-neutral-900 dark:text-white tracking-tight leading-tight">
+                    <h1 className="text-3xl sm:text-[2.5rem] font-black text-gray-900 dark:text-white tracking-tight leading-none mb-3">
                         {isCancelled
-                            ? "Order Was Cancelled"
+                            ? "Order Cancelled!"
                             : isCash
-                                ? (isDelivery ? "Order Sent for Delivery!" : "Order Sent to Kitchen!")
+                                ? (isDelivery ? "Sent for Delivery!" : "Sent to Kitchen!")
                                 : "Order Confirmed!"}
                     </h1>
 
-                    <p className="mt-2.5 max-w-sm text-sm text-neutral-500 dark:text-neutral-400 font-normal">
+                    <p className="max-w-sm text-[15px] text-gray-500 dark:text-neutral-400 font-medium">
                         {isCancelled
                             ? "This order has been cancelled."
                             : `Preparing freshly at ${restaurant?.name || restaurantName || "the restaurant"}.`}
                     </p>
 
                     {!isCancelled && (
-                        <div className="w-full mt-8 rounded-xl bg-white dark:bg-zinc-900 p-5 sm:p-6 shadow-sm border border-gray-100 dark:border-zinc-800 relative overflow-hidden">
+                        <div className="w-full mt-8 rounded-xl bg-white dark:bg-zinc-900 p-3 sm:p-4 shadow-sm border border-gray-100 dark:border-zinc-800 relative overflow-hidden">
                             <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none" />
                             <div className="flex items-center justify-between pb-4 border-b border-gray-100/60 dark:border-zinc-800/60 mb-6 sm:mb-8 relative z-10">
                                 <div className="flex items-center gap-2.5">

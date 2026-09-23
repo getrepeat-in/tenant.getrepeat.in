@@ -1,4 +1,5 @@
 "use client";
+import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { useRestaurant } from "@/hooks/useRestaurant";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,49 +7,6 @@ import { ItemImage } from "@/components/global/common/item-image";
 import DiaterySymbol from "@/components/global/common/diatery-symbol";
 import VariantDrawer from "@/components/global/common/variant-drawer";
 import { addItem, updateQuantity } from "@/store/slices/cartSlice";
-import { cn } from "@/lib/utils";
-import { Flame } from "lucide-react";
-
-/**
- * Formats details string: description, allergens, calories, serving size
- */
-const getDetailText = (item) => {
-    const parts = [];
-    if (item?.description || item?.desc) {
-        parts.push(item?.description || item?.desc);
-    }
-    if (
-        item?.allergens &&
-        (Array.isArray(item.allergens)
-            ? item.allergens.length > 0
-            : Boolean(item.allergens))
-    ) {
-        parts.push(
-            `Allergen ${Array.isArray(item.allergens)
-                ? item.allergens.join(",")
-                : item.allergens
-            }`
-        );
-    }
-    if (item?.calories || item?.nutritionalInfo?.calories) {
-        parts.push(`${item?.calories || item?.nutritionalInfo?.calories}Kcal`);
-    }
-    if (
-        item?.servingSize ||
-        item?.nutritionalInfo?.servingSize ||
-        item?.weight
-    ) {
-        parts.push(
-            `${item?.servingSize ||
-            item?.nutritionalInfo?.servingSize ||
-            item?.weight
-            }`
-        );
-    }
-    return parts.length > 0
-        ? parts.join(" | ")
-        : "Freshly prepared with authentic ingredients.";
-};
 
 export const BestsellerItemCard = ({ item, promo, className }) => {
     const dispatch = useDispatch();
@@ -64,7 +22,6 @@ export const BestsellerItemCard = ({ item, promo, className }) => {
         item?.price || item?.base_price || item?.defaultPrice || 0;
     let finalPrice = basePrice;
 
-    // Apply promo discount if present
     if (promo) {
         if (
             promo.discount_type === "PERCENTAGE" ||
@@ -163,7 +120,6 @@ export const BestsellerItemCard = ({ item, promo, className }) => {
                     {item?.name}
                 </h4>
 
-                {/* Price & Add Button Row */}
                 <div className="flex items-center justify-between mt-2.5 pt-0.5 gap-2">
                     <div className="flex items-baseline gap-1.5 shrink-0">
                         {hasDiscount ? (
@@ -182,7 +138,6 @@ export const BestsellerItemCard = ({ item, promo, className }) => {
                         )}
                     </div>
 
-                    {/* Add Button / Counter with rounded-xl */}
                     <div className="shrink-0 flex items-center">
                         {!hasCustomizations && simpleQuantity > 0 ? (
                             <div className="flex h-[32px] w-[82px] items-center justify-between rounded-xl bg-primary text-primary-foreground font-semibold overflow-hidden shadow-xs">
