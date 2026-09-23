@@ -13,7 +13,7 @@ export function Breadcrumbs() {
   return (
     <div className="flex items-center justify-between w-full h-14 sm:h-16 px-4 sm:px-6 border-b border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-950 sticky top-0 z-30">
       <div className="flex items-center gap-3 sm:gap-3.5">
-        <SidebarTrigger className="h-8 w-8 text-muted-foreground hover:text-foreground cursor-pointer -ml-1.5" />
+        <SidebarTrigger className="h-8 w-8 text-muted-foreground hover:text-foreground cursor-pointer -ml-1.5 !flex" />
         <div className="h-4.5 w-px bg-gray-200 dark:bg-zinc-800 shrink-0" />
 
         <nav className="flex items-center gap-1.5 text-sm sm:text-[15px]">

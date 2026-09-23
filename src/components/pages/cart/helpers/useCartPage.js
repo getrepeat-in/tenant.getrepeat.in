@@ -1,7 +1,7 @@
 import { getImageUrl } from "@/lib/utils";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
 import { CART_CONSTANTS } from "./constants";
+import { useState, useEffect, useRef } from "react";
 import { clearCart } from "@/store/slices/cartSlice";
 import { useSelector, useDispatch } from "react-redux";
 import PaymentService from "@/services/frontend/payment";
@@ -21,28 +21,52 @@ export function useCartPage({ slug, restaurant, user, notify, configuration }) {
 
     const [isTableModalOpen, setIsTableModalOpen] = useState(false);
     const [selectedAddress, setSelectedAddress] = useState(null);
+    const isConfigApplied = useRef(false);
 
     useEffect(() => {
-        if (configuration?.ordering) {
+        if (configuration?.ordering && !isConfigApplied.current) {
+            isConfigApplied.current = true;
             const acceptedTypes = configuration.ordering.acceptedTypes || ["DINE_IN", "TAKEAWAY", "DELIVERY"];
             const paymentMethods = configuration.ordering.paymentMethods || ["ONLINE", "CASH"];
-            
+
+            let initialOrderType = CART_CONSTANTS.ORDER_TYPES.DINE_IN;
+            if (configuration.ordering.defaultType && acceptedTypes.includes(configuration.ordering.defaultType)) {
+                initialOrderType = configuration.ordering.defaultType;
+            } else if (acceptedTypes.length > 0) {
+                initialOrderType = acceptedTypes[0];
+            }
+            setOrderType(initialOrderType);
+
+            let initialPaymentMethod = CART_CONSTANTS.PAYMENT_METHODS.ONLINE;
+            if (configuration.ordering.defaultPaymentMethod && paymentMethods.includes(configuration.ordering.defaultPaymentMethod)) {
+                initialPaymentMethod = configuration.ordering.defaultPaymentMethod;
+            } else if (paymentMethods.length > 0) {
+                initialPaymentMethod = paymentMethods[0];
+            }
+            setPaymentMethod(initialPaymentMethod);
+        } else if (configuration?.ordering) {
+            const acceptedTypes = configuration.ordering.acceptedTypes || ["DINE_IN", "TAKEAWAY", "DELIVERY"];
+            const paymentMethods = configuration.ordering.paymentMethods || ["ONLINE", "CASH"];
+
             setOrderType(current => {
                 if (!acceptedTypes.includes(current) && acceptedTypes.length > 0) {
-                    return acceptedTypes[0];
+                    return configuration.ordering.defaultType || acceptedTypes[0];
                 }
                 return current;
             });
-            
+
             setPaymentMethod(current => {
                 const isCashAllowed = paymentMethods.includes("CASH");
                 const isOnlineAllowed = paymentMethods.includes("ONLINE");
-                
+
                 if (current === CART_CONSTANTS.PAYMENT_METHODS.CASH && !isCashAllowed && isOnlineAllowed) {
-                    return CART_CONSTANTS.PAYMENT_METHODS.ONLINE;
+                    return configuration.ordering.defaultPaymentMethod || CART_CONSTANTS.PAYMENT_METHODS.ONLINE;
                 }
                 if (current === CART_CONSTANTS.PAYMENT_METHODS.ONLINE && !isOnlineAllowed && isCashAllowed) {
-                    return CART_CONSTANTS.PAYMENT_METHODS.CASH;
+                    return configuration.ordering.defaultPaymentMethod || CART_CONSTANTS.PAYMENT_METHODS.CASH;
+                }
+                if (!paymentMethods.includes(current) && paymentMethods.length > 0) {
+                    return configuration.ordering.defaultPaymentMethod || paymentMethods[0];
                 }
                 return current;
             });

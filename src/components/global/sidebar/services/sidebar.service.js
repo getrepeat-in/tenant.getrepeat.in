@@ -15,28 +15,10 @@ export const SidebarService = {
             href: "/orders",
         },
         {
-            id: "favorites",
-            label: "Favorites",
-            icon: Heart,
-            href: "/favorites",
-        },
-        {
-            id: "history",
-            label: "History",
-            icon: Clock,
-            href: "/history",
-        },
-        {
             id: "profile",
             label: "Profile",
             icon: User,
             href: "/profile",
-        },
-        {
-            id: "settings",
-            label: "Settings",
-            icon: Settings,
-            href: "/settings",
         }
     ],
 
