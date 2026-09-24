@@ -7,6 +7,7 @@ import { ResponsiveHeader } from "./fragments/header"
 import PromoCarousel from "./fragments/promo-carousel";
 import { MenuEmptyState } from "./fragments/empty-state";
 import { QuickActions } from "./fragments/quick-actions";
+import { MenuHeroBanner } from "./fragments/menu-hero-banner";
 import { RestaurantOfflineState } from "./fragments/offline-state";
 import { FreebieItems } from "./fragments/promo-carousel/fragments/freebie-items";
 import { SpecialDeals } from "./fragments/promo-carousel/fragments/special-deals";
@@ -93,6 +94,8 @@ const Home = () => {
             <FreebieItems />
             <BestsellerDeals />
             <SpecialDeals />
+
+            <MenuHeroBanner />
 
             <QuickActions />
             <CartBar />
