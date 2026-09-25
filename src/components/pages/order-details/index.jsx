@@ -28,7 +28,9 @@ export default function OrderDetailsPage() {
         isDelivery,
         router,
         isAddressExpanded,
-        setIsAddressExpanded
+        setIsAddressExpanded,
+        isConnected,
+        rejectionReason,
     } = useOrderDetailsPage();
 
     return (
@@ -62,9 +64,23 @@ export default function OrderDetailsPage() {
                                     <h1 className="text-sm sm:text-base font-normal text-neutral-900 dark:text-zinc-50 truncate leading-tight tracking-tight">
                                         {restaurant?.name || restaurantName || "Order Status"}
                                     </h1>
-                                    <span className="text-[11px] font-medium text-neutral-500 dark:text-neutral-400 truncate">
-                                        {isCancelled ? "Order Cancelled" : "Live Tracking"}
-                                    </span>
+                                    <div className="flex items-center gap-1.5 min-w-0">
+                                        <span className={cn(
+                                            "size-1.5 rounded-full shrink-0",
+                                            isCancelled
+                                                ? "bg-rose-500"
+                                                : isConnected
+                                                    ? "bg-emerald-500 animate-pulse"
+                                                    : "bg-amber-400"
+                                        )} />
+                                        <span className="text-[11px] font-medium text-neutral-500 dark:text-neutral-400 truncate">
+                                            {isCancelled
+                                                ? "Order Cancelled"
+                                                : isConnected
+                                                    ? "Live Tracking"
+                                                    : "Syncing..."}
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -133,24 +149,38 @@ export default function OrderDetailsPage() {
 
                     <p className="max-w-sm text-[15px] text-gray-500 dark:text-neutral-400 font-medium">
                         {isCancelled
-                            ? "This order has been cancelled."
+                            ? (rejectionReason ? `Reason: ${rejectionReason}` : "This order has been cancelled.")
                             : `Preparing freshly at ${restaurant?.name || restaurantName || "the restaurant"}.`}
                     </p>
 
                     {!isCancelled && (
                         <div className="w-full mt-8 rounded-xl bg-white dark:bg-zinc-900 p-3 sm:p-4 shadow-sm border border-gray-100 dark:border-zinc-800 relative overflow-hidden">
                             <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none" />
-                            <div className="flex items-center justify-between pb-4 border-b border-gray-100/60 dark:border-zinc-800/60 mb-6 sm:mb-8 relative z-10">
-                                <div className="flex items-center gap-2.5">
+                            <div className="flex items-center justify-between pb-4 border-b border-gray-100/60 dark:border-zinc-800/60 mb-6 sm:mb-8 relative z-10 gap-2">
+                                <div className="flex items-center gap-2">
                                     <span className="relative flex h-2.5 w-2.5">
-                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                                        <span className={cn(
+                                            "animate-ping absolute inline-flex h-full w-full rounded-full opacity-75",
+                                            isConnected ? "bg-emerald-400" : "bg-amber-400"
+                                        )}></span>
+                                        <span className={cn(
+                                            "relative inline-flex rounded-full h-2.5 w-2.5",
+                                            isConnected ? "bg-emerald-500" : "bg-amber-500"
+                                        )}></span>
                                     </span>
                                     <span className="text-xs font-normal uppercase tracking-wider text-neutral-800 dark:text-neutral-200">
                                         Live Order Status
                                     </span>
+                                    <span className={cn(
+                                        "text-[10px] font-semibold px-2 py-0.5 rounded-full border transition-colors",
+                                        isConnected
+                                            ? "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border-emerald-200/60 dark:border-emerald-800/60"
+                                            : "bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 border-amber-200/60 dark:border-amber-800/60"
+                                    )}>
+                                        {isConnected ? "● Live Updates" : "Syncing..."}
+                                    </span>
                                 </div>
-                                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-normal bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/15">
+                                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-normal bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/15 shrink-0">
                                     <Clock size={12} strokeWidth={2.5} />
                                     <span>{currentStatus}</span>
                                 </span>

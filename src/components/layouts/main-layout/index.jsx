@@ -14,15 +14,15 @@ export default function NavigationWrapper({ children }) {
     const brandInfo = {
         name: restaurant?.name || restaurantName || "Restaurant",
         tagline: restaurant?.tagline || "Fresh. Simple. Always Delicious.",
-        logo: restaurant?.logo ? (
+        logo: (
             <div className="relative size-10 rounded-md overflow-hidden border border-border/50 bg-muted shrink-0 shadow-sm">
                 <img
-                    src={getImageUrl(restaurant.logo, true, "thumbnail")}
+                    src={restaurant?.logo ? getImageUrl(restaurant.logo, true, "thumbnail") : "/logo.png"}
                     alt={restaurant?.name || "Logo"}
                     className="w-full h-full object-cover rounded-md bg-white"
                 />
             </div>
-        ) : null,
+        ),
     };
 
     const hideBottomNavPaths = ["/login", "/register", "/cart"];

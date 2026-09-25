@@ -6,7 +6,7 @@ import { addItem } from "@/store/slices/cartSlice";
 import { useRestaurant } from "@/hooks/useRestaurant";
 import useNotification from "@/hooks/useNotification";
 import { OrderService } from "@/services/frontend/order";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { ORDER_STATUS_CONFIG } from "./constants";
 
 const TERMINAL_STATUSES = ["COMPLETED", "CANCELLED", "REJECTED"];
@@ -51,7 +51,6 @@ export function formatOrderDate(dateString) {
 export function useOrdersPage() {
     const router = useRouter();
     const dispatch = useDispatch();
-    const queryClient = useQueryClient();
     const notify = useNotification();
     const { slug, restaurant, name: restaurantName } = useRestaurant();
     const { user } = useUser();
@@ -85,6 +84,12 @@ export function useOrdersPage() {
             }
         },
         enabled: !!slug,
+        refetchInterval: (query) => {
+            const data = query.state.data;
+            const orders = Array.isArray(data) ? data : data?.orders || [];
+            const hasActive = orders.some((o) => !TERMINAL_STATUSES.includes((o.orderStatus || "").toUpperCase()));
+            return hasActive ? 15000 : false;
+        },
     });
 
     const allOrders = useMemo(() => {

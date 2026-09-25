@@ -56,7 +56,7 @@ const Home = () => {
                     />
                 ) : (
                     <img
-                        src="/assets/images/image-placeholder.webp"
+                        src="/logo.png"
                         alt={brandInfo.name}
                         className="w-full h-full object-cover rounded-md bg-white"
                     />

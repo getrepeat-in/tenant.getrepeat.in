@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useRestaurant } from "@/hooks/useRestaurant";
 import useNotification from "@/hooks/useNotification";
@@ -22,9 +22,12 @@ export function useOrderDetailsPage() {
     const [isCancelling, setIsCancelling] = useState(false);
     const [isAddressExpanded, setIsAddressExpanded] = useState(false);
 
+    const prevStatusRef = useRef(null);
+
     const {
         data: orderData,
         isLoading,
+        isFetching,
         refetch,
     } = useQuery({
         queryKey: ["order-details", slug, orderParam],
@@ -39,10 +42,20 @@ export function useOrderDetailsPage() {
         },
         enabled: !!slug && !!orderParam,
         retry: 1,
+        // Smart polling: poll every 5s while order is active, stop when completed/cancelled
+        refetchInterval: (query) => {
+            const currentOrder = query.state.data;
+            const status = (currentOrder?.orderStatus || "").toUpperCase();
+            if (status === "COMPLETED" || status === "CANCELLED" || status === "REJECTED") {
+                return false;
+            }
+            return 5000;
+        },
+        refetchIntervalInBackground: false,
     });
 
-    const order = orderData || {};
-    const orderNumber = order.orderNumber || order._id || orderParam || `ORD-${Date.now().toString().slice(-6)}`;
+    const order = useMemo(() => orderData || {}, [orderData]);
+    const orderNumber = order.orderNumber || order._id || orderParam || "ORD-RECENT";
 
     const orderStatus = (order.orderStatus || "PLACED").toUpperCase();
     const orderType = (order.orderType || "DINE_IN").toUpperCase();
@@ -62,6 +75,41 @@ export function useOrderDetailsPage() {
     const items = order.items || [];
     const tableInfo = order.table;
     const customerInfo = order.customerInfo || {};
+    const rejectionReason = order.rejectionReason || null;
+
+    // Detect status updates across poll cycles
+    useEffect(() => {
+        if (!order?.orderStatus) return;
+
+        const currentOS = (order.orderStatus || "").toUpperCase();
+        if (prevStatusRef.current && prevStatusRef.current !== currentOS) {
+            const steps = getStepsForType(order?.orderType || orderType);
+            const stepLabel = steps.find((s) => s.key === currentOS)?.label || currentOS.replace(/_/g, " ");
+            notify.info(`Order updated: ${stepLabel}!`, { duration: 4000 });
+
+            // Sync with local storage
+            if (typeof window !== "undefined" && slug) {
+                try {
+                    const key = `recent_orders_${slug}`;
+                    const stored = JSON.parse(localStorage.getItem(key) || "[]");
+                    const targetKey = order._id || order.orderNumber;
+                    const updated = stored.map((item) => {
+                        const itemKey = item._id || item.orderNumber;
+                        if (itemKey === targetKey) {
+                            return { ...item, ...order, status: currentOS };
+                        }
+                        return item;
+                    });
+                    localStorage.setItem(key, JSON.stringify(updated));
+                } catch (e) {
+                    console.warn("Could not sync local orders:", e);
+                }
+            }
+        }
+        prevStatusRef.current = currentOS;
+    }, [order, orderType, slug, notify]);
+
+    const isLive = !isCancelled && !isCompleted;
 
     const handleShare = () => {
         if (typeof navigator !== "undefined" && navigator.clipboard) {
@@ -99,6 +147,8 @@ export function useOrderDetailsPage() {
         order,
         orderNumber,
         orderType,
+        orderStatus,
+        rejectionReason,
         isCancelled,
         isCompleted,
         isDelivery,
@@ -117,8 +167,11 @@ export function useOrderDetailsPage() {
         handleCancelOrder,
         canCancel,
         isLoading,
+        isFetching,
+        isLive,
+        isConnected: isLive, // Keep isConnected for UI compatibility
         router,
         isAddressExpanded,
-        setIsAddressExpanded
+        setIsAddressExpanded,
     };
 }
