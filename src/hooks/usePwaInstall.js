@@ -10,7 +10,12 @@ export function usePwaInstall() {
     const [isStandalone, setIsStandalone] = useState(false);
 
     useEffect(() => {
-        setIsStandalone(window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone);
+        try {
+            const isMatch = window.matchMedia ? window.matchMedia('(display-mode: standalone)').matches : false;
+            setIsStandalone(isMatch || !!window.navigator.standalone);
+        } catch (e) {
+            console.error(e);
+        }
 
         if ('serviceWorker' in navigator && !isSwRegistered) {
             window.addEventListener('load', () => {
