@@ -8,13 +8,7 @@ const isPostHogConfigured = Boolean(
     process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN && process.env.NEXT_PUBLIC_POSTHOG_HOST
 );
 
-if (typeof window !== "undefined" && isPostHogConfigured) {
-    posthog.init(process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN, {
-        api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST,
-        person_profiles: "identified_only",
-        capture_pageview: false,
-    });
-}
+    // Move initialization inside the provider to ensure it only happens on client after hydration
 
 export function PostHogPageview() {
     const pathname = usePathname();
@@ -36,6 +30,16 @@ export function PostHogPageview() {
 }
 
 export default function PostHogProvider({ children }) {
+    useEffect(() => {
+        if (isPostHogConfigured) {
+            posthog.init(process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN, {
+                api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST,
+                person_profiles: "identified_only",
+                capture_pageview: false,
+            });
+        }
+    }, []);
+
     if (!isPostHogConfigured) {
         return <>{children}</>;
     }
