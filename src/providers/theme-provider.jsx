@@ -40,12 +40,8 @@ export default function ThemeProvider({
     const variables = useMemo(() => flattenTheme(theme), [theme]);
     
     const cssString = useMemo(() => {
-        const base = generateCSS(variables);
-        const foucPrevention = isLoading 
-            ? '\nbody { opacity: 0 !important; }' 
-            : '\nbody { opacity: 1 !important; transition: opacity 0.3s ease-in-out; }';
-        return base + foucPrevention;
-    }, [variables, isLoading]);
+        return generateCSS(variables);
+    }, [variables]);
 
     return (
         <ThemeContext.Provider value={theme}>

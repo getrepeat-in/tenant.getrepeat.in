@@ -104,15 +104,13 @@ export function ResponsiveHeader({ brand, actions = [], showMenu = true, searchP
 
         return (
             <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <button className="relative shrink-0 rounded-full border border-gray-200 dark:border-zinc-800 shadow-sm overflow-hidden focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer active:scale-95 transition-all">
-                        <Avatar className="size-9 rounded-full">
-                            <AvatarImage src={getImageUrl(user.avatar, true, "thumbnail")} className="object-cover" />
-                            <AvatarFallback className="font-semibold text-sm bg-primary/10 text-primary">
-                                {initials}
-                            </AvatarFallback>
-                        </Avatar>
-                    </button>
+                <DropdownMenuTrigger className="relative shrink-0 rounded-full border border-gray-200 dark:border-zinc-800 shadow-sm overflow-hidden focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer active:scale-95 transition-all">
+                    <Avatar className="size-9 rounded-full">
+                        <AvatarImage src={getImageUrl(user.avatar, true, "thumbnail")} className="object-cover" />
+                        <AvatarFallback className="font-semibold text-sm bg-primary/10 text-primary">
+                            {initials}
+                        </AvatarFallback>
+                    </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56 mt-1" align="end">
                     <div className="flex items-center gap-3 p-2 border-b border-gray-100 dark:border-zinc-800">

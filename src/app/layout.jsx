@@ -11,42 +11,76 @@ import InstallAppBanner from "@/components/global/common/install-app-banner";
 import PostHogProvider, { PostHogPageview } from "@/providers/posthog-provider";
 import { Suspense } from "react";
 
-export const metadata = {
-  title: {
-    default: "Repeat",
-    template: "%s | Repeat",
-  },
-  description: "Order delicious food, beverages, and explore the best culinary offerings with Repeat.",
-  icons: {
-    icon: [
-      { url: "/logo.png", type: "image/png" },
-      { url: "/favicon.ico", sizes: "any" },
-    ],
-    shortcut: "/logo.png",
-    apple: [
-      { url: "/logo.png", sizes: "180x180", type: "image/png" },
-    ],
-  },
-  manifest: "/manifest.json",
-  openGraph: {
-    title: "Repeat",
-    description: "Order delicious food, beverages, and explore the best culinary offerings with Repeat.",
-    images: [
-      {
-        url: "/logo.png",
-        width: 1024,
-        height: 1024,
-        alt: "Repeat Logo",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary",
-    title: "Repeat",
-    description: "Order delicious food, beverages, and explore the best culinary offerings with Repeat.",
-    images: ["/logo.png"],
-  },
-};
+import { headers } from "next/headers";
+
+export async function generateMetadata() {
+  const headersList = await headers();
+  const host = headersList.get("host") || "";
+  let slug = "haldiram";
+  
+  const parts = host.split(".");
+  if (parts.length > 0 && parts[0] !== "localhost" && parts[0] !== "www" && parts[0] !== "127") {
+    slug = parts[0];
+  }
+
+  let restaurantName = "Repeat";
+  let restaurantLogo = "/logo.png";
+  let description = "Order delicious food, beverages, and explore the best culinary offerings with Repeat.";
+
+  try {
+    const merchantAppUrl = process.env.MERCHANT_APP_URL || "http://localhost:3001";
+    const res = await fetch(`${merchantAppUrl}/api/${slug}`, { next: { revalidate: 60 } });
+    if (res.ok) {
+      const data = await res.json();
+      const restaurant = data?.data || data;
+      if (restaurant?.name) {
+        restaurantName = restaurant.name;
+        description = `Order delicious food, beverages, and explore the best culinary offerings with ${restaurantName}.`;
+      }
+      if (restaurant?.logo) {
+        restaurantLogo = restaurant.logo;
+      }
+    }
+  } catch (error) {
+    console.error("Failed to fetch restaurant metadata:", error);
+  }
+
+  return {
+    title: {
+      default: restaurantName,
+      template: `%s | ${restaurantName}`,
+    },
+    description: description,
+    icons: {
+      icon: [
+        { url: restaurantLogo, sizes: "any" },
+      ],
+      shortcut: restaurantLogo,
+      apple: [
+        { url: restaurantLogo, sizes: "180x180", type: "image/png" },
+      ],
+    },
+    manifest: "/manifest.json",
+    openGraph: {
+      title: restaurantName,
+      description: description,
+      images: [
+        {
+          url: restaurantLogo,
+          width: 1024,
+          height: 1024,
+          alt: `${restaurantName} Logo`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary",
+      title: restaurantName,
+      description: description,
+      images: [restaurantLogo],
+    },
+  };
+}
 
 export default function RootLayout({ children }) {
   return (

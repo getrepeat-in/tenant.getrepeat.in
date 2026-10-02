@@ -70,7 +70,7 @@ export const PromoCarousel = ({ banners, isLoading = false }) => {
                     return (
                         <CardWrapper
                             {...wrapperProps}
-                            key={offer._id || offer.id || index}
+                            key={`${offer._id || offer.id || 'banner'}-${index}`}
                             className="group relative flex aspect-video w-[90%] shrink-0 snap-center overflow-hidden rounded-[20px] bg-gray-100 sm:w-[85%] md:w-[80%] shadow-sm"
                         >
                             <Image
