@@ -8,6 +8,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import NavigationWrapper from "@/components/layouts/main-layout";
 import NotificationBanner from "@/components/global/notification";
 import InstallAppBanner from "@/components/global/common/install-app-banner";
+import PostHogProvider, { PostHogPageview } from "@/providers/posthog-provider";
+import { Suspense } from "react";
 
 export const metadata = {
   title: {
@@ -53,19 +55,24 @@ export default function RootLayout({ children }) {
       className={cn("h-full", "antialiased")}
     >
       <body className={cn("min-h-full flex flex-col font-sans", fontPoppins.className, fontPoppins.variable)}>
-        <QueryProvider>
-          <ThemeProvider>
-            <StoreProvider>
-              <TooltipProvider>
-                <NavigationWrapper>
-                  {children}
-                </NavigationWrapper>
-                <NotificationBanner />
-                <InstallAppBanner />
-              </TooltipProvider>
-            </StoreProvider>
-          </ThemeProvider>
-        </QueryProvider>
+        <Suspense fallback={null}>
+          <PostHogPageview />
+        </Suspense>
+        <PostHogProvider>
+          <QueryProvider>
+            <ThemeProvider>
+              <StoreProvider>
+                <TooltipProvider>
+                  <NavigationWrapper>
+                    {children}
+                  </NavigationWrapper>
+                  <NotificationBanner />
+                  <InstallAppBanner />
+                </TooltipProvider>
+              </StoreProvider>
+            </ThemeProvider>
+          </QueryProvider>
+        </PostHogProvider>
       </body>
     </html>
   );

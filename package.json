@@ -10,6 +10,10 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
+    "@opentelemetry/api-logs": "^0.222.0",
+    "@opentelemetry/exporter-logs-otlp-http": "^0.222.0",
+    "@opentelemetry/resources": "^2.11.0",
+    "@opentelemetry/sdk-logs": "^0.222.0",
     "@reduxjs/toolkit": "^2.12.0",
     "@tanstack/react-query": "^5.101.4",
     "axios": "^1.19.0",
@@ -21,6 +25,7 @@
     "lucide-react": "^1.31.0",
     "mongoose": "^9.10.3",
     "next": "16.3.0",
+    "posthog-js": "^1.435.7",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "react-redux": "^9.3.0",

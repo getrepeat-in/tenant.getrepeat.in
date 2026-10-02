@@ -1,10 +1,52 @@
 "use client";
 import { makeStore } from "@/store";
 import { useRef, useEffect } from "react";
-import { Provider, useDispatch } from "react-redux";
+import { Provider, useDispatch, useSelector } from "react-redux";
+import posthog from "posthog-js";
 import { fetchUser } from "@/store/slices/userSlice";
 import { fetchRestaurant } from "@/store/slices/restaurantSlice";
 import { loadCart, setCartLoaded } from "@/store/slices/cartSlice";
+
+const isPostHogConfigured = Boolean(
+    process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN && process.env.NEXT_PUBLIC_POSTHOG_HOST,
+);
+
+function PostHogUserIdentity() {
+    const user = useSelector((state) => state.user.user);
+    const previousDistinctId = useRef(null);
+
+    useEffect(() => {
+        if (!isPostHogConfigured) return;
+
+        const distinctId = user?._id || user?.id;
+
+        if (!distinctId) {
+            if (previousDistinctId.current) {
+                posthog.reset();
+                previousDistinctId.current = null;
+            }
+            return;
+        }
+
+        const normalizedDistinctId = String(distinctId);
+        if (
+            previousDistinctId.current &&
+            previousDistinctId.current !== normalizedDistinctId &&
+            posthog.get_distinct_id() !== normalizedDistinctId
+        ) {
+            posthog.reset();
+        }
+
+        posthog.identify(normalizedDistinctId, {
+            name: user.name,
+            phone: user.phone,
+            is_guest: Boolean(user.isGuest),
+        });
+        previousDistinctId.current = normalizedDistinctId;
+    }, [user]);
+
+    return null;
+}
 
 function StateHydrator({ children }) {
     const dispatch = useDispatch();
@@ -40,6 +82,7 @@ export default function StoreProvider({ children }) {
 
     return (
         <Provider store={storeRef.current}>
+            <PostHogUserIdentity />
             <StateHydrator>
                 {children}
             </StateHydrator>
