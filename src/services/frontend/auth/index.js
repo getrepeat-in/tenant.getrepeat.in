@@ -13,6 +13,16 @@ export class AuthService {
         }
     }
 
+    static async guestLogin({ name, phone }, slug = getTenantSlug()) {
+        try {
+            const response = await api.post(API_ENDPOINTS.AUTH.GUEST_LOGIN(slug), { name, phone });
+            return response.data;
+        } catch (error) {
+            console.error("Guest login error:", error);
+            throw new Error(error.response?.data?.message || "Failed to guest login");
+        }
+    }
+
     static async register({ name, phone, password }, slug = getTenantSlug()) {
         try {
             const response = await api.post(API_ENDPOINTS.AUTH.REGISTER(slug), { name, phone, password });

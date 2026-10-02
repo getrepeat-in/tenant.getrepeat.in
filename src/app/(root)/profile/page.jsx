@@ -1,5 +1,10 @@
 import Profile from "@/components/pages/profile";
+import ProtectedRoute from "@/components/global/protected-route";
 
 export default function Page() {
-    return <Profile />;
+    return (
+        <ProtectedRoute>
+            <Profile />
+        </ProtectedRoute>
+    );
 }

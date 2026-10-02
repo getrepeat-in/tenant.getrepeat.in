@@ -7,6 +7,7 @@ import QueryProvider from "@/providers/query-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NavigationWrapper from "@/components/layouts/main-layout";
 import NotificationBanner from "@/components/global/notification";
+import InstallAppBanner from "@/components/global/common/install-app-banner";
 
 export const metadata = {
   title: {
@@ -60,6 +61,7 @@ export default function RootLayout({ children }) {
                   {children}
                 </NavigationWrapper>
                 <NotificationBanner />
+                <InstallAppBanner />
               </TooltipProvider>
             </StoreProvider>
           </ThemeProvider>

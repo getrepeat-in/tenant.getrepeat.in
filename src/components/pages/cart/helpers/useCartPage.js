@@ -20,8 +20,11 @@ export function useCartPage({ slug, restaurant, user, notify, configuration }) {
     const [orderType, setOrderType] = useState(CART_CONSTANTS.ORDER_TYPES.DINE_IN);
 
     const [isTableModalOpen, setIsTableModalOpen] = useState(false);
+    const [isGuestModalOpen, setIsGuestModalOpen] = useState(false);
     const [selectedAddress, setSelectedAddress] = useState(null);
     const isConfigApplied = useRef(false);
+
+
 
     useEffect(() => {
         if (configuration?.ordering && !isConfigApplied.current) {
@@ -102,6 +105,11 @@ export function useCartPage({ slug, restaurant, user, notify, configuration }) {
 
         if (!slug) {
             notify.error("Restaurant information is unavailable", { duration: 3000 });
+            return;
+        }
+
+        if (!user) {
+            setIsGuestModalOpen(true);
             return;
         }
 
@@ -372,6 +380,8 @@ export function useCartPage({ slug, restaurant, user, notify, configuration }) {
         setOrderType,
         isTableModalOpen,
         setIsTableModalOpen,
+        isGuestModalOpen,
+        setIsGuestModalOpen,
         selectedAddress,
         setSelectedAddress,
         subtotal,

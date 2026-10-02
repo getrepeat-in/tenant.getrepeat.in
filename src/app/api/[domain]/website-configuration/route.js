@@ -1,3 +1,4 @@
+import dbConnect from "@/lib/db";
 import { proxyMerchantRequest } from "@/lib/api/proxy";
 import { JsonResponse } from "@/lib/api/responseHandler";
 
@@ -8,6 +9,7 @@ export const GET = async (req, { params }) => {
     if (!domain) {
       return JsonResponse.error("Restaurant slug is required!", 400);
     }
+    await dbConnect();
 
     return await proxyMerchantRequest({
       method: "GET",

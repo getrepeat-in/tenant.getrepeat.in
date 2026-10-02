@@ -1,4 +1,5 @@
 "use client";
+import React from "react";
 import { getImageUrl } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import { useRestaurant } from "@/hooks/useRestaurant";
@@ -35,7 +36,7 @@ export default function NavigationWrapper({ children }) {
             <AppSidebar brand={brandInfo} />
             <SidebarInset className="flex-1 flex flex-col min-h-screen min-w-0 bg-slate-50">
                 {!shouldHideBreadcrumbs && <Breadcrumbs />}
-                <main className="flex-1">
+                <main className="flex-1 relative flex flex-col">
                     {children}
                 </main>
                 {!shouldHideBottomNav && <BottomNav />}

@@ -1,6 +1,5 @@
 "use client";
 import { useUser } from "@/hooks/useUser";
-import { useState, useEffect } from "react";
 import { MapPin, Plus, Loader2 } from "lucide-react";
 import { AddressCard } from "./fragments/AddressCard";
 import { AddressForm } from "./fragments/AddressForm";
@@ -8,9 +7,13 @@ import { useRestaurant } from "@/hooks/useRestaurant";
 import useNotification from "@/hooks/useNotification";
 import { UserService } from "@/services/frontend/user";
 import Button from "@/components/global/common/Button";
+import { useState, useEffect, forwardRef, useImperativeHandle } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
-export function AddressManager({ onSelectAddress, selectedAddressId, readOnly = false }) {
+export const AddressManager = forwardRef(function AddressManager(
+    { onSelectAddress, selectedAddressId, readOnly = false, onAddressesLoaded },
+    ref
+) {
     const { slug } = useRestaurant();
     const { user } = useUser();
     const notify = useNotification();
@@ -20,6 +23,8 @@ export function AddressManager({ onSelectAddress, selectedAddressId, readOnly = 
     const [editingAddress, setEditingAddress] = useState(null);
     const [deletingId, setDeletingId] = useState(null);
     const [formData, setFormData] = useState({
+        name: "",
+        phone: "",
         street: "",
         city: "",
         state: "",
@@ -44,7 +49,10 @@ export function AddressManager({ onSelectAddress, selectedAddressId, readOnly = 
                 onSelectAddress(defaultAddress);
             }
         }
-    }, [addresses, selectedAddressId, onSelectAddress]);
+        if (!isLoading && onAddressesLoaded) {
+            onAddressesLoaded(addresses || []);
+        }
+    }, [addresses, isLoading, selectedAddressId, onSelectAddress, onAddressesLoaded]);
 
     const addMutation = useMutation({
         mutationFn: (newAddress) => UserService.addAddress(slug, newAddress),
@@ -92,6 +100,8 @@ export function AddressManager({ onSelectAddress, selectedAddressId, readOnly = 
         if (address) {
             setEditingAddress(address);
             setFormData({
+                name: address.name || user?.name || "",
+                phone: address.phone || user?.phone || "",
                 street: address.street || "",
                 city: address.city || "",
                 state: address.state || "",
@@ -103,13 +113,15 @@ export function AddressManager({ onSelectAddress, selectedAddressId, readOnly = 
         } else {
             setEditingAddress(null);
             setFormData({
+                name: user?.name || "",
+                phone: user?.phone || "",
                 street: "",
                 city: "",
                 state: "",
                 zipCode: "",
                 label: "Home",
                 instructions: "",
-                isDefault: addresses.length === 0,
+                isDefault: displayAddresses.length === 0,
             });
         }
         setIsFormOpen(true);
@@ -120,11 +132,50 @@ export function AddressManager({ onSelectAddress, selectedAddressId, readOnly = 
         setEditingAddress(null);
     };
 
+    useImperativeHandle(ref, () => ({
+        openForm,
+        closeForm
+    }));
+
+    const isGuest = !user;
+    const [guestAddresses, setGuestAddresses] = useState([]);
+    const displayAddresses = isGuest ? guestAddresses : addresses;
+
+    useEffect(() => {
+        if (!selectedAddressId && displayAddresses.length > 0 && onSelectAddress) {
+            const defaultAddress = displayAddresses.find(a => a.isDefault) || displayAddresses[0];
+            if (defaultAddress) {
+                onSelectAddress(defaultAddress);
+            }
+        }
+    }, [displayAddresses, selectedAddressId, onSelectAddress]);
+
     const handleSubmit = (e) => {
         e.preventDefault();
 
+        if (isGuest) {
+            if (!formData.name || !formData.phone) {
+                notify.error("Please fill in your name and phone number");
+                return;
+            }
+        }
+
         if (!formData.street || !formData.city || !formData.zipCode) {
             notify.error("Please fill in all required fields");
+            return;
+        }
+
+        if (isGuest) {
+            if (editingAddress) {
+                setGuestAddresses(guestAddresses.map(a => a._id === editingAddress._id ? { ...formData, _id: a._id } : a));
+                notify.success("Address updated successfully");
+            } else {
+                const newAddress = { ...formData, _id: Date.now().toString() };
+                setGuestAddresses([...guestAddresses, newAddress]);
+                onSelectAddress(newAddress);
+                notify.success("Address added successfully");
+            }
+            closeForm();
             return;
         }
 
@@ -137,14 +188,6 @@ export function AddressManager({ onSelectAddress, selectedAddressId, readOnly = 
             addMutation.mutate(formData);
         }
     };
-
-    if (!user) {
-        return (
-            <div className="p-4 bg-rose-50 dark:bg-rose-950/20 text-rose-600 rounded-xl text-sm text-center">
-                Please log in to manage your addresses.
-            </div>
-        );
-    }
 
     return (
         <div className="w-full space-y-4">
@@ -166,11 +209,11 @@ export function AddressManager({ onSelectAddress, selectedAddressId, readOnly = 
                 )}
             </div>
 
-            {isLoading ? (
+            {isLoading && !isGuest ? (
                 <div className="flex items-center justify-center p-8">
                     <Loader2 size={24} className="animate-spin text-primary" />
                 </div>
-            ) : addresses.length === 0 ? (
+            ) : displayAddresses.length === 0 ? (
                 <div className="text-center p-6 bg-neutral-50 dark:bg-zinc-900/50 rounded-md border border-dashed border-neutral-200 dark:border-zinc-800">
                     <MapPin size={24} className="mx-auto text-neutral-400 mb-2" />
                     <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-4">No saved addresses found.</p>
@@ -185,7 +228,7 @@ export function AddressManager({ onSelectAddress, selectedAddressId, readOnly = 
                 </div>
             ) : (
                 <div className="grid gap-2.5">
-                    {addresses.map((address) => (
+                    {displayAddresses.map((address) => (
                         <AddressCard
                             key={address._id}
                             address={address}
@@ -196,6 +239,7 @@ export function AddressManager({ onSelectAddress, selectedAddressId, readOnly = 
                             onEdit={openForm}
                             onDelete={handleDelete}
                             readOnly={readOnly}
+                            isGuest={isGuest}
                         />
                     ))}
                 </div>
@@ -209,9 +253,10 @@ export function AddressManager({ onSelectAddress, selectedAddressId, readOnly = 
                 setFormData={setFormData}
                 isEditing={!!editingAddress}
                 isPending={addMutation.isPending || updateMutation.isPending}
+                isGuest={isGuest}
             />
         </div>
     );
-}
+});
 
 export default AddressManager;

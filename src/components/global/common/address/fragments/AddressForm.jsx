@@ -1,10 +1,52 @@
+import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { X, Check, Loader2 } from "lucide-react";
 import { DEFAULT_LABELS } from "./helpers/constants";
 import Button from "@/components/global/common/Button";
+import { X, Check, Loader2, Navigation } from "lucide-react";
 
-export function AddressForm({ isOpen, onClose, onSubmit, formData, setFormData, isEditing, isPending }) {
+export function AddressForm({ isOpen, onClose, onSubmit, formData, setFormData, isEditing, isPending, isGuest }) {
+    const [isLocating, setIsLocating] = useState(false);
+
     if (!isOpen) return null;
+
+    const handleAutoPick = () => {
+        if (!("geolocation" in navigator)) {
+            alert("Geolocation is not supported by your browser");
+            return;
+        }
+
+        setIsLocating(true);
+        navigator.geolocation.getCurrentPosition(
+            async (position) => {
+                try {
+                    const { latitude, longitude } = position.coords;
+                    const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+                    const data = await response.json();
+
+                    if (data.address) {
+                        setFormData(prev => ({
+                            ...prev,
+                            street: data.address.road || prev.street,
+                            city: data.address.city || data.address.town || data.address.village || data.address.county || prev.city,
+                            state: data.address.state || prev.state,
+                            zipCode: data.address.postcode || prev.zipCode,
+                        }));
+                    }
+                } catch (error) {
+                    console.error("Error fetching location:", error);
+                    alert("Failed to fetch address from location.");
+                } finally {
+                    setIsLocating(false);
+                }
+            },
+            (error) => {
+                console.error("Geolocation error:", error);
+                alert("Unable to retrieve your location");
+                setIsLocating(false);
+            },
+            { enableHighAccuracy: true }
+        );
+    };
 
     return (
         <div className="fixed inset-0 z-[100] flex flex-col justify-end">
@@ -15,21 +57,8 @@ export function AddressForm({ isOpen, onClose, onSubmit, formData, setFormData, 
 
             <div className="relative w-full max-h-[90vh] overflow-y-auto bg-white dark:bg-zinc-950 rounded-t-3xl shadow-2xl animate-in slide-in-from-bottom-full duration-300 pt-5 pb-6 px-4 sm:px-5">
                 <div className="absolute top-3 left-1/2 -translate-x-1/2 w-12 h-1.5 bg-neutral-200 dark:bg-zinc-800 rounded-full" />
-
-                <div className="flex items-center justify-between mb-6 mt-2">
-                    <h3 className="text-xl font-bold text-neutral-900 dark:text-zinc-100 tracking-tight">
-                        {isEditing ? "Edit Address" : "Add New Address"}
-                    </h3>
-                    <button
-                        type="button"
-                        onClick={onClose}
-                        className="p-2 rounded-full text-neutral-400 hover:bg-neutral-100 dark:hover:bg-zinc-800 hover:text-neutral-700 dark:hover:text-zinc-200 transition-colors"
-                    >
-                        <X size={20} strokeWidth={2.5} />
-                    </button>
-                </div>
-
                 <form onSubmit={onSubmit} className="space-y-4">
+
                     <div className="space-y-1">
                         <label className="text-xs font-semibold text-neutral-700 dark:text-neutral-300">Save As</label>
                         <div className="flex flex-wrap gap-2">
@@ -51,6 +80,50 @@ export function AddressForm({ isOpen, onClose, onSubmit, formData, setFormData, 
                             ))}
                         </div>
                     </div>
+
+                    <div className="space-y-1">
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={handleAutoPick}
+                            disabled={isLocating}
+                            className="w-full h-11 flex items-center justify-center gap-2 border-primary/30 text-primary hover:bg-primary/10 rounded-md transition-colors"
+                        >
+                            {isLocating ? (
+                                <Loader2 size={16} className="animate-spin" />
+                            ) : (
+                                <Navigation size={16} />
+                            )}
+                            {isLocating ? "Detecting location..." : "Use Current Location"}
+                        </Button>
+                    </div>
+
+                    {isGuest && (
+                        <div className="flex flex-col gap-4">
+                            <div className="space-y-1">
+                                <label className="text-xs font-semibold text-neutral-700 dark:text-neutral-300">Name *</label>
+                                <input
+                                    required
+                                    type="text"
+                                    value={formData.name || ""}
+                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                    placeholder="Your Name"
+                                    className="w-full h-11 px-3 rounded-md bg-neutral-50 dark:bg-zinc-800/50 border border-gray-200 dark:border-zinc-800 text-sm text-neutral-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                                />
+                            </div>
+                            <div className="space-y-1">
+                                <label className="text-xs font-semibold text-neutral-700 dark:text-neutral-300">Phone *</label>
+                                <input
+                                    required
+                                    type="tel"
+                                    value={formData.phone || ""}
+                                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                                    placeholder="Phone Number"
+                                    className="w-full h-11 px-3 rounded-md bg-neutral-50 dark:bg-zinc-800/50 border border-gray-200 dark:border-zinc-800 text-sm text-neutral-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                                />
+                            </div>
+                        </div>
+                    )}
 
                     <div className="space-y-1">
                         <label className="text-xs font-semibold text-neutral-700 dark:text-neutral-300">Street Address *</label>
@@ -100,16 +173,7 @@ export function AddressForm({ isOpen, onClose, onSubmit, formData, setFormData, 
                         />
                     </div>
 
-                    <div className="space-y-1">
-                        <label className="text-xs font-semibold text-neutral-700 dark:text-neutral-300">Delivery Instructions (Optional)</label>
-                        <textarea
-                            value={formData.instructions}
-                            onChange={(e) => setFormData({ ...formData, instructions: e.target.value })}
-                            placeholder="e.g. Ring the bell twice, leave at the door..."
-                            rows={2}
-                            className="w-full p-3 rounded-md bg-neutral-50 dark:bg-zinc-800/50 border border-gray-200 dark:border-zinc-800 text-sm text-neutral-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-none"
-                        />
-                    </div>
+
 
                     <label className="flex items-center gap-2 cursor-pointer group">
                         <div className="relative flex items-center justify-center w-4 h-4 rounded border border-gray-300 dark:border-zinc-700 group-hover:border-primary transition-colors">

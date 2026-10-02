@@ -2,8 +2,12 @@ import { NextResponse } from "next/server";
 
 const AUTH_ROUTES = ["/login", "/register"];
 const PUBLIC_ROUTES = [
+    "/",
+    "/cart",
+    "/menu",
     "/login",
     "/register",
+    "/social"
 ];
 
 export function middleware(request) {

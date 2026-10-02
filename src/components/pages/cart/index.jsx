@@ -1,4 +1,5 @@
 "use client";
+import React from "react";
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import { useUser } from "@/hooks/useUser";
@@ -19,12 +20,14 @@ import { CouponSection } from "@/components/pages/cart/fragments/coupon-section"
 import { CheckoutFooter } from "@/components/pages/cart/fragments/checkout-footer";
 import { TableNumberModal } from "@/components/pages/cart/fragments/table-number-modal";
 import { OrderTypeSelector } from "@/components/pages/cart/fragments/order-type-selector";
+import { GuestCheckoutDrawer } from "@/components/pages/cart/fragments/guest-checkout-drawer";
 
 export default function CartPage() {
     const { slug, restaurant } = useRestaurant();
     const { user } = useUser();
     const notify = useNotification();
     const { configuration, isLoading: isConfigLoading } = useWebsiteConfiguration();
+    const addressManagerRef = React.useRef(null);
 
     const {
         cartItems,
@@ -37,6 +40,8 @@ export default function CartPage() {
         setOrderType,
         isTableModalOpen,
         setIsTableModalOpen,
+        isGuestModalOpen,
+        setIsGuestModalOpen,
         selectedAddress,
         setSelectedAddress,
         subtotal,
@@ -82,9 +87,10 @@ export default function CartPage() {
                             acceptedTypes={configuration?.ordering?.acceptedTypes}
                         />
 
-                        {orderType === CART_CONSTANTS.ORDER_TYPES.DELIVERY && (
+                        {orderType === CART_CONSTANTS.ORDER_TYPES.DELIVERY && user && (
                             <div className="bg-white dark:bg-zinc-900 border border-gray-150/80 dark:border-zinc-800 rounded-xl p-4 sm:p-5 shadow-xs">
                                 <AddressManager
+                                    ref={addressManagerRef}
                                     onSelectAddress={setSelectedAddress}
                                     selectedAddressId={selectedAddress?._id}
                                 />
@@ -152,6 +158,18 @@ export default function CartPage() {
                 onConfirm={(table) => {
                     setIsTableModalOpen(false);
                     processCheckout(table, "");
+                }}
+            />
+
+            <GuestCheckoutDrawer
+                open={isGuestModalOpen}
+                onOpenChange={setIsGuestModalOpen}
+                orderType={orderType}
+                selectedAddressId={selectedAddress?._id}
+                onSelectAddress={setSelectedAddress}
+                onLoginSuccess={() => {
+                    setIsGuestModalOpen(false);
+                    handleCheckout();
                 }}
             />
         </div>
