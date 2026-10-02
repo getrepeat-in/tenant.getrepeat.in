@@ -61,16 +61,17 @@ export const PromoCarousel = ({ banners, isLoading = false }) => {
                 style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
             >
                 {displayBanners.map((offer, index) => {
-                    const imgUrl = getImageUrl(offer.image, true, "detail");
-                    const hasText = offer.title || offer.subtitle || offer.ctaText;
+                    const imgUrl = getImageUrl(offer?.image, true, "detail");
+                    if (!imgUrl) return null;
+                    const hasText = offer?.title || offer?.subtitle || offer?.ctaText;
 
-                    const CardWrapper = offer.ctaLink ? Link : "div";
+                    const CardWrapper = offer?.ctaLink ? Link : "div";
                     const wrapperProps = offer.ctaLink ? { href: offer.ctaLink } : {};
 
                     return (
                         <CardWrapper
                             {...wrapperProps}
-                            key={`${offer._id || offer.id || 'banner'}-${index}`}
+                            key={`${offer?._id || offer?.id || 'banner'}-${index}`}
                             className="group relative flex aspect-video w-[90%] shrink-0 snap-center overflow-hidden rounded-[20px] bg-gray-100 sm:w-[85%] md:w-[80%] shadow-sm"
                         >
                             <Image
