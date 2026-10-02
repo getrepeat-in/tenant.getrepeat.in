@@ -19,10 +19,18 @@ export function usePwaInstall() {
 
         if ('serviceWorker' in navigator && !isSwRegistered) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js').then(() => {
-                    isSwRegistered = true;
-                }).catch(err => {
-                    console.log('SW registration failed: ', err);
+                // Force unregister ALL old service workers to completely kill the broken one
+                navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                    for(let registration of registrations) {
+                        registration.unregister();
+                    }
+                }).then(() => {
+                    // Register the new clean one
+                    navigator.serviceWorker.register('/sw.js').then(() => {
+                        isSwRegistered = true;
+                    }).catch(err => {
+                        console.log('SW registration failed: ', err);
+                    });
                 });
             });
         }
