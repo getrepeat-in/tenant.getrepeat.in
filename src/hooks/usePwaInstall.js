@@ -7,8 +7,11 @@ let isSwRegistered = false;
 
 export function usePwaInstall() {
     const [deferredPrompt, setDeferredPrompt] = useState(globalDeferredPrompt);
+    const [isStandalone, setIsStandalone] = useState(false);
 
     useEffect(() => {
+        setIsStandalone(window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone);
+
         if ('serviceWorker' in navigator && !isSwRegistered) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/sw.js').then(() => {
@@ -49,6 +52,7 @@ export function usePwaInstall() {
 
     return {
         isInstallable: !!deferredPrompt,
+        isStandalone,
         promptInstall
     };
 }
