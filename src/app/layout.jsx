@@ -85,8 +85,12 @@ export default function RootLayout({ children }) {
     <html
       lang="en"
       className={cn("h-full", "antialiased")}
+      suppressHydrationWarning
     >
-      <body className={cn("min-h-full flex flex-col font-sans", fontPoppins.className, fontPoppins.variable)}>
+      <body 
+        className={cn("min-h-full flex flex-col font-sans", fontPoppins.className, fontPoppins.variable)}
+        suppressHydrationWarning
+      >
         <Suspense fallback={null}>
           <PostHogPageview />
         </Suspense>
