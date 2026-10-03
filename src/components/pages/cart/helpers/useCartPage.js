@@ -77,7 +77,7 @@ export function useCartPage({ slug, restaurant, user, notify, configuration }) {
     }, [configuration]);
 
     const subtotal = cartItems.reduce((acc, curr) => {
-        const itemPrice = curr.price || curr.item?.base_price || curr.item?.price || 0;
+        const itemPrice = curr.price !== undefined ? curr.price : (curr.item?.base_price || curr.item?.price || 0);
         return acc + itemPrice * curr.quantity;
     }, 0);
 
@@ -144,7 +144,7 @@ export function useCartPage({ slug, restaurant, user, notify, configuration }) {
             const menuItemId = rawItem._id || rawItem.id || cartItem.itemId;
             const name = rawItem.name || cartItem.name || "Item";
             const quantity = cartItem.quantity || 1;
-            const unitPrice = cartItem.price || rawItem.base_price || rawItem.price || 0;
+            const unitPrice = cartItem.price !== undefined ? cartItem.price : (rawItem.base_price || rawItem.price || 0);
 
             let variant = undefined;
             let addons = [];

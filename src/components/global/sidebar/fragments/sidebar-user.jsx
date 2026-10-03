@@ -9,23 +9,8 @@ import { clearUser } from "@/store/slices/userSlice"
 import { AuthService } from "@/services/frontend/auth"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { SidebarMenu, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar"
-import {
-    LogInIcon,
-    UserPlusIcon,
-    LogOutIcon,
-    Loader2,
-    CheckCircle2Icon,
-    AlertCircleIcon,
-    XCircleIcon,
-    ChevronsUpDownIcon,
-} from "lucide-react"
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import { LogInIcon, UserPlusIcon, LogOutIcon, Loader2, CheckCircle2Icon, AlertCircleIcon, XCircleIcon, ChevronsUpDownIcon } from "lucide-react"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
 function StatusBadge({ status }) {
     switch (status?.toLowerCase()) {

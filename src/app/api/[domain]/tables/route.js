@@ -1,0 +1,26 @@
+import dbConnect from "@/lib/db";
+import { proxyMerchantRequest } from "@/lib/api/proxy";
+import { JsonResponse } from "@/lib/api/responseHandler";
+
+export const GET = async (req, { params }) => {
+  try {
+    const { domain } = await params;
+
+    if (!domain) {
+      return JsonResponse.error("Restaurant slug is required!", 400);
+    }
+
+    await dbConnect();
+
+    return await proxyMerchantRequest({
+      method: "GET",
+      url: `/api/${domain}/tables`,
+      req,
+      successMessage: "Tables fetched successfully",
+      errorMessage: "Failed to fetch tables from server",
+    });
+  } catch (err) {
+    console.error("GET tables error:", err);
+    return JsonResponse.error(err.message || "Internal Server Error!", 500);
+  }
+};

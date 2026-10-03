@@ -94,6 +94,21 @@ export default function RootLayout({ children }) {
         <Suspense fallback={null}>
           <PostHogPageview />
         </Suspense>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                  navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                    for(let registration of registrations) {
+                      registration.unregister();
+                    }
+                  });
+                });
+              }
+            `,
+          }}
+        />
         <PostHogProvider>
           <QueryProvider>
             <ThemeProvider>

@@ -8,12 +8,15 @@ import { ArrowRight, Sparkles } from "lucide-react";
 import { useRestaurant } from "@/hooks/useRestaurant";
 import { PromotionService } from "@/services/frontend/promotion";
 import { ItemImage } from "@/components/global/common/item-image";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { FreebieItems } from "../promo-carousel/fragments/freebie-items";
 
 export default function CartBar() {
     const router = useRouter();
     const { slug } = useRestaurant();
     const cartItems = useSelector((state) => state.cart.items);
     const [isMounted, setIsMounted] = useState(false);
+    const [isFreebieSheetOpen, setIsFreebieSheetOpen] = useState(false);
 
     const { data: promotions = [] } = useQuery({
         queryKey: ["promotions", slug],
@@ -32,7 +35,7 @@ export default function CartBar() {
 
     const totalItems = cartItems.reduce((acc, curr) => acc + curr.quantity, 0);
     const cartTotal = cartItems.reduce((acc, curr) => {
-        const price = curr.item?.base_price || curr.item?.price || 0;
+        const price = curr.price !== undefined ? curr.price : (curr.item?.base_price || curr.item?.price || 0);
         return acc + (price * curr.quantity);
     }, 0);
 
@@ -67,7 +70,10 @@ export default function CartBar() {
             <div className="w-full max-w-screen-sm pointer-events-auto flex flex-col overflow-hidden rounded-2xl bg-white shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-gray-150">
                 {displayPromo && (
                     <button 
-                        onClick={() => router.push('/cart')}
+                        onClick={() => {
+                            if (isAchieved) setIsFreebieSheetOpen(true);
+                            else router.push('/cart');
+                        }}
                         className={cn(
                             "relative w-full flex items-center justify-between p-3 transition-all duration-300 active:bg-gray-50 border-b",
                             isAchieved 
@@ -148,6 +154,14 @@ export default function CartBar() {
                     </div>
                 </button>
             </div>
+
+            <Sheet open={isFreebieSheetOpen} onOpenChange={setIsFreebieSheetOpen}>
+                <SheetContent side="bottom" showCloseButton={false} className="rounded-t-3xl px-0 pb-6 pt-2 max-h-[85vh] overflow-y-auto custom-scrollbar">
+                    <div className="px-2">
+                        <FreebieItems />
+                    </div>
+                </SheetContent>
+            </Sheet>
         </div>
     );
 }

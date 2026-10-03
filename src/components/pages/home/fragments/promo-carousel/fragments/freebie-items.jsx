@@ -1,18 +1,20 @@
 "use client";
-import { useQuery } from "@tanstack/react-query";
-import { useSelector, useDispatch } from "react-redux";
-import { PromotionService } from "@/services/frontend/promotion";
-import { useRestaurant } from "@/hooks/useRestaurant";
-import { addItem, removeItem } from "@/store/slices/cartSlice";
-import { Lock, Unlock, Plus, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
-import React from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useRestaurant } from "@/hooks/useRestaurant";
+import { useSelector, useDispatch } from "react-redux";
+import { Lock, Unlock, Plus, Check } from "lucide-react";
+import { addItem, removeItem } from "@/store/slices/cartSlice";
+import { PromotionService } from "@/services/frontend/promotion";
 import { ItemImage } from "@/components/global/common/item-image";
 
 export const FreebieItems = () => {
     const { slug } = useRestaurant();
     const cartItems = useSelector((state) => state.cart.items) || [];
-    const cartTotal = cartItems.reduce((acc, item) => acc + ((item.price || item.base_price || 0) * (item.quantity || 1)), 0);
+    const cartTotal = cartItems.reduce((acc, item) => {
+        const p = item.price !== undefined ? item.price : (item.item?.base_price || item.item?.price || 0);
+        return acc + (p * (item.quantity || 1));
+    }, 0);
 
     const { data: promotions = [], isPending } = useQuery({
         queryKey: ["promotions", slug],
@@ -38,20 +40,20 @@ export const FreebieItems = () => {
                     <div key={promo._id || idx} className="flex flex-col gap-3">
                         <div className="flex items-center justify-between">
                             <div>
-                                <h2 className="text-lg font-bold text-gray-900 tracking-tight flex items-center gap-2">
-                                    {promo.name || "Free Treats"}
+                                <h2 className="text-[19px] font-black text-gray-900 dark:text-white tracking-tight flex items-center gap-2 uppercase">
+                                    GET FREE ITEM
                                     {!isLocked && (
-                                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-green-100 text-green-600">
+                                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400">
                                             <Unlock size={12} strokeWidth={3} />
                                         </span>
                                     )}
                                 </h2>
                                 {isLocked ? (
-                                    <p className="text-[13px] text-gray-500 font-medium">
+                                    <p className="text-[14px] text-gray-500 dark:text-gray-400 font-medium mt-0.5">
                                         Add <span className="text-primary font-bold">₹{remaining.toFixed(2)}</span> more to unlock free items
                                     </p>
                                 ) : (
-                                    <p className="text-[13px] text-green-600 font-medium">
+                                    <p className="text-[14px] text-green-600 dark:text-green-400 font-medium mt-0.5">
                                         Unlocked! Claim your free item now.
                                     </p>
                                 )}
@@ -89,21 +91,26 @@ const FreebieCard = ({ item, isLocked, promo }) => {
     const { restaurant } = useRestaurant();
     const cartItems = useSelector((state) => state.cart.items);
     const isAdded = cartItems.some(
-        (i) => i.item?._id === item._id && i.price === 0
+        (i) => i.item?._id === item._id && i.selectedCustomizations?.freebie
     );
 
     const handleToggle = (e) => {
         if (e) e.stopPropagation();
         if (isLocked) return;
         if (isAdded) {
-            dispatch(removeItem(`${item._id}`));
+            dispatch(removeItem(`${item._id}|{"freebie":true}`));
         } else {
+            const existingFreebies = cartItems.filter(i => i.selectedCustomizations?.freebie);
+            existingFreebies.forEach(f => {
+                dispatch(removeItem(f.cartItemId || `${f.item._id}|{"freebie":true}`));
+            });
+
             dispatch(
                 addItem({
                     item,
                     restaurantId: restaurant?._id || restaurant?.id,
                     price: 0,
-                    selectedCustomizations: {},
+                    selectedCustomizations: { freebie: true },
                     quantity: 1,
                 })
             );
@@ -113,35 +120,37 @@ const FreebieCard = ({ item, isLocked, promo }) => {
     return (
         <div
             className={cn(
-                "relative flex min-w-[145px] w-[145px] shrink-0 snap-start flex-col rounded-xl bg-white dark:bg-zinc-900 p-2.5 transition-all duration-300 border shadow-[0_2px_8px_rgba(0,0,0,0.04)]",
+                "relative flex min-w-[155px] w-[155px] shrink-0 snap-start flex-col rounded-2xl bg-white dark:bg-zinc-900 p-2.5 transition-all duration-300 border shadow-xs",
                 isLocked
                     ? "border-gray-100 dark:border-zinc-800"
-                    : "border-primary/20 hover:border-primary/40 cursor-pointer"
+                    : isAdded
+                        ? "border-green-500 ring-1 ring-green-500"
+                        : "border-gray-200 hover:border-primary/30 cursor-pointer dark:border-zinc-700"
             )}
             onClick={handleToggle}
         >
-            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-gray-50 dark:bg-zinc-800 group mb-3">
+            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl bg-gray-50 dark:bg-zinc-800 group mb-3">
                 <ItemImage
                     src={item?.image}
                     alt={item?.name}
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
 
-                <div className="absolute top-0 left-0 bg-primary text-primary-foreground text-[10px] font-bold px-2 py-0.5 rounded-br-lg shadow-xs uppercase tracking-wider">
+                <div className="absolute top-0 left-0 bg-primary text-primary-foreground text-[10px] font-bold px-2.5 py-1 rounded-br-xl shadow-xs uppercase tracking-widest z-10">
                     Freebie
                 </div>
             </div>
 
             <div className="flex items-center justify-between gap-2 px-0.5">
                 <div className="flex flex-col gap-0.5 flex-1 min-w-0">
-                    <h3 className="text-[13px] font-bold leading-tight text-gray-900 dark:text-zinc-100 line-clamp-1 truncate pr-1">
+                    <h3 className="text-[14px] font-bold leading-tight text-gray-900 dark:text-zinc-100 line-clamp-1 truncate pr-1">
                         {item.name}
                     </h3>
                     <div className="flex items-center gap-1.5 mt-0.5">
-                        <span className="text-[12px] font-medium text-gray-400 line-through">
+                        <span className="text-[13px] font-semibold text-gray-400 line-through">
                             ₹{item.base_price || item.price}
                         </span>
-                        <span className="text-[12px] font-black text-green-600">
+                        <span className="text-[13px] font-black text-green-600 dark:text-green-500">
                             ₹0
                         </span>
                     </div>
@@ -149,18 +158,18 @@ const FreebieCard = ({ item, isLocked, promo }) => {
 
                 <div
                     className={cn(
-                        "flex h-8 w-8 shrink-0 items-center justify-center rounded-md shadow-xs transition-all duration-300 border",
+                        "flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] shadow-sm transition-all duration-300",
                         isLocked
-                            ? "bg-gray-50 dark:bg-zinc-800 text-gray-400 border-gray-100 dark:border-zinc-700 cursor-not-allowed"
+                            ? "bg-gray-100 dark:bg-zinc-800 text-gray-400 cursor-not-allowed"
                             : isAdded
-                            ? "bg-green-500 text-white border-green-500 cursor-pointer"
-                            : "bg-primary text-primary-foreground border-primary/20 cursor-pointer hover:brightness-95"
+                                ? "bg-[#00C853] text-white cursor-pointer hover:bg-[#00B048]"
+                                : "bg-primary text-primary-foreground cursor-pointer hover:brightness-95"
                     )}
                 >
                     {isLocked ? (
-                        <Lock size={14} strokeWidth={2.5} />
+                        <Lock size={15} strokeWidth={2.5} />
                     ) : isAdded ? (
-                        <Check size={16} strokeWidth={3} />
+                        <Check size={18} strokeWidth={3} />
                     ) : (
                         <Plus size={18} strokeWidth={2.5} />
                     )}

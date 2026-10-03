@@ -1,19 +1,27 @@
 "use client";
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { SidebarTrigger } from "@/components/ui/sidebar";
+import { ChevronRight, Menu } from "lucide-react";
+import { useSidebar } from "@/components/ui/sidebar";
 
 export function Breadcrumbs() {
   const pathname = usePathname();
   const segments = pathname.split("/").filter(Boolean);
+
+  const { toggleSidebar } = useSidebar();
 
   if (segments.length === 0) return null;
 
   return (
     <div className="flex items-center justify-between w-full h-14 sm:h-16 px-4 sm:px-6 border-b border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-950 sticky top-0 z-30">
       <div className="flex items-center gap-3 sm:gap-3.5">
-        <SidebarTrigger className="h-8 w-8 text-muted-foreground hover:text-foreground cursor-pointer -ml-1.5 !flex" />
+        <button
+            type="button"
+            onClick={toggleSidebar}
+            className="flex h-6 w-9 items-center justify-center rounded-xl bg-white text-neutral-700 hover:bg-neutral-50 hover:text-primary active:scale-95 transition-all dark:bg-zinc-900 dark:border-zinc-800 dark:text-zinc-300 dark:hover:text-primary -ml-1"
+        >
+            <Menu size={18} strokeWidth={2.5} />
+        </button>
         <div className="h-4.5 w-px bg-gray-200 dark:bg-zinc-800 shrink-0" />
 
         <nav className="flex items-center gap-1.5 text-sm sm:text-[15px]">

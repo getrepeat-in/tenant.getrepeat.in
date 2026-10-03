@@ -3,14 +3,12 @@ import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { useRestaurant } from "@/hooks/useRestaurant";
 
-import { BookOpen, BellRing, Clock, ArrowRight, Download } from "lucide-react";
-import { usePwaInstall } from "@/hooks/usePwaInstall";
+import { BookOpen, BellRing, Clock, ArrowRight } from "lucide-react";
 import useNotification from "@/hooks/useNotification";
 
 export const QuickActions = () => {
     const router = useRouter();
     const { restaurant } = useRestaurant();
-    const { isInstallable, isStandalone, promptInstall } = usePwaInstall();
     const notify = useNotification();
 
     const actions = [
@@ -38,24 +36,6 @@ export const QuickActions = () => {
             color: "from-emerald-500/5 to-transparent dark:from-emerald-500/10"
         },
     ];
-
-    if (!isStandalone) {
-        actions.push({
-            id: "install",
-            title: "Install App",
-            subtitle: "Add to home screen",
-            icon: <Download size={22} className="text-zinc-700 dark:text-zinc-300 transition-colors group-hover:text-primary" />,
-            actionText: "Install Now",
-            onClick: () => {
-                if (isInstallable) {
-                    promptInstall();
-                } else {
-                    notify.info("To install on this device, tap Share (or menu) and select 'Add to Home Screen'");
-                }
-            },
-            color: "from-blue-500/5 to-transparent dark:from-blue-500/10"
-        });
-    }
 
     return (
         <div className="w-full px-4 md:px-6 mb-8 mt-4 animate-in fade-in slide-in-from-bottom-4 duration-500">

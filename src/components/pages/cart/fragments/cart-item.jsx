@@ -30,8 +30,12 @@ export function CartItem({ cartItem }) {
         dispatch(removeItem(cartItemId || item?._id));
     };
 
-    const hasCustomizations = Object.keys(selectedCustomizations || {}).length > 0;
-    const customizationEntries = Object.entries(selectedCustomizations || {}).map(
+    const isFreebie = cartItem?.selectedCustomizations?.freebie === true;
+    const displayCustomizations = { ...selectedCustomizations };
+    if (displayCustomizations.freebie !== undefined) delete displayCustomizations.freebie;
+
+    const hasCustomizations = Object.keys(displayCustomizations || {}).length > 0;
+    const customizationEntries = Object.entries(displayCustomizations || {}).map(
         ([groupName, selection]) => {
             const formattedVal = Array.isArray(selection)
                 ? selection.join(", ")
@@ -43,7 +47,7 @@ export function CartItem({ cartItem }) {
         }
     ).filter((c) => Boolean(c.value));
 
-    const unitPrice = price || item?.base_price || item?.price || 0;
+    const unitPrice = price !== undefined ? price : (item?.base_price || item?.price || 0);
     const totalPrice = unitPrice * quantity;
     const description = item?.description;
     const dietaryType = item?.dietaryType || item?.dietary_type;
@@ -69,9 +73,14 @@ export function CartItem({ cartItem }) {
                     <div className="flex items-start justify-between gap-2">
                         <h3
                             title={item?.name}
-                            className="text-sm sm:text-[15px] font-medium text-neutral-800 dark:text-zinc-100 truncate leading-snug flex-1"
+                            className="text-sm sm:text-[15px] font-medium text-neutral-800 dark:text-zinc-100 truncate leading-snug flex-1 flex items-center gap-2"
                         >
-                            {item?.name}
+                            <span className="truncate">{item?.name}</span>
+                            {isFreebie && (
+                                <span className="inline-flex shrink-0 items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400">
+                                    FREE
+                                </span>
+                            )}
                         </h3>
 
                         <button
@@ -109,13 +118,26 @@ export function CartItem({ cartItem }) {
 
             <div className="flex items-center justify-between pt-2 border-t border-gray-100 dark:border-zinc-800/80">
                 <div className="flex items-baseline gap-1.5">
-                    <span className="text-sm sm:text-base font-semibold text-neutral-900 dark:text-zinc-100">
-                        ₹{totalPrice}
-                    </span>
-                    {quantity > 1 && (
-                        <span className="text-xs text-neutral-400 dark:text-neutral-500 font-normal">
-                            (₹{unitPrice} each)
-                        </span>
+                    {isFreebie ? (
+                        <>
+                            <span className="text-sm sm:text-base font-semibold text-emerald-600 dark:text-emerald-500">
+                                ₹0
+                            </span>
+                            <span className="text-xs text-neutral-400 dark:text-neutral-500 font-normal line-through">
+                                ₹{(item?.base_price || item?.price || 0) * quantity}
+                            </span>
+                        </>
+                    ) : (
+                        <>
+                            <span className="text-sm sm:text-base font-semibold text-neutral-900 dark:text-zinc-100">
+                                ₹{totalPrice}
+                            </span>
+                            {quantity > 1 && (
+                                <span className="text-xs text-neutral-400 dark:text-neutral-500 font-normal">
+                                    (₹{unitPrice} each)
+                                </span>
+                            )}
+                        </>
                     )}
                 </div>
 
