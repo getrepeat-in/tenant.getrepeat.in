@@ -6,12 +6,13 @@ import { useHomePage } from "./helpers/useHomePage";
 import { ResponsiveHeader } from "./fragments/header"
 import PromoCarousel from "./fragments/promo-carousel";
 import { MenuEmptyState } from "./fragments/empty-state";
-import { QuickActions } from "./fragments/quick-actions";
-import { MenuHeroBanner } from "./fragments/menu-hero-banner";
 import { RestaurantOfflineState } from "./fragments/offline-state";
-import { FreebieItems } from "./fragments/promo-carousel/fragments/freebie-items";
-import { SpecialDeals } from "./fragments/promo-carousel/fragments/special-deals";
-import { BestsellerDeals } from "./fragments/promo-carousel/fragments/bestseller-deals";
+
+import dynamic from "next/dynamic";
+const FreebieItems = dynamic(() => import("./fragments/promo-carousel/fragments/freebie-items").then(mod => mod.FreebieItems), { ssr: false });
+const SpecialDeals = dynamic(() => import("./fragments/promo-carousel/fragments/special-deals").then(mod => mod.SpecialDeals), { ssr: false });
+const BestsellerDeals = dynamic(() => import("./fragments/promo-carousel/fragments/bestseller-deals").then(mod => mod.BestsellerDeals), { ssr: false });
+const MenuLayout = dynamic(() => import("../menu/fragments"), { ssr: false });
 
 const Home = () => {
     const {
@@ -94,10 +95,7 @@ const Home = () => {
             <FreebieItems />
             <BestsellerDeals />
             <SpecialDeals />
-
-            <MenuHeroBanner />
-
-            <QuickActions />
+            <MenuLayout searchVal={searchValue} />
             <CartBar />
         </div>
     )

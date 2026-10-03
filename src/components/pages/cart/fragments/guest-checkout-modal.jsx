@@ -1,10 +1,10 @@
 "use client";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { X, Loader2, User, Phone } from "lucide-react";
 import { setUser } from "@/store/slices/userSlice";
 import useNotification from "@/hooks/useNotification";
 import { AuthService } from "@/services/frontend/auth";
+import { X, Loader2, User, Phone } from "lucide-react";
 
 export function GuestCheckoutModal({ open, onOpenChange, onLoginSuccess }) {
     const dispatch = useDispatch();

@@ -10,7 +10,7 @@ const PUBLIC_ROUTES = [
     "/social"
 ];
 
-export function middleware(request) {
+export function proxy(request) {
     const { pathname } = request.nextUrl;
     
     const isPublicRoute = PUBLIC_ROUTES.some(route => {
@@ -35,6 +35,6 @@ export function middleware(request) {
 
 export const config = {
     matcher: [
-        "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|assets|sw.js|manifest.json|icon.png|apple-icon.png).*)",
+        "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|assets|manifest.json|icon.png|apple-icon.png).*)",
     ],
 };

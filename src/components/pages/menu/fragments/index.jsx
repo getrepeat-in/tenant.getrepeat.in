@@ -3,12 +3,12 @@ import React, { useState, useEffect, useRef, useMemo, useDeferredValue } from "r
 import { useDispatch } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
-import { useRestaurant } from "@/hooks/useRestaurant";
-import { MenuService } from "@/services/frontend/menu";
-import { PromotionService } from "@/services/frontend/promotion";
-import { setAddonGroups } from "@/store/slices/menuSlice";
 import { MenuEmptyState } from "./menu-empty-state";
 import { MenuSkeleton } from "@/components/skeleton";
+import { useRestaurant } from "@/hooks/useRestaurant";
+import { MenuService } from "@/services/frontend/menu";
+import { setAddonGroups } from "@/store/slices/menuSlice";
+import { PromotionService } from "@/services/frontend/promotion";
 import ItemCardV1 from "./item-cards";
 import { ItemImage } from "@/components/global/common/item-image";
 import { cn } from "@/lib/utils";

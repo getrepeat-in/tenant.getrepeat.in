@@ -1,9 +1,9 @@
 "use client";
+import posthog from "posthog-js";
 import { makeStore } from "@/store";
 import { useRef, useEffect } from "react";
-import { Provider, useDispatch, useSelector } from "react-redux";
-import posthog from "posthog-js";
 import { fetchUser } from "@/store/slices/userSlice";
+import { Provider, useDispatch, useSelector } from "react-redux";
 import { fetchRestaurant } from "@/store/slices/restaurantSlice";
 import { loadCart, setCartLoaded } from "@/store/slices/cartSlice";
 

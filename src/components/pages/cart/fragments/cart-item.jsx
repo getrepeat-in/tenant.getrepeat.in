@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { CookingInstructions } from "./cooking-instructions";
 import { ItemImage } from "@/components/global/common/item-image";

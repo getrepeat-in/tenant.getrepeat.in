@@ -1,14 +1,14 @@
 "use client";
+import { cn } from "@/lib/utils";
 import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { useRestaurant } from "@/hooks/useRestaurant";
+import { Sheet, SheetContent} from "@/components/ui/sheet";
 import { PromotionService } from "@/services/frontend/promotion";
 import { ItemImage } from "@/components/global/common/item-image";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { FreebieItems } from "../promo-carousel/fragments/freebie-items";
 
 export default function CartBar() {
