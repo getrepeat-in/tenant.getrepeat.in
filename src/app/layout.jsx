@@ -11,55 +11,41 @@ import PostHogProvider, { PostHogPageview } from "@/providers/posthog-provider";
 import { Suspense } from "react";
 import { headers } from "next/headers";
 
-export async function generateMetadata() {
-  const headersList = await headers();
-  const host = headersList.get("host") || "";
-  let slug = "haldiram";
-  
-  const parts = host.split(".");
-  if (parts.length > 0 && parts[0] !== "localhost" && parts[0] !== "www" && parts[0] !== "127") {
-    slug = parts[0];
-  }
-
-  let restaurantName = "Repeat";
-  let restaurantLogo = "/logo.png";
-  let description = "Order delicious food, beverages, and explore the best culinary offerings with Repeat.";
-  return {
-    title: {
-      default: restaurantName,
-      template: `%s | ${restaurantName}`,
-    },
-    description: description,
-    icons: {
-      icon: [
-        { url: restaurantLogo, sizes: "any" },
-      ],
-      shortcut: restaurantLogo,
-      apple: [
-        { url: restaurantLogo, sizes: "180x180", type: "image/png" },
-      ],
-    },
-    manifest: "/manifest.json",
-    openGraph: {
-      title: restaurantName,
-      description: description,
-      images: [
-        {
-          url: restaurantLogo,
-          width: 1024,
-          height: 1024,
-          alt: `${restaurantName} Logo`,
-        },
-      ],
-    },
-    twitter: {
-      card: "summary",
-      title: restaurantName,
-      description: description,
-      images: [restaurantLogo],
-    },
-  };
-}
+export const metadata = {
+  title: {
+    default: "Repeat",
+    template: "%s | Repeat",
+  },
+  description: "Order delicious food, beverages, and explore the best culinary offerings with Repeat.",
+  icons: {
+    icon: [
+      { url: "/logo.png", sizes: "any" },
+    ],
+    shortcut: "/logo.png",
+    apple: [
+      { url: "/logo.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
+  manifest: "/manifest.json",
+  openGraph: {
+    title: "Repeat",
+    description: "Order delicious food, beverages, and explore the best culinary offerings with Repeat.",
+    images: [
+      {
+        url: "/logo.png",
+        width: 1024,
+        height: 1024,
+        alt: "Repeat Logo",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary",
+    title: "Repeat",
+    description: "Order delicious food, beverages, and explore the best culinary offerings with Repeat.",
+    images: ["/logo.png"],
+  },
+};
 
 export default async function RootLayout({ children }) {
   const headersList = await headers();
