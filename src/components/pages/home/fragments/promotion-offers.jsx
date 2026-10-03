@@ -10,7 +10,8 @@ export const PromotionOffers = () => {
         queryKey: ["promotions", slug],
         queryFn: async () => {
             const response = await PromotionService.getAll(slug);
-            return response?.data || response || [];
+            const data = response?.data || response;
+            return Array.isArray(data) ? data : [];
         },
         enabled: !!slug,
     });
