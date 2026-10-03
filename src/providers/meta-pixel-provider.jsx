@@ -11,8 +11,9 @@ export default function MetaPixelProvider({ children }) {
     const user = useSelector((state) => state.user?.user);
     const restaurant = useSelector((state) => state.restaurant?.data);
     const metaPixel = restaurant?.integrations?.metaPixel;
+    const pixelId = metaPixel?.pixelId;
     
-    const isConfigured = metaPixel?.isLinked && metaPixel?.isActive && metaPixel?.pixelId;
+    const isConfigured = metaPixel?.isLinked && metaPixel?.isActive && !!pixelId;
     
     useEffect(() => {
         if (isConfigured && typeof window !== "undefined" && window.fbq && window.__meta_pixel_active) {
@@ -37,15 +38,15 @@ export default function MetaPixelProvider({ children }) {
                                 t.src=v;s=b.getElementsByTagName(e)[0];
                                 s.parentNode.insertBefore(t,s)}(window, document,'script',
                                 'https://connect.facebook.net/en_US/fbevents.js');
-                                fbq('set', 'autoConfig', true, '${metaPixel.pixelId}');
+                                fbq('set', 'autoConfig', true, '${pixelId}');
                                 ${user ? `
-                                fbq('init', '${metaPixel.pixelId}', {
+                                fbq('init', '${pixelId}', {
                                     em: '${user.email || ""}',
                                     ph: '${user.phone || user.phoneNumber || ""}',
                                     fn: '${user.name ? user.name.split(" ")[0] : ""}',
                                     ln: '${user.name ? user.name.split(" ").slice(1).join(" ") : ""}'
                                 });
-                                ` : `fbq('init', '${metaPixel.pixelId}');`}
+                                ` : `fbq('init', '${pixelId}');`}
                                 window.__meta_pixel_active = true;
                             `,
                         }}
@@ -55,7 +56,7 @@ export default function MetaPixelProvider({ children }) {
                             height="1" 
                             width="1" 
                             style={{ display: "none" }}
-                            src={`https://www.facebook.com/tr?id=${metaPixel.pixelId}&ev=PageView&noscript=1`}
+                            src={`https://www.facebook.com/tr?id=${pixelId}&ev=PageView&noscript=1`}
                             alt=""
                         />
                     </noscript>
