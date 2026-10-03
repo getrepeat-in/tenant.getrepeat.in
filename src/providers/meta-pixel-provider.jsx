@@ -7,22 +7,38 @@ import { usePathname, useSearchParams } from "next/navigation";
 export default function MetaPixelProvider({ children }) {
     const pathname = usePathname();
     const searchParams = useSearchParams();
-    const isFirstLoad = useRef(true);
     
     const user = useSelector((state) => state.user?.user);
-    const restaurant = useSelector((state) => state.restaurant?.data);
+    const restaurant = useSelector((state) => state.restaurant?.restaurant);
     const metaPixel = restaurant?.integrations?.metaPixel;
-    const pixelId = metaPixel?.pixelId;
+    const pixelId = metaPixel?.pixelId || restaurant?.metaPixelId;
     
-    const isConfigured = metaPixel?.isLinked && metaPixel?.isActive && !!pixelId;
+    console.log("META PIXEL DEBUG:", {
+        restaurantId: restaurant?._id,
+        metaPixel,
+        metaPixelId: restaurant?.metaPixelId,
+        pixelId,
+        isConfigured: !!pixelId
+    });
+
+    const isConfigured = !!pixelId;
+    
+    const isFirstLoad = useRef(true);
+    const lastTrackedUrl = useRef("");
     
     useEffect(() => {
+        const currentUrl = pathname + searchParams.toString();
+        
         if (isFirstLoad.current) {
+            lastTrackedUrl.current = currentUrl;
             isFirstLoad.current = false;
-            return;
         }
+
         if (isConfigured && typeof window !== "undefined" && window.fbq && window.__meta_pixel_active) {
-            window.fbq("track", "PageView");
+            if (lastTrackedUrl.current !== currentUrl) {
+                window.fbq("track", "PageView");
+                lastTrackedUrl.current = currentUrl;
+            }
         }
     }, [pathname, searchParams, isConfigured]);
 

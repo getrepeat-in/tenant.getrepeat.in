@@ -3,8 +3,8 @@ import { headers } from "next/headers";
 export default async function manifest() {
     const headersList = await headers();
     const host = headersList.get("host") || "";
-    let slug = "haldiram";
-    
+    let slug = "mithanlals";
+
     const parts = host.split(".");
     if (parts.length > 0 && parts[0] !== "localhost" && parts[0] !== "www" && parts[0] !== "127") {
         slug = parts[0];

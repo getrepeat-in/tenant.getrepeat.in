@@ -51,9 +51,10 @@ export const metadata = {
 export default async function RootLayout({ children }) {
   const headersList = await headers();
   const host = headersList.get("host") || "";
-  let slug = "haldiram";
+  let slug = "mithanlals";
 
-  const parts = host.split(".");
+  const hostname = host.split(":")[0];
+  const parts = hostname.split(".");
   if (parts.length > 0 && parts[0] !== "localhost" && parts[0] !== "www" && parts[0] !== "127") {
     slug = parts[0];
   }
