@@ -19,7 +19,6 @@ function PostHogUserIdentity() {
         if (!isPostHogConfigured) return;
 
         const distinctId = user?._id || user?.id;
-
         if (!distinctId) {
             if (previousDistinctId.current) {
                 posthog.reset();
