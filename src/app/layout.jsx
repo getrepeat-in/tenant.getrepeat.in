@@ -24,25 +24,6 @@ export async function generateMetadata() {
   let restaurantName = "Repeat";
   let restaurantLogo = "/logo.png";
   let description = "Order delicious food, beverages, and explore the best culinary offerings with Repeat.";
-
-  try {
-    const merchantAppUrl = process.env.MERCHANT_APP_URL || "http://localhost:3001";
-    const res = await fetch(`${merchantAppUrl}/api/${slug}`, { next: { revalidate: 60 } });
-    if (res.ok) {
-      const data = await res.json();
-      const restaurant = data?.data || data;
-      if (restaurant?.name) {
-        restaurantName = restaurant.name;
-        description = `Order delicious food, beverages, and explore the best culinary offerings with ${restaurantName}.`;
-      }
-      if (restaurant?.logo) {
-        restaurantLogo = restaurant.logo;
-      }
-    }
-  } catch (error) {
-    console.error("Failed to fetch restaurant metadata:", error);
-  }
-
   return {
     title: {
       default: restaurantName,
