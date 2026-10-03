@@ -1,7 +1,8 @@
+"use client";
 import { cn } from "@/lib/utils";
-import { Loader2, CheckCircle2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { Loader2, CheckCircle2 } from "lucide-react";
 import { useRestaurant } from "@/hooks/useRestaurant";
 import Button from "@/components/global/common/Button";
 import { TableService } from "@/services/frontend/table";
