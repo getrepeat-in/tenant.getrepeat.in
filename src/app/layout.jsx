@@ -80,7 +80,16 @@ export async function generateMetadata() {
   };
 }
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  const headersList = await headers();
+  const host = headersList.get("host") || "";
+  let slug = "haldiram";
+  
+  const parts = host.split(".");
+  if (parts.length > 0 && parts[0] !== "localhost" && parts[0] !== "www" && parts[0] !== "127") {
+    slug = parts[0];
+  }
+
   return (
     <html
       lang="en"
