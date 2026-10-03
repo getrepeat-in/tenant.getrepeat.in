@@ -56,7 +56,7 @@ export function GuestCheckoutDrawer({ open, onOpenChange, onLoginSuccess, orderT
 
     return (
         <Sheet open={open} onOpenChange={onOpenChange}>
-            <SheetContent side="bottom" className="rounded-t-2xl px-4 pb-8 pt-4">
+            <SheetContent side="bottom" className="rounded-t-2xl sm:max-w-[500px] sm:mx-auto px-4 pb-8 pt-4 sm:mb-0 sm:border-x sm:border-t">
                 {step === 1 ? (
                     <>
                         <SheetHeader className="px-0 pb-5 text-left">

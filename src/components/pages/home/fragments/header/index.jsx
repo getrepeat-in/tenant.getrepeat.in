@@ -165,7 +165,7 @@ export function ResponsiveHeader({ brand, actions = [], showMenu = true, searchP
                         actions={actions}
                     />
                 ) : (
-                    <div className={`flex flex-col ${isScrolled ? 'gap-0 lg:gap-8' : 'gap-3 lg:gap-8'} lg:flex-row lg:items-center lg:justify-between transition-all duration-300`}>
+                    <div className={`flex flex-col ${isScrolled ? 'gap-0 lg:gap-10' : 'gap-3 lg:gap-10'} lg:flex-row lg:items-center lg:justify-between transition-all duration-300`}>
                         <div className="flex w-full min-w-0 items-center justify-between lg:w-auto lg:max-w-[40%]">
                             <div className="flex min-w-0 flex-1 items-center gap-3 sm:gap-4">
                                 {showMenu && (

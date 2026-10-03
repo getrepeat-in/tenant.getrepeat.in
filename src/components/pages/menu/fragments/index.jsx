@@ -62,7 +62,6 @@ const CategorySection = React.memo(({ category, subCategories = [] }) => {
             id={`category-${category?._id || category?.id}`}
             className="scroll-mt-28 border-b border-gray-100 dark:border-zinc-800 last:border-b-0"
         >
-            {/* Category Header */}
             <div className="flex items-center justify-between gap-3 px-4 sm:px-6 py-2.5 sm:py-3 border-b border-gray-100 dark:border-zinc-800 bg-gray-50/70 dark:bg-zinc-900/50">
                 <h3
                     title={category?.name}
@@ -75,8 +74,7 @@ const CategorySection = React.memo(({ category, subCategories = [] }) => {
                 </span>
             </div>
 
-            {/* Items Grid */}
-            <div className="grid grid-cols-2 gap-3 sm:gap-4 p-3 sm:p-4 bg-white dark:bg-zinc-900">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 p-3 sm:p-4 bg-white dark:bg-zinc-900">
                 {items.map((item) => (
                     <ItemCardV1
                         key={item?._id || item?.id}
@@ -125,14 +123,12 @@ const MenuLayout = ({ searchVal = "", isVeg = false, onResetFilters }) => {
         enabled: !!slug,
     });
 
-    // Populate Redux addon groups whenever menu data loads
     useEffect(() => {
         if (menuData?.addonGroups && Array.isArray(menuData.addonGroups) && menuData.addonGroups.length > 0) {
             dispatch(setAddonGroups(menuData.addonGroups));
         }
     }, [menuData, dispatch]);
 
-    // Parse categories from menuData (supports data.category, data.categories, or direct array)
     const rawCategories = useMemo(() => {
         if (Array.isArray(menuData)) {
             return menuData;
@@ -146,7 +142,6 @@ const MenuLayout = ({ searchVal = "", isVeg = false, onResetFilters }) => {
         return [];
     }, [menuData]);
 
-    // Pre-indexed Menu: Computes dietary flags, promotional pricing, and search corpus once per data load
     const indexedMenu = useMemo(() => {
         if (!rawCategories || rawCategories.length === 0) return [];
 
@@ -209,8 +204,6 @@ const MenuLayout = ({ searchVal = "", isVeg = false, onResetFilters }) => {
             };
         });
     }, [rawCategories, promotions]);
-
-    // High-performance tokenized filtering over the pre-indexed data
     const filteredCategories = useMemo(() => {
         const trimmed = (deferredSearchVal || "").trim().toLowerCase();
         const queryTokens = trimmed ? trimmed.split(/\s+/).filter(Boolean) : [];
@@ -220,10 +213,8 @@ const MenuLayout = ({ searchVal = "", isVeg = false, onResetFilters }) => {
                 const filteredSubCats = cat.sub_category
                     .map((subCat) => {
                         const matchingItems = subCat.items.filter((item) => {
-                            // Filter by Veg
                             if (isVeg && !item._isVeg) return false;
 
-                            // Filter by Tokenized Multi-word Search
                             if (queryTokens.length > 0) {
                                 const matchesAllTokens = queryTokens.every((token) =>
                                     item._searchCorpus.includes(token)
@@ -252,12 +243,10 @@ const MenuLayout = ({ searchVal = "", isVeg = false, onResetFilters }) => {
             .filter((cat) => cat.totalItems > 0);
     }, [indexedMenu, deferredSearchVal, isVeg]);
 
-    // Total matching item count across all categories
     const totalMatchingItems = useMemo(() => {
         return filteredCategories.reduce((sum, cat) => sum + (cat.totalItems || 0), 0);
     }, [filteredCategories]);
 
-    // Auto-scroll to selected category if present in URL
     useEffect(() => {
         if (urlCategory) {
             setActiveCategoryId(urlCategory);
@@ -325,10 +314,10 @@ const MenuLayout = ({ searchVal = "", isVeg = false, onResetFilters }) => {
         <div className="w-full">
             {/* Sticky Category Tabs Bar */}
             {filteredCategories.length > 0 && (
-                <div className="sticky top-[57px] sm:top-[65px] z-20 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md border-b border-gray-100 dark:border-zinc-800 shadow-2xs">
+                <div className="sticky top-[73px] sm:top-[76px] z-20 mt-2 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md border border-gray-100 dark:border-zinc-800 shadow-2xs sm:rounded-2xl mx-auto w-full max-w-screen-xl">
                     <div
                         ref={tabsRef}
-                        className="mx-auto max-w-screen-md flex items-center gap-2 overflow-x-auto px-4 py-2.5 no-scrollbar scroll-smooth"
+                        className="flex items-center gap-2 overflow-x-auto px-4 py-2.5 no-scrollbar scroll-smooth lg:px-6"
                     >
                         {filteredCategories.map((cat) => {
                             const catId = cat?._id || cat?.id;
@@ -348,9 +337,7 @@ const MenuLayout = ({ searchVal = "", isVeg = false, onResetFilters }) => {
                 </div>
             )}
 
-            {/* Main Menu Container */}
-            <div className="mx-auto max-w-screen-md mt-4">
-                {/* Search result summary when searching */}
+            <div className="mx-auto w-full max-w-screen-xl mt-4 lg:px-8">
                 {isSearching && (
                     <div className="px-4 py-2 text-xs font-semibold text-neutral-500 dark:text-neutral-400">
                         Found {totalMatchingItems} item{totalMatchingItems !== 1 ? "s" : ""}
@@ -359,7 +346,6 @@ const MenuLayout = ({ searchVal = "", isVeg = false, onResetFilters }) => {
                     </div>
                 )}
 
-                {/* Categories & Subcategories Sections */}
                 <div className="bg-white dark:bg-zinc-900 sm:rounded-2xl sm:border sm:border-gray-100 dark:sm:border-zinc-800 overflow-hidden shadow-xs">
                     {filteredCategories.map((category) => (
                         <CategorySection

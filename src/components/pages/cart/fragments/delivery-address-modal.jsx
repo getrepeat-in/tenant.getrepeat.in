@@ -12,7 +12,7 @@ export function DeliveryAddressModal({ open, onOpenChange, onConfirm }) {
 
     return (
         <Sheet open={open} onOpenChange={onOpenChange}>
-            <SheetContent side="bottom" className="rounded-t-3xl pb-10 pt-6 px-6">
+            <SheetContent side="bottom" className="rounded-t-3xl pb-10 pt-6 px-6 sm:max-w-md sm:mx-auto sm:border-x sm:border-t">
                 <SheetHeader className="px-0 pb-4">
                     <SheetTitle className="text-lg">Delivery Address</SheetTitle>
                     <SheetDescription>

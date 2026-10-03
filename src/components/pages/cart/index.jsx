@@ -65,7 +65,7 @@ export default function CartPage() {
         <div className="min-h-screen bg-slate-50 dark:bg-zinc-950 pb-[130px] select-none">
             <CartHeader itemCount={cartItems.length} />
 
-            <main className="mx-auto max-w-screen-md px-4 pt-4 sm:pt-6">
+            <main className="mx-auto max-w-screen-xl px-4 pt-4 sm:pt-6 lg:px-8">
                 {(!isCartLoaded || isConfigLoading) ? (
                     <CartSkeleton />
                 ) : isOrderingDisabled ? (
@@ -80,62 +80,82 @@ export default function CartPage() {
                 ) : cartItems.length === 0 ? (
                     <EmptyCart />
                 ) : (
-                    <div className="flex flex-col gap-4 sm:gap-5 animate-in fade-in slide-in-from-bottom-3 duration-300">
-                        <OrderTypeSelector
-                            orderType={orderType}
-                            setOrderType={setOrderType}
-                            acceptedTypes={configuration?.ordering?.acceptedTypes}
-                        />
+                    <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start animate-in fade-in slide-in-from-bottom-3 duration-300">
+                        {/* Left Column - Order Items & Details */}
+                        <div className="w-full lg:flex-[1.5] flex flex-col gap-4 sm:gap-5">
+                            <OrderTypeSelector
+                                orderType={orderType}
+                                setOrderType={setOrderType}
+                                acceptedTypes={configuration?.ordering?.acceptedTypes}
+                            />
 
-                        {orderType === CART_CONSTANTS.ORDER_TYPES.DELIVERY && user && (
-                            <div className="bg-white dark:bg-zinc-900 border border-gray-150/80 dark:border-zinc-800 rounded-xl p-4 sm:p-5 shadow-xs">
-                                <AddressManager
-                                    ref={addressManagerRef}
-                                    onSelectAddress={setSelectedAddress}
-                                    selectedAddressId={selectedAddress?._id}
-                                />
-                            </div>
-                        )}
-
-                        <div className="flex flex-col gap-2.5">
-                            <div className="flex items-center justify-between px-1">
-                                <h2 className="text-xs font-semibold uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
-                                    Order Items ({totalQuantity})
-                                </h2>
-
-                                <Link
-                                    href="/menu"
-                                    className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
-                                >
-                                    <Plus size={13} strokeWidth={2} />
-                                    <span>Add More Items</span>
-                                </Link>
-                            </div>
+                            {orderType === CART_CONSTANTS.ORDER_TYPES.DELIVERY && user && (
+                                <div className="bg-white dark:bg-zinc-900 border border-gray-150/80 dark:border-zinc-800 rounded-xl p-4 sm:p-5 shadow-xs">
+                                    <AddressManager
+                                        ref={addressManagerRef}
+                                        onSelectAddress={setSelectedAddress}
+                                        selectedAddressId={selectedAddress?._id}
+                                    />
+                                </div>
+                            )}
 
                             <div className="flex flex-col gap-2.5">
-                                {cartItems.map((cartItem) => (
-                                    <CartItem
-                                        key={cartItem.cartItemId || cartItem.item?._id}
-                                        cartItem={cartItem}
-                                    />
-                                ))}
+                                <div className="flex items-center justify-between px-1">
+                                    <h2 className="text-xs font-semibold uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
+                                        Order Items ({totalQuantity})
+                                    </h2>
+
+                                    <Link
+                                        href="/menu"
+                                        className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+                                    >
+                                        <Plus size={13} strokeWidth={2} />
+                                        <span>Add More Items</span>
+                                    </Link>
+                                </div>
+
+                                <div className="flex flex-col gap-2.5">
+                                    {cartItems.map((cartItem) => (
+                                        <CartItem
+                                            key={cartItem.cartItemId || cartItem.item?._id}
+                                            cartItem={cartItem}
+                                        />
+                                    ))}
+                                </div>
                             </div>
                         </div>
 
-                        <CouponSection
-                            appliedCoupon={appliedCoupon}
-                            setAppliedCoupon={setAppliedCoupon}
-                            subtotal={subtotal}
-                        />
+                        {/* Right Column - Summary & Checkout */}
+                        <div className="w-full lg:flex-[1] flex flex-col gap-4 sm:gap-5 lg:sticky lg:top-24">
+                            <CouponSection
+                                appliedCoupon={appliedCoupon}
+                                setAppliedCoupon={setAppliedCoupon}
+                                subtotal={subtotal}
+                            />
 
-                        <BillSummary
-                            subtotal={subtotal}
-                            discount={discount}
-                            packingCharges={packingCharges}
-                            platformFee={platformFee}
-                            taxAmount={taxAmount}
-                            taxRate={taxRate}
-                        />
+                            <BillSummary
+                                subtotal={subtotal}
+                                discount={discount}
+                                packingCharges={packingCharges}
+                                platformFee={platformFee}
+                                taxAmount={taxAmount}
+                                taxRate={taxRate}
+                            />
+                            
+                            {/* Inline Checkout Footer for Desktop */}
+                            <div className="hidden lg:block bg-white dark:bg-zinc-900 border border-gray-150/80 dark:border-zinc-800 rounded-xl p-4 shadow-xs">
+                                <CheckoutFooter
+                                    grandTotal={grandTotal}
+                                    itemCount={totalQuantity}
+                                    paymentMethod={paymentMethod}
+                                    onSelectPaymentMethod={setPaymentMethod}
+                                    onCheckout={handleCheckout}
+                                    isLoading={isCheckingOut}
+                                    allowedPaymentMethods={configuration?.ordering?.paymentMethods}
+                                    isInline={true}
+                                />
+                            </div>
+                        </div>
                     </div>
                 )}
             </main>
@@ -149,6 +169,7 @@ export default function CartPage() {
                     onCheckout={handleCheckout}
                     isLoading={isCheckingOut}
                     allowedPaymentMethods={configuration?.ordering?.paymentMethods}
+                    className="lg:hidden"
                 />
             )}
 

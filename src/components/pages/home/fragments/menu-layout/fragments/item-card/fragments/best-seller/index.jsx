@@ -4,9 +4,9 @@ import { useState } from "react";
 import { useRestaurant } from "@/hooks/useRestaurant";
 import { useDispatch, useSelector } from "react-redux";
 import { ItemImage } from "@/components/global/common/item-image";
+import { addItem, updateQuantity } from "@/store/slices/cartSlice";
 import DiaterySymbol from "@/components/global/common/diatery-symbol";
 import VariantDrawer from "@/components/global/common/variant-drawer";
-import { addItem, updateQuantity } from "@/store/slices/cartSlice";
 
 export const BestsellerItemCard = ({ item, promo, className }) => {
     const dispatch = useDispatch();
@@ -88,11 +88,10 @@ export const BestsellerItemCard = ({ item, promo, className }) => {
             <article
                 onClick={() => setIsVariantDrawerOpen(true)}
                 className={cn(
-                    "flex flex-col w-[210px] sm:w-[230px] shrink-0 group select-none snap-start bg-white dark:bg-zinc-900 rounded-md p-2.5 border border-gray-100 dark:border-zinc-800 shadow-xs transition-shadow hover:shadow-sm cursor-pointer",
+                    "flex flex-col w-[210px] sm:w-[230px] md:w-full shrink-0 group select-none snap-start bg-white dark:bg-zinc-900 rounded-md p-2.5 border border-gray-100 dark:border-zinc-800 shadow-xs transition-shadow hover:shadow-sm cursor-pointer",
                     className
                 )}
             >
-                {/* Image Container with rounded-md */}
                 <div className="relative aspect-[4/3] w-full rounded-md overflow-hidden bg-gray-100 dark:bg-zinc-800 border border-gray-100 dark:border-zinc-800">
                     <ItemImage
                         src={item?.image}
@@ -101,7 +100,6 @@ export const BestsellerItemCard = ({ item, promo, className }) => {
                     />
                 </div>
 
-                {/* Dietary Symbol + Bestseller Badge */}
                 <div className="flex items-center gap-2 mt-2.5">
                     <DiaterySymbol
                         type={item?.dietaryType || item?.dietary_type}
@@ -112,7 +110,6 @@ export const BestsellerItemCard = ({ item, promo, className }) => {
                     </span>
                 </div>
 
-                {/* Item Name */}
                 <h4
                     title={item?.name}
                     className="text-[14px] sm:text-[15px] font-bold text-gray-900 dark:text-zinc-100 truncate tracking-tight mt-1 leading-snug"
@@ -208,7 +205,7 @@ export const BestsellerSection = ({
                 </div>
             )}
 
-            <div className="flex gap-3.5 overflow-x-auto px-4 md:px-6 pb-3 pt-0.5 no-scrollbar scroll-smooth snap-x snap-mandatory">
+            <div className="flex md:grid gap-3.5 md:gap-4 overflow-x-auto md:overflow-visible px-4 md:px-6 pb-3 pt-0.5 no-scrollbar scroll-smooth snap-x snap-mandatory md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                 {items.map((item, idx) => (
                     <BestsellerItemCard
                         key={item?._id || item?.id || idx}

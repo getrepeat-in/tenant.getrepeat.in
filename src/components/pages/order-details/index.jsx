@@ -96,8 +96,11 @@ export default function OrderDetailsPage() {
                 </div>
             </header>
 
-            <main className="bg-white dark:bg-zinc-950 max-w-screen-md mx-auto px-4 py-10 sm:py-14 sm:px-6 m-2 sm:m-4 rounded-[32px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 dark:border-zinc-800 relative overflow-hidden">
-                <div className="flex flex-col items-center text-center relative z-10">
+            <main className="bg-white dark:bg-zinc-950 max-w-screen-lg mx-auto px-4 py-10 sm:py-14 sm:px-10 my-4 sm:my-8 rounded-[32px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 dark:border-zinc-800 relative overflow-hidden">
+                <div className="flex flex-col lg:flex-row items-center lg:items-start gap-8 lg:gap-12 relative z-10 w-full">
+                    
+                    {/* LEFT COLUMN: Status & Tracker */}
+                    <div className="flex-1 w-full flex flex-col items-center text-center">
                     <div className="relative mb-8 mt-2">
                         <div className={cn(
                             "absolute -inset-4 rounded-full animate-pulse opacity-10 dark:opacity-20 blur-xl",
@@ -264,8 +267,13 @@ export default function OrderDetailsPage() {
                             </div>
                         </div>
                     )}
-
-                    <div className="w-full mt-4 rounded-xl bg-white dark:bg-zinc-900 p-5 sm:p-6 shadow-sm border border-gray-100 dark:border-zinc-800 text-left flex flex-col gap-0 relative overflow-hidden">
+                    
+                    {/* DIVIDER on Desktop */}
+                    <div className="hidden lg:block w-px bg-gray-100 dark:bg-zinc-800 self-stretch my-4" />
+                    
+                    {/* RIGHT COLUMN: Details & Buttons */}
+                    <div className="flex-1 w-full flex flex-col relative">
+                        <div className="w-full rounded-xl bg-gray-50/50 dark:bg-zinc-900/50 p-5 sm:p-6 shadow-sm border border-gray-100 dark:border-zinc-800 text-left flex flex-col gap-0 relative overflow-hidden">
                         <div className="flex items-center justify-between py-3">
                             <div className="flex items-center gap-2">
                                 <ReceiptText size={14} className="text-neutral-400" />

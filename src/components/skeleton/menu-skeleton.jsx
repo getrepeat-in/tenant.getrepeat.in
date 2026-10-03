@@ -31,8 +31,8 @@ export function ItemCardSkeleton() {
 export function MenuSkeleton() {
     return (
         <div className="w-full select-none">
-            <div className="sticky top-[57px] sm:top-[65px] z-20 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md border-b border-gray-100 dark:border-zinc-800 shadow-2xs">
-                <div className="mx-auto max-w-screen-md flex items-center gap-2 overflow-x-hidden px-4 py-2.5">
+            <div className="sticky top-[73px] sm:top-[76px] z-20 mt-2 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md border border-gray-100 dark:border-zinc-800 shadow-2xs sm:rounded-2xl mx-auto w-full max-w-screen-xl">
+                <div className="flex items-center gap-2 overflow-x-hidden px-4 py-2.5 lg:px-6">
                     {[110, 130, 95, 120, 105].map((width, idx) => (
                         <div
                             key={idx}
@@ -46,14 +46,14 @@ export function MenuSkeleton() {
                 </div>
             </div>
 
-            <div className="mx-auto max-w-screen-md mt-4 space-y-4">
+            <div className="mx-auto w-full max-w-screen-xl mt-4 space-y-4 lg:px-8">
                 <div className="bg-white dark:bg-zinc-900 sm:rounded-2xl sm:border sm:border-gray-100 dark:sm:border-zinc-800 overflow-hidden shadow-xs">
                     <div className="flex items-center justify-between gap-3 px-4 sm:px-6 py-3 border-b border-gray-100 dark:border-zinc-800 bg-gray-50/70 dark:bg-zinc-900/50 animate-pulse">
                         <div className="h-5 w-28 bg-neutral-200/80 dark:bg-zinc-800 rounded-md" />
                         <div className="h-5 w-8 bg-neutral-200/80 dark:bg-zinc-800 rounded-full" />
                     </div>
 
-                    <div className="grid grid-cols-2 gap-3 sm:gap-4 p-3 sm:p-4 bg-white dark:bg-zinc-900">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 p-3 sm:p-4 bg-white dark:bg-zinc-900">
                         <ItemCardSkeleton />
                         <ItemCardSkeleton />
                         <ItemCardSkeleton />
@@ -67,7 +67,7 @@ export function MenuSkeleton() {
                         <div className="h-5 w-8 bg-neutral-200/80 dark:bg-zinc-800 rounded-full" />
                     </div>
 
-                    <div className="grid grid-cols-2 gap-3 sm:gap-4 p-3 sm:p-4 bg-white dark:bg-zinc-900">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 p-3 sm:p-4 bg-white dark:bg-zinc-900">
                         <ItemCardSkeleton />
                         <ItemCardSkeleton />
                     </div>

@@ -20,7 +20,7 @@ export function CartHeader({ itemCount = 0 }) {
 
     return (
         <header className="sticky top-0 z-40 w-full border-b border-gray-150/40 dark:border-zinc-800 bg-white/90 dark:bg-zinc-950/90 backdrop-blur-md shadow-[0_2px_12px_rgba(0,0,0,0.03)]">
-            <div className="mx-auto max-w-screen-md px-4 py-3">
+            <div className="mx-auto max-w-screen-xl px-4 py-3 lg:px-8">
                 <div className="flex items-center justify-between gap-3">
                     {/* Back & Restaurant info */}
                     <div className="flex items-center gap-3 min-w-0">

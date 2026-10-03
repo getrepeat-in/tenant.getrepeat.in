@@ -70,7 +70,7 @@ export const FreebieItems = () => {
                             </div>
                         )}
 
-                        <div className="flex gap-3 overflow-x-auto pb-4 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                        <div className="flex md:grid gap-3 overflow-x-auto md:overflow-visible pb-4 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 md:gap-4">
                             {(promo.items || []).map((item) => (
                                 <FreebieCard
                                     key={item._id}
@@ -121,7 +121,7 @@ const FreebieCard = ({ item, isLocked, promo }) => {
     return (
         <div
             className={cn(
-                "relative flex min-w-[155px] w-[155px] shrink-0 snap-start flex-col rounded-2xl bg-white dark:bg-zinc-900 p-2.5 transition-all duration-300 border shadow-xs",
+                "relative flex w-[155px] md:w-full shrink-0 snap-start flex-col rounded-2xl bg-white dark:bg-zinc-900 p-2.5 transition-all duration-300 border shadow-xs",
                 isLocked
                     ? "border-gray-100 dark:border-zinc-800"
                     : isAdded

@@ -1,6 +1,6 @@
 export function HeaderSkeleton({ showMenu = true, showSearch = true, showFilter = true, actions = [] }) {
     return (
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between lg:gap-8 w-full animate-pulse">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between lg:gap-10 w-full animate-pulse">
             <div className="flex w-full min-w-0 items-center justify-between lg:w-auto lg:max-w-[40%]">
                 <div className="flex min-w-0 flex-1 items-center gap-3 sm:gap-4">
                     {showMenu && (

@@ -69,7 +69,7 @@ export const SpecialDeals = () => {
                             </div>
                         )}
 
-                        <div className="flex gap-3 overflow-x-auto pb-4 pt-1 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                        <div className="flex md:grid gap-3 overflow-x-auto md:overflow-visible pb-4 pt-1 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 md:gap-4">
                             {(promo.items || []).map((item) => (
                                 <DealCard
                                     key={item._id}
@@ -115,7 +115,7 @@ const DealCard = ({ item, dealPrice, isLocked }) => {
     return (
         <div
             className={cn(
-                "relative flex min-w-[145px] w-[145px] shrink-0 snap-start flex-col rounded-xl bg-white dark:bg-zinc-900 p-2.5 transition-all duration-300 border shadow-xs",
+                "relative flex w-[145px] md:w-full shrink-0 snap-start flex-col rounded-xl bg-white dark:bg-zinc-900 p-2.5 transition-all duration-300 border shadow-xs",
                 isLocked
                     ? "border-gray-100 dark:border-zinc-800"
                     : "border-primary/20 hover:border-primary/40 cursor-pointer"

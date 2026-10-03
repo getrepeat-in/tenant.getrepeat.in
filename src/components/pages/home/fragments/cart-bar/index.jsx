@@ -157,7 +157,7 @@ export default function CartBar() {
             </div>
 
             <Sheet open={isFreebieSheetOpen} onOpenChange={setIsFreebieSheetOpen}>
-                <SheetContent side="bottom" showCloseButton={false} className="rounded-t-3xl px-0 pb-6 pt-2 max-h-[85vh] overflow-y-auto custom-scrollbar">
+                <SheetContent side="bottom" showCloseButton={false} className="rounded-t-3xl px-0 pb-6 pt-2 max-h-[85vh] overflow-y-auto custom-scrollbar sm:max-w-md sm:mx-auto sm:border-x sm:border-t">
                     <div className="px-2">
                         <FreebieItems />
                     </div>

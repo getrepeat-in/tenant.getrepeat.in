@@ -87,14 +87,16 @@ const Home = () => {
                 onFilterClick={handleFilterClick}
             />
 
-            <PromoCarousel
-                banners={configuration?.homepage?.banners}
-                isLoading={isConfigLoading}
-            />
+            <div className="mx-auto w-full max-w-screen-xl">
+                <PromoCarousel
+                    banners={configuration?.homepage?.banners}
+                    isLoading={isConfigLoading}
+                />
 
-            <FreebieItems />
-            <BestsellerDeals />
-            <SpecialDeals />
+                <FreebieItems />
+                <BestsellerDeals />
+                <SpecialDeals />
+            </div>
             <MenuLayout searchVal={searchValue} />
             <CartBar />
         </div>

@@ -33,7 +33,7 @@ export function TableNumberModal({ open, onOpenChange, onConfirm }) {
 
     return (
         <Sheet open={open} onOpenChange={onOpenChange}>
-            <SheetContent side="bottom" className="rounded-t-3xl pb-6 pt-3 px-6 max-h-[85vh] overflow-y-auto">
+            <SheetContent side="bottom" className="rounded-t-3xl pb-6 pt-3 px-6 max-h-[85vh] overflow-y-auto sm:max-w-sm sm:mx-auto sm:border-x sm:border-t">
                 <SheetHeader className="px-0 pb-4">
                     <SheetTitle className="text-lg">Dine-in Table</SheetTitle>
                     <SheetDescription className="text-gray-500 mt-1.5">

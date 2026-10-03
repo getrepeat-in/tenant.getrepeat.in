@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import Button from "@/components/global/common/Button";
 import { ArrowRight, ShieldCheck, CreditCard, Banknote } from "lucide-react";
 
-export function CheckoutFooter({ grandTotal = 0, paymentMethod = "ONLINE", onSelectPaymentMethod, onCheckout, isLoading = false, allowedPaymentMethods = ["ONLINE", "CASH"] }) {
+export function CheckoutFooter({ grandTotal = 0, paymentMethod = "ONLINE", onSelectPaymentMethod, onCheckout, isLoading = false, allowedPaymentMethods = ["ONLINE", "CASH"], isInline = false, className }) {
     const isCash = paymentMethod === "CASH";
     const isCashAllowed = allowedPaymentMethods?.includes("CASH") || false;
     const isOnlineAllowed = allowedPaymentMethods?.includes("ONLINE") || false;
@@ -11,8 +11,12 @@ export function CheckoutFooter({ grandTotal = 0, paymentMethod = "ONLINE", onSel
     const showToggle = isCashAllowed && isOnlineAllowed;
 
     return (
-        <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md border-t border-gray-150/70 dark:border-zinc-800 p-3 sm:p-4 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] animate-in slide-in-from-bottom-5 duration-300">
-            <div className="mx-auto max-w-screen-md flex items-center justify-between gap-3 sm:gap-4">
+        <div className={cn(
+            !isInline && "fixed bottom-0 left-0 right-0 z-50 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md border-t border-gray-150/70 dark:border-zinc-800 p-3 sm:p-4 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] animate-in slide-in-from-bottom-5 duration-300",
+            isInline && "w-full flex flex-col gap-2",
+            className
+        )}>
+            <div className={cn("flex items-center justify-between gap-3 sm:gap-4", !isInline && "mx-auto max-w-screen-md")}>
                 {showToggle && (
                     <div className="inline-flex h-12 items-center rounded-xl bg-neutral-100 dark:bg-zinc-850 p-1 border border-gray-200/80 dark:border-zinc-750 shrink-0 select-none shadow-2xs">
                         <button
@@ -62,7 +66,7 @@ export function CheckoutFooter({ grandTotal = 0, paymentMethod = "ONLINE", onSel
                 )}
             </div>
 
-            <div className="mx-auto max-w-screen-md flex items-center justify-center gap-1.5 mt-1.5 text-[10px] font-normal text-neutral-400 dark:text-neutral-500">
+            <div className={cn("flex items-center justify-center gap-1.5 mt-1.5 text-[10px] font-normal text-neutral-400 dark:text-neutral-500", !isInline && "mx-auto max-w-screen-md")}>
                 <ShieldCheck size={12} className="text-emerald-500" />
                 <span>100% Safe & Secure Ordering</span>
             </div>
