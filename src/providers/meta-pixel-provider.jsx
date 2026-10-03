@@ -1,12 +1,13 @@
 "use client";
 import Script from "next/script";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { usePathname, useSearchParams } from "next/navigation";
 
 export default function MetaPixelProvider({ children }) {
     const pathname = usePathname();
     const searchParams = useSearchParams();
+    const isFirstLoad = useRef(true);
     
     const user = useSelector((state) => state.user?.user);
     const restaurant = useSelector((state) => state.restaurant?.data);
@@ -16,6 +17,10 @@ export default function MetaPixelProvider({ children }) {
     const isConfigured = metaPixel?.isLinked && metaPixel?.isActive && !!pixelId;
     
     useEffect(() => {
+        if (isFirstLoad.current) {
+            isFirstLoad.current = false;
+            return;
+        }
         if (isConfigured && typeof window !== "undefined" && window.fbq && window.__meta_pixel_active) {
             window.fbq("track", "PageView");
         }
@@ -47,6 +52,7 @@ export default function MetaPixelProvider({ children }) {
                                     ln: '${user.name ? user.name.split(" ").slice(1).join(" ") : ""}'
                                 });
                                 ` : `fbq('init', '${pixelId}');`}
+                                fbq('track', 'PageView');
                                 window.__meta_pixel_active = true;
                             `,
                         }}
