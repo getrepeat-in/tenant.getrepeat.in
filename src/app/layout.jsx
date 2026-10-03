@@ -112,7 +112,7 @@ export default function RootLayout({ children }) {
         <PostHogProvider>
           <QueryProvider>
             <ThemeProvider>
-              <StoreProvider>
+              <StoreProvider slug={slug}>
                 <TooltipProvider>
                   <NavigationWrapper>
                     {children}

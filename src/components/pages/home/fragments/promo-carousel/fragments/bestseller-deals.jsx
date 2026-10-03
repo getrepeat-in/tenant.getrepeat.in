@@ -1,7 +1,7 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
-import { PromotionService } from "@/services/frontend/promotion";
 import { useRestaurant } from "@/hooks/useRestaurant";
+import { PromotionService } from "@/services/frontend/promotion";
 import { BestsellerSection } from "@/components/pages/home/fragments/menu-layout/fragments/item-card/fragments/best-seller";
 
 export const BestsellerDeals = () => {

@@ -73,11 +73,14 @@ function StateHydrator({ children }) {
     return <>{children}</>;
 }
 
-export default function StoreProvider({ children }) {
+export default function StoreProvider({ children, slug }) {
     const storeRef = useRef(undefined);
 
     if (!storeRef.current) {
         storeRef.current = makeStore();
+        if (slug) {
+            storeRef.current.dispatch({ type: 'restaurant/setSlug', payload: slug });
+        }
     }
 
     return (
