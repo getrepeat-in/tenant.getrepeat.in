@@ -1,15 +1,16 @@
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import { Suspense } from "react";
+import { headers } from "next/headers";
 import { fontPoppins } from "@/constants/fonts";
 import StoreProvider from "@/providers/store-provider";
 import ThemeProvider from "@/providers/theme-provider";
 import QueryProvider from "@/providers/query-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import MetaPixelProvider from "@/providers/meta-pixel-provider";
 import NavigationWrapper from "@/components/layouts/main-layout";
 import NotificationBanner from "@/components/global/notification";
 import PostHogProvider, { PostHogPageview } from "@/providers/posthog-provider";
-import { Suspense } from "react";
-import { headers } from "next/headers";
 
 export const metadata = {
   title: {
@@ -51,7 +52,7 @@ export default async function RootLayout({ children }) {
   const headersList = await headers();
   const host = headersList.get("host") || "";
   let slug = "haldiram";
-  
+
   const parts = host.split(".");
   if (parts.length > 0 && parts[0] !== "localhost" && parts[0] !== "www" && parts[0] !== "127") {
     slug = parts[0];
@@ -63,7 +64,7 @@ export default async function RootLayout({ children }) {
       className={cn("h-full", "antialiased")}
       suppressHydrationWarning
     >
-      <body 
+      <body
         className={cn("min-h-full flex flex-col font-sans", fontPoppins.className, fontPoppins.variable)}
         suppressHydrationWarning
       >
@@ -75,12 +76,14 @@ export default async function RootLayout({ children }) {
           <QueryProvider>
             <ThemeProvider>
               <StoreProvider slug={slug}>
-                <TooltipProvider>
-                  <NavigationWrapper>
-                    {children}
-                  </NavigationWrapper>
-                  <NotificationBanner />
-                </TooltipProvider>
+                <MetaPixelProvider>
+                  <TooltipProvider>
+                    <NavigationWrapper>
+                      {children}
+                    </NavigationWrapper>
+                    <NotificationBanner />
+                  </TooltipProvider>
+                </MetaPixelProvider>
               </StoreProvider>
             </ThemeProvider>
           </QueryProvider>

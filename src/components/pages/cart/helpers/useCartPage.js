@@ -224,6 +224,13 @@ export function useCartPage({ slug, restaurant, user, notify, configuration }) {
             paymentStatus: paymentMethod === CART_CONSTANTS.PAYMENT_METHODS.CASH ? "PENDING" : "PAID",
         };
 
+        const metaContents = formattedItems.map(item => ({
+            id: item.menuItem,
+            quantity: item.quantity,
+            item_price: item.unitPrice
+        }));
+        const metaContentIds = formattedItems.map(item => item.menuItem);
+
         if (paymentMethod === CART_CONSTANTS.PAYMENT_METHODS.CASH) {
             try {
                 notify.info("Placing your order...", { duration: 2000 });
@@ -261,6 +268,16 @@ export function useCartPage({ slug, restaurant, user, notify, configuration }) {
                     }
                 }
 
+                if (typeof window !== "undefined" && window.fbq && window.__meta_pixel_active) {
+                    window.fbq('track', 'Purchase', {
+                        value: grandTotal,
+                        currency: 'INR',
+                        content_type: 'product',
+                        contents: metaContents,
+                        content_ids: metaContentIds,
+                        num_items: totalQuantity
+                    });
+                }
                 dispatch(clearCart());
                 notify.success("Order placed successfully!", { duration: 3500 });
                 router.push(`/orders/${createdOrderId}?method=CASH&amount=${grandTotal}`);
@@ -330,6 +347,16 @@ export function useCartPage({ slug, restaurant, user, notify, configuration }) {
                             verifyResult?.order?._id ||
                             response.razorpay_order_id;
 
+                        if (typeof window !== "undefined" && window.fbq && window.__meta_pixel_active) {
+                            window.fbq('track', 'Purchase', {
+                                value: grandTotal,
+                                currency: 'INR',
+                                content_type: 'product',
+                                contents: metaContents,
+                                content_ids: metaContentIds,
+                                num_items: totalQuantity
+                            });
+                        }
                         dispatch(clearCart());
                         notify.success("Payment successful! Order placed.", { duration: 3500 });
                         router.push(`/orders/${confirmedOrderId}?paymentId=${response.razorpay_payment_id}&method=ONLINE&amount=${grandTotal}`);

@@ -27,6 +27,18 @@ export const cartSlice = createSlice({
                 price = item.price || item.base_price || item.defaultPrice,
                 quantity = 1
             } = action.payload;
+
+            if (typeof window !== "undefined" && window.fbq && window.__meta_pixel_active) {
+                window.fbq('track', 'AddToCart', {
+                    content_name: item.name,
+                    content_ids: [item._id || item.id],
+                    content_type: 'product',
+                    value: price,
+                    currency: 'INR',
+                    num_items: quantity
+                });
+            }
+
             if (state.restaurantId && state.restaurantId !== restaurantId) {
                 state.items = [];
             }
