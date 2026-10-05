@@ -1,12 +1,11 @@
 "use client";
-import React from "react";
 import { getImageUrl } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import { useRestaurant } from "@/hooks/useRestaurant";
-import BottomNav from "@/components/global/sidebar/fragments/bottom-nav";
 import { AppSidebar } from "@/components/global/sidebar";
-import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { Breadcrumbs } from "@/components/global/breadcrumbs";
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
+import BottomNav from "@/components/global/sidebar/fragments/bottom-nav";
 
 export default function NavigationWrapper({ children }) {
     const pathname = usePathname();

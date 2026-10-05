@@ -1,6 +1,6 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "@/lib/api/axiosInstance";
 import { getTenantSlug } from "@/lib/utils";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const fetchRestaurant = createAsyncThunk(
     "restaurant/fetchRestaurant",
@@ -22,6 +22,12 @@ const initialState = {
     loading: true,
     error: null,
     slug: null,
+    tableInfo: {
+        tableToken: null,
+        tableNumber: null,
+        isDineIn: false,
+        tableId: null
+    }
 };
 
 export const restaurantSlice = createSlice({
@@ -35,10 +41,14 @@ export const restaurantSlice = createSlice({
         setSlug: (state, action) => {
             state.slug = action.payload;
         },
+        setTableInfo: (state, action) => {
+            state.tableInfo = { ...state.tableInfo, ...action.payload };
+        },
         clearRestaurant: (state) => {
             state.restaurant = null;
             state.loading = false;
             state.error = null;
+            state.tableInfo = { tableToken: null, tableNumber: null, isDineIn: false, tableId: null };
         },
     },
     extraReducers: (builder) => {
@@ -60,5 +70,5 @@ export const restaurantSlice = createSlice({
     },
 });
 
-export const { setRestaurant, setSlug, clearRestaurant } = restaurantSlice.actions;
+export const { setRestaurant, setSlug, setTableInfo, clearRestaurant } = restaurantSlice.actions;
 export default restaurantSlice.reducer;

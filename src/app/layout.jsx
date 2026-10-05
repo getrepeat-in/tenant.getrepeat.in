@@ -10,6 +10,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import MetaPixelProvider from "@/providers/meta-pixel-provider";
 import NavigationWrapper from "@/components/layouts/main-layout";
 import NotificationBanner from "@/components/global/notification";
+import { TableParamHandler } from "@/components/global/table-param-handler";
 import PostHogProvider, { PostHogPageview } from "@/providers/posthog-provider";
 
 export const metadata = {
@@ -51,7 +52,7 @@ export const metadata = {
 export default async function RootLayout({ children }) {
   const headersList = await headers();
   const host = headersList.get("host") || "";
-  let slug = "mithanlals";
+  let slug = "haldiram";
 
   const hostname = host.split(":")[0];
   const parts = hostname.split(".");
@@ -77,6 +78,9 @@ export default async function RootLayout({ children }) {
           <QueryProvider>
             <ThemeProvider>
               <StoreProvider slug={slug}>
+                <Suspense fallback={null}>
+                  <TableParamHandler slug={slug} />
+                </Suspense>
                 <MetaPixelProvider>
                   <TooltipProvider>
                     <NavigationWrapper>

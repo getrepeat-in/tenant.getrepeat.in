@@ -3,6 +3,7 @@ import React from "react";
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import { useUser } from "@/hooks/useUser";
+import { useSelector } from "react-redux";
 import { Store, AlertCircle } from "lucide-react";
 import useNotification from "@/hooks/useNotification";
 import { useRestaurant } from "@/hooks/useRestaurant";
@@ -25,6 +26,7 @@ import { GuestCheckoutDrawer } from "@/components/pages/cart/fragments/guest-che
 export default function CartPage() {
     const { slug, restaurant } = useRestaurant();
     const { user } = useUser();
+    const tableInfo = useSelector((state) => state.restaurant?.tableInfo);
     const notify = useNotification();
     const { configuration, isLoading: isConfigLoading } = useWebsiteConfiguration();
     const addressManagerRef = React.useRef(null);

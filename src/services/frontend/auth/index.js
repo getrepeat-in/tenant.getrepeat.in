@@ -38,6 +38,9 @@ export class AuthService {
             const response = await api.get(API_ENDPOINTS.AUTH.ME(slug));
             return response.data;
         } catch (error) {
+            if (error.response?.status === 401) {
+                return null; 
+            }
             console.error("Fetch user error:", error);
             throw new Error(error.response?.data?.message || "Failed to fetch user");
         }

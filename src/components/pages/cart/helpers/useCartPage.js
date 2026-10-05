@@ -12,6 +12,7 @@ export function useCartPage({ slug, restaurant, user, notify, configuration }) {
     const cartItems = useSelector((state) => state.cart.items || []);
     const isCartLoaded = useSelector((state) => state.cart.isLoaded);
     const globalAddonGroups = useSelector((state) => state.menu?.addonGroups || []);
+    const tableInfo = useSelector((state) => state.restaurant?.tableInfo);
 
 
     const [appliedCoupon, setAppliedCoupon] = useState(null);
@@ -23,8 +24,12 @@ export function useCartPage({ slug, restaurant, user, notify, configuration }) {
     const [isGuestModalOpen, setIsGuestModalOpen] = useState(false);
     const [selectedAddress, setSelectedAddress] = useState(null);
     const isConfigApplied = useRef(false);
-
-
+    
+    useEffect(() => {
+        if (tableInfo?.isDineIn) {
+            setOrderType(CART_CONSTANTS.ORDER_TYPES.DINE_IN);
+        }
+    }, [tableInfo?.isDineIn]);
 
     useEffect(() => {
         if (configuration?.ordering && !isConfigApplied.current) {
@@ -33,7 +38,9 @@ export function useCartPage({ slug, restaurant, user, notify, configuration }) {
             const paymentMethods = configuration.ordering.paymentMethods || ["ONLINE", "CASH"];
 
             let initialOrderType = CART_CONSTANTS.ORDER_TYPES.DINE_IN;
-            if (configuration.ordering.defaultType && acceptedTypes.includes(configuration.ordering.defaultType)) {
+            if (tableInfo?.isDineIn) {
+                initialOrderType = CART_CONSTANTS.ORDER_TYPES.DINE_IN;
+            } else if (configuration.ordering.defaultType && acceptedTypes.includes(configuration.ordering.defaultType)) {
                 initialOrderType = configuration.ordering.defaultType;
             } else if (acceptedTypes.length > 0) {
                 initialOrderType = acceptedTypes[0];
@@ -117,8 +124,10 @@ export function useCartPage({ slug, restaurant, user, notify, configuration }) {
             const currentUrlParams = new URLSearchParams(typeof window !== "undefined" ? window.location.search : "");
             const existingTable =
                 currentUrlParams.get("table") ||
+                currentUrlParams.get("token") ||
                 currentUrlParams.get("t") ||
-                (typeof window !== "undefined" ? localStorage.getItem("table") || sessionStorage.getItem("table") : "");
+                tableInfo?.tableToken || 
+                tableInfo?.tableId;
 
             if (!existingTable) {
                 setIsTableModalOpen(true);
@@ -201,8 +210,10 @@ export function useCartPage({ slug, restaurant, user, notify, configuration }) {
         const currentUrlParams = new URLSearchParams(typeof window !== "undefined" ? window.location.search : "");
         const fallbackTable =
             currentUrlParams.get("table") ||
+            currentUrlParams.get("token") ||
             currentUrlParams.get("t") ||
-            (typeof window !== "undefined" ? localStorage.getItem("table") || sessionStorage.getItem("table") : "");
+            tableInfo?.tableToken || 
+            tableInfo?.tableId;
 
         const finalTable = tableNum || fallbackTable || (orderType === CART_CONSTANTS.ORDER_TYPES.DINE_IN ? "1" : null);
 

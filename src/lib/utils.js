@@ -6,7 +6,7 @@ export function cn(...inputs) {
 }
 
 export function getTenantSlug() {
-  let slug = "mithanlals";
+  let slug = "haldiram";
   if (typeof window !== "undefined") {
     const host = window.location.host;
     const hostname = host.split(":")[0];
