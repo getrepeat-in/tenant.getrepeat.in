@@ -30,6 +30,27 @@ export function proxy(request) {
         return NextResponse.redirect(new URL("/", request.url));
     }
 
+    // Custom domain routing logic
+    let hostname = request.headers
+        .get('host')
+        ?.replace('.localhost:3000', `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN || 'localhost:3000'}`);
+
+    if (hostname) {
+        hostname = hostname.replace('www.', '');
+        const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || 'localhost:3000';
+        
+        const isCustomDomain =
+            hostname !== rootDomain &&
+            hostname !== 'localhost:3000' &&
+            !hostname.includes('vercel.app') &&
+            hostname !== process.env.NEXT_PUBLIC_VERCEL_URL;
+
+        if (isCustomDomain) {
+            // Rewrite the URL to the dynamic domain route
+            return NextResponse.rewrite(new URL(`/${hostname}${pathname}`, request.url));
+        }
+    }
+
     return NextResponse.next();
 }
 
